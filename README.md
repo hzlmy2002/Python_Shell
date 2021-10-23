@@ -1,5 +1,9 @@
 # comp0010psh
 
+
+# Next Meeting: 2021.10.25 15:00 PM
+
+
 ### Course details
 
 Course Moodle page: [comp0010](https://moodle.ucl.ac.uk/course/view.php?id=1365)
@@ -56,7 +60,4 @@ TBC
 1. 2021.10.20: Discuss initial ideas
 2. 2021.10.25: TBC
 
-
-
-# Next Meeting: 2021.10.25 15:00 PM
 
