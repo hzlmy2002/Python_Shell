@@ -1,12 +1,11 @@
 from collections import defaultdict
-from apps import echo, pwd, cd, cat, ls, head, tail, grep
+from apps import echo, pwd, cd, cat, ls, head, tail, grep, cut, find, uniq, sort
 
 
 def def_val():
     raise ValueError("unsupported application")
 
 
-# Doesn't necessarilly need to use this structure
 class appManager:
     def __init__(self) -> None:
         self.app_map = defaultdict(def_val)
@@ -18,6 +17,10 @@ class appManager:
         self.app_map["head"] = head()
         self.app_map["tail"] = tail()
         self.app_map["grep"] = grep()
+        self.app_map["cut"] = cut()
+        self.app_map["find"] = find()
+        self.app_map["uniq"] = uniq()
+        self.app_map["sort"] = sort()
 
     def extract_app(self, token):
         """Returns app class corresponding to the string token"""

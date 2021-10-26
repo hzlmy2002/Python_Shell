@@ -30,9 +30,10 @@ def evaluate(cmdline, out):
             raw_commands.append(m.group(0))
     for command in raw_commands:
         tokens = parse_token(command)
-        app = manager.extract_app(tokens[0])
         args = tokens[1:]
-        app.exec(out, args)
+        app = manager.extract_app(tokens[0])
+        app.setter(out, args)
+        app.exec()
 
 
 if __name__ == "__main__":
