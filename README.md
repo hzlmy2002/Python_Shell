@@ -1,7 +1,7 @@
 # comp0010psh
 
 
-# Next Meeting: 2021.10.25 15:00 PM
+# Next Meeting: 2021.10.29 17:00 PM
 
 
 ### Course details
@@ -58,6 +58,7 @@ TBC
 ### Previous meetings:
 
 1. 2021.10.20: Discuss initial ideas
-2. 2021.10.25: TBC
+2. 2021.10.25: Define the basic structure of the shell implementation
+3. 2021.10.28: TBC
 
 
