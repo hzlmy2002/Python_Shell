@@ -41,7 +41,7 @@ TBC
 ---
 
 ### Backlog
-- ~~Refactor design into basic architechture
+- ~~Refactor design into basic architechture~~
 - Preserve the following functionalities, improving design and implementation:
   - Shell features:
     - Calling applications
