@@ -3,6 +3,12 @@
 
 # Next Meeting: 2021.10.29 17:00 PM
 
+To discuss:
+- Reflect on initial code refactoring sprint - code & design review
+- Flesh out design more - principles & patterns
+- Plan next sprint, for improving design and implementation of existing functionality
+- Decide on code style
+
 
 ### Course details
 
@@ -16,9 +22,27 @@ Coursework deadline: 2021.12.20 16:00
 
 ---
 
-### Tasks
+### Project Management
 
-- Preserve the following functionalities:
+- Agile/scrum methodology
+- Rough timeline of milestones
+- Focus on delivering sprint goals, reflecting, and refactoring plan, design & implementation
+- Self-organisation
+- Meetings for code and design reviews - reflect and change/refactor anything necessary
+- Order sprints in a way that set us up well for each subsequent sprint
+- Stick to design principles & patterns
+- Unit and integration testing (continuous integration?)
+- Github flow
+
+### Agreed code style
+
+TBC
+
+---
+
+### Backlog
+- ~~Refactor design into basic architechture
+- Preserve the following functionalities, improving design and implementation:
   - Shell features:
     - Calling applications
     - Quoting
@@ -33,6 +57,7 @@ Coursework deadline: 2021.12.20 16:00
     - head
     - tail
     - grep
+- Testing (unit and integration)
 - Implement the following functionalities:
   - Shell features:
     - pipe
@@ -49,16 +74,13 @@ Coursework deadline: 2021.12.20 16:00
   
     - cut
 - And unsafe version of all above
-
-### Agreed code style
-
-TBC
+- Add extra/more advanced functionality/testing/code analysis etc.
 
 ---
 ### Previous meetings:
 
-1. 2021.10.20: Discuss initial ideas
-2. 2021.10.25: Define the basic structure of the shell implementation
+1. 2021.10.20: Discuss initial ideas, project management
+2. 2021.10.25: Define the basic architecture of the shell implementation
 3. 2021.10.28: TBC
 
 
