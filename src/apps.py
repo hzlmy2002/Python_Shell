@@ -3,9 +3,9 @@ from os import listdir
 import re
 
 
-class app:
+class App:
     def __init__(self) -> None:
-        # Pretty useless for now, may need it
+        # Pretty useless for now, may need it further in development
         self.out = None
         self.args = None
 
@@ -17,31 +17,46 @@ class app:
         raise NotImplementedError("Please Implement this method")
 
 
-class echo(app):
+class Echo(App):
+    def __init__(self) -> None:
+        super().__init__()
+
     def exec(self):
         self.out.append(" ".join(self.args) + "\n")
 
 
-class pwd(app):
+class Pwd(App):
+    def __init__(self) -> None:
+        super().__init__()
+
     def exec(self):
         self.out.append(os.getcwd())
 
 
-class cd(app):
+class Cd(App):
+    def __init__(self) -> None:
+        super().__init__()
+
     def exec(self):
         if len(self.args) == 0 or len(self.args) > 1:
             raise ValueError("wrong number of command line arguments")
         os.chdir(self.args[0])
 
 
-class cat(app):
+class Cat(App):
+    def __init__(self) -> None:
+        super().__init__()
+
     def exec(self):
         for argument in self.args:
             with open(argument) as f:
                 self.out.append(f.read())
 
 
-class ls(app):
+class Ls(App):
+    def __init__(self) -> None:
+        super().__init__()
+
     def list_directory(self, ls_dir):
         for file in listdir(ls_dir):
             if not file.startswith("."):
@@ -57,7 +72,7 @@ class ls(app):
         self.list_directory(ls_dir)
 
 
-class headTail(app):
+class HeadTail(App):
     def __init__(self):
         super().__init__()
         self.num_lines = None
@@ -85,22 +100,31 @@ class headTail(app):
             self.file_op(lines)
 
 
-class head(headTail):
+class Head(HeadTail):
+    def __init__(self) -> None:
+        super().__init__()
+
     def file_op(self, lines):
         for i in range(0, min(len(lines), self.num_lines)):
             self.out.append(lines[i])
 
 
-class tail(headTail):
+class Tail(HeadTail):
+    def __init__(self) -> None:
+        super().__init__()
+
     def file_op(self, lines):
         display_length = min(len(lines), self.num_lines)
         for i in range(0, display_length):
             self.out.append(lines[len(lines) - display_length + i])
 
 
-class grep(app):
+class Grep(App):
+    def __init__(self) -> None:
+        super().__init__()
+
     def match_line(self, filename, filelen, pattern):
-        """Finds matching pattern given by args and append to output"""
+        """Finds matching pattern given by args and Append to output"""
         with open(filename) as f:
             lines = f.readlines()
             for line in lines:
@@ -119,21 +143,21 @@ class grep(app):
             self.match_line(filename, filelen, pattern)
 
 
-class cut(app):
+class Cut(App):
     def exec(self):
         pass
 
 
-class find(app):
+class Find(App):
     def exec(self):
         pass
 
 
-class uniq(app):
+class Uniq(App):
     def exec(self):
         pass
 
 
-class sort(app):
+class Sort(App):
     def exec(self):
         pass
