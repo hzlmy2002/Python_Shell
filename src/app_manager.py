@@ -1,5 +1,5 @@
 from collections import defaultdict
-from apps import Echo, Pwd, Cd, Cat, Ls, Head, Tail, Grep, Cut, Find, Uniq, Sort
+from apps import *
 
 
 def def_val():

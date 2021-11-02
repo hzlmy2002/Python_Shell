@@ -2,7 +2,7 @@ import sys
 import os
 import re
 from collections import deque
-from parser import Parser
+from Parser import Parser
 from app_manager import AppManager
 
 
