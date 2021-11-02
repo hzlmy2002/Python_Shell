@@ -82,5 +82,3 @@ TBC
 1. 2021.10.20: Discuss initial ideas, project management
 2. 2021.10.25: Define the basic architecture of the shell implementation
 3. 2021.10.28: TBC
-
-
