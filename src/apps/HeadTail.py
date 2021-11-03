@@ -5,6 +5,7 @@ class HeadTail(App):
     def __init__(self):
         super().__init__()
         self.num_lines = None
+        self.output = []
 
     def file_op(self, lines):
         """Requires implementation of child class"""
@@ -27,6 +28,7 @@ class HeadTail(App):
         with open(file) as f:
             lines = f.readlines()
             self.file_op(lines)
+        return self.output
 
 
 

@@ -7,4 +7,4 @@ class Tail(HeadTail):
     def file_op(self, lines):
         display_length = min(len(lines), self.num_lines)
         for i in range(0, display_length):
-            self.out.append(lines[len(lines) - display_length + i])
+            self.output.append(lines[len(lines) - display_length + i])

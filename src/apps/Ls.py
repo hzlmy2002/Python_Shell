@@ -4,11 +4,12 @@ import os
 class Ls(App):
     def __init__(self) -> None:
         super().__init__()
+        self.output = []
 
     def list_directory(self, ls_dir):
         for file in os.listdir(ls_dir):
             if not file.startswith("."):
-                self.out.append(file + "\n")
+                self.output.append(file + "\n")
 
     def exec(self):
         if len(self.args) == 0:
@@ -18,3 +19,4 @@ class Ls(App):
         else:
             ls_dir = self.args[0]
         self.list_directory(ls_dir)
+        return self.output

@@ -6,6 +6,9 @@ class Cat(App):
         super().__init__()
 
     def exec(self):
+        output = []
         for argument in self.args:
             with open(argument) as f:
-                self.out.append(f.read())
+                output.append(f.read())
+        return output
+

@@ -6,4 +6,4 @@ class Pwd(App):
         super().__init__()
 
     def exec(self):
-        self.out.append(os.getcwd())
+        return [os.getcwd()]

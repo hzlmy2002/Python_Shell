@@ -4,6 +4,7 @@ import re
 class Grep(App):
     def __init__(self) -> None:
         super().__init__()
+        
 
     def match_line(self, filename, filelen, pattern):
         """Finds matching pattern given by args and Append to output"""
@@ -11,11 +12,13 @@ class Grep(App):
             lines = f.readlines()
             for line in lines:
                 if re.match(pattern, line) and filelen <= 1:
-                    self.out.append(line)
+                    self.outputs.append(line)
                 else:
-                    self.out.append(f"{filename}:{line}")
+                    self.outputs.append(f"{filename}:{line}")
 
     def exec(self):
+        self.outputs = []
+        print(self.args)
         if len(self.args) < 2:
             raise ValueError("wrong number of command line arguments")
         pattern = self.args[0]
@@ -23,3 +26,5 @@ class Grep(App):
         filelen = len(files)
         for filename in files:
             self.match_line(filename, filelen, pattern)
+        print(self.outputs)
+        return self.outputs

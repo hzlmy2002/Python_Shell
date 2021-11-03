@@ -6,4 +6,4 @@ class Head(HeadTail):
 
     def file_op(self, lines):
         for i in range(0, min(len(lines), self.num_lines)):
-            self.out.append(lines[i])
+            self.output.append(lines[i])

@@ -5,4 +5,5 @@ class Echo(App):
         super().__init__()
 
     def exec(self):
-        self.out.append(" ".join(self.args) + "\n")
+        output = " ".join(self.args) + "\n"
+        return [output]
