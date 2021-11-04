@@ -9,6 +9,9 @@ class Cat(App):
         output = []
         for argument in self.args:
             with open(argument) as f:
-                output.append(f.read())
+                line = f.read()
+                if not line.endswith("\n"):
+                    line += "\n"
+                output.append(line)
+        print(output)
         return output
-

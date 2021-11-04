@@ -2,8 +2,10 @@ import sys
 import os
 import re
 from collections import deque
-from Parser import Parser
 from AppManager import AppManager
+
+# from Parser import Parser
+from testParser import Parser
 
 
 class Shell:
