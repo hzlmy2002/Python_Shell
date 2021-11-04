@@ -30,4 +30,3 @@ class AppManager:
             app.setter(stream)
             self.output_list += app.exec()
         return self.output_list
-

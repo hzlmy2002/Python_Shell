@@ -13,18 +13,18 @@ class Shell:
         self.parser = Parser()
         self.env = None
 
-    def get_raw(cmdline):
+    def get_raw(self, cmdline):
         raw_commands = []
         for m in re.finditer("([^\"';]+|\"[^\"]*\"|'[^']*')", cmdline):
             if m.group(0):
                 raw_commands.append(m.group(0))
-    
+        return raw_commands
+
     def evaluate(self, cmdline):
-        #Returns list of outputs or error message if required
-        command_list = self.parser.parse(self.get_raw(cmdline))
+        # Returns list of outputs or error message if required
+        command_list = self.parser.parse(self.get_raw(cmdline), self.env)
         output_list = self.manager.run_app(command_list)
         return output_list
-            
 
 
 if __name__ == "__main__":
