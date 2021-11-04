@@ -24,9 +24,10 @@ class AppManager:
 
     def run_app(self, command_list):
         """Returns list of output stream"""
-        self.output_list = []
+        output_list = []
         for stream in command_list:
             app = self.app_map[stream.get_app()]
+            # Setup application parameters for the new stream
             app.setter(stream)
-            self.output_list += app.exec()
-        return self.output_list
+            output_list += app.exec()
+        return output_list

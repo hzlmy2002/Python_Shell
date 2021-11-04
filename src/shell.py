@@ -4,14 +4,13 @@ import re
 from collections import deque
 from Parser import Parser
 from AppManager import AppManager
-from Stream import Stream
 
 
 class Shell:
-    def __init__(self) -> None:
+    def __init__(self, env=None) -> None:
         self.manager = AppManager()
         self.parser = Parser()
-        self.env = None
+        self.env = env
 
     def get_raw(self, cmdline):
         raw_commands = []
@@ -20,9 +19,17 @@ class Shell:
                 raw_commands.append(m.group(0))
         return raw_commands
 
+    def construct_command_list(self, raw_command):
+        command_list = []
+        for sing_com in raw_command:
+            stream = self.parser.parse(sing_com)
+            stream.add_env(self.env)
+            command_list.append(stream)
+        return command_list
+
     def evaluate(self, cmdline):
         # Returns list of outputs or error message if required
-        command_list = self.parser.parse(self.get_raw(cmdline), self.env)
+        command_list = self.construct_command_list(self.get_raw(cmdline))
         output_list = self.manager.run_app(command_list)
         return output_list
 
@@ -35,8 +42,7 @@ if __name__ == "__main__":
             raise ValueError("wrong number of command line arguments")
         if sys.argv[1] != "-c":
             raise ValueError(f"unexpected command line argument {sys.argv[1]}")
-        out = deque()
-        sh.evaluate(sys.argv[2])
+        out = deque(sh.evaluate(sys.argv[2]))
         while len(out) > 0:
             print(out.popleft(), end="")
     else:

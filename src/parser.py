@@ -7,14 +7,14 @@ class Parser:
     def __init__(self) -> None:
         pass
 
-    def setup_stream(self, tokens, env):
+    def setup_stream(self, tokens):
         # Current setup includes the parameters into arguments
         application = tokens[0]
         arguments = tokens[1:]
-        return Stream(1, application, None, arguments, env)
+        return Stream(1, application, None, arguments, None)
 
     def parse_token(self, command):
-        # Separates command into list [app,args] and returns it
+        # Separates command into a token (list [app,args]) and returns it
         tokens = []
         for m in re.finditer("[^\\s\"']+|\"([^\"]*)\"|'([^']*)'", command):
             if m.group(1) or m.group(2):
@@ -28,9 +28,7 @@ class Parser:
                     tokens.append(m.group(0))
         return tokens
 
-    def parse(self, raw_command, env):
-        command_list = []
-        for com in raw_command:
-            tokens = self.parse_token(com)
-            command_list.append(self.setup_stream(tokens, env))
-        return command_list
+    def parse(self, sing_com):
+        # Packs input singular command into an stream object
+        tokens = self.parse_token(sing_com)
+        return self.setup_stream(tokens)
