@@ -1,13 +1,10 @@
 # comp0010psh
 
 
-# Next Meeting: 2021.10.29 17:00 PM
+# Next Meeting: 2021.11.08
 
 To discuss:
-- Reflect on initial code refactoring sprint - code & design review
-- Flesh out design more - principles & patterns
-- Plan next sprint, for improving design and implementation of existing functionality
-- Decide on code style
+- Design and implementation of improving existing functionality
 
 
 ### Course details
@@ -33,10 +30,6 @@ Coursework deadline: 2021.12.20 16:00
 - Stick to design principles & patterns
 - Unit and integration testing (continuous integration?)
 - Github flow
-
-### Agreed code style
-
-TBC
 
 ---
 
@@ -81,4 +74,4 @@ TBC
 
 1. 2021.10.20: Discuss initial ideas, project management
 2. 2021.10.25: Define the basic architecture of the shell implementation
-3. 2021.10.28: TBC
+3. 2021.10.29: Fleshed out design more, decided on next sprint, rough timeline, and code style
