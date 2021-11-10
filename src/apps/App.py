@@ -1,24 +1,18 @@
 from Stream import Stream
+from abc import ABC, abstractmethod
+from typing import List, Dict
 
 
-class App:
-    def __init__(self) -> None:
-        # Pretty useless for now, may need it further in development
-        self.app = None
-        self.param = None
-        self.args = None
-        self.env = None
+class App(ABC):
+    @abstractmethod
+    def __init__(self, stream: "Stream") -> None:
+        pass
 
-    def setter(self, input_stream):
-        self.args = input_stream.get_args()
-        self.param = input_stream.get_param()
-        self.args = input_stream.get_args()
-        self.env = input_stream.get_env
+    @abstractmethod
+    def getStream(self) -> "Stream":
+        raise NotImplementedError("Please Implement this method")
 
-    """
-    def pack_output(self):
-        raise NotImplementedError("Please Implement this method")"""
-
-    def exec(self):
-        # exec should return an output list
+    @abstractmethod
+    def exec(self) -> "Stream":
+        # exec should return an output stream
         raise NotImplementedError("Please Implement this method")

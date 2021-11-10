@@ -1,4 +1,4 @@
-from .Cat import Cat
+from .Cat import Cat,CatUnsafe
 from .Cd import Cd
 from .Cut import Cut
 from .Echo import Echo

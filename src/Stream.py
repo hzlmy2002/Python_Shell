@@ -1,28 +1,38 @@
+from typing import List, Dict
+
+
 class Stream:
-    def __init__(self, stream_type, app, param, args, env) -> None:
+    def __init__(
+        self,
+        streamType: int,
+        app: str,
+        params: List[str],
+        args: List[str],
+        env: Dict[str,str],
+    ) -> None:
         """
-        self.stream_type (int) : 0 represents input, 1 represents output
+        self.stream_type (int) : 0 represents input, 1 represents output, -1 represents error
         self.app (String)
         self.param (List of String)
         self.args (List of String)
         """
-        self.stream_type = stream_type
+        self.stream_type = streamType
         self.app = app
-        self.param = param
-        self.args = args
-        self.env = env
+        self.params = params[:]
+        self.args = args[:]
+        self.env = env.copy()
 
-    def get_app(self):
+    def getApp(self):
         return self.app
 
-    def get_param(self):
-        return self.param
+    def getParams(self):
+        return self.params
 
-    def get_args(self):
+    def getArgs(self):
         return self.args
 
-    def get_env(self):
+    def getEnv(self):
         return self.env
 
-    def add_env(self, env):
-        self.env = env
+    def addEnv(self, envName, envValue):
+        self.env[envName] = envValue
