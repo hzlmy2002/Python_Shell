@@ -17,7 +17,7 @@ def testCat():
         args=["\0HelloWorld!\n\0"],
         env={},
     )        
-    cat = CatUnsafe(stream1)
+    cat = CatUnsafe(stream2)
     output = cat.exec()
     
     print(output.args[0],end="")

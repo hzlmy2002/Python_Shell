@@ -9,14 +9,13 @@ class Cat(App):
         self.stream = stream
 
     def exec(self) -> "Stream":
-        if len(self.stream.params) != 0:
+        if len(self.stream.params) != 0 or len(self.stream.getArgs()) == 0:
             raise Exception("Cat: Invalid number of parameters")
         output = []
         args=self.stream.args
+        if apps.tools.isStdin(args[0]):
+            return Stream(streamType=1, app="", params=[], args=[apps.tools.stdin2str(args[0])], env={}) 
         for arg in args:
-            if apps.tools.isStdin(arg):
-                output.append(apps.tools.stdin2str(arg))
-                break
             with open(arg, "r") as f:
                 content=f.read()
                 if len(content) > 1:
