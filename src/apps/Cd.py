@@ -4,11 +4,12 @@ from StreamType import streamType
 from types import MethodType
 import apps.tools
 import os
+from standardStreamExceptions import standardStreamExceptions
 
 
 class Cd(App):
     def __init__(self) -> None:
-        self.stream = None
+        self.exceptions = standardStreamExceptions("Cd")
 
     def getStream(self) -> "Stream":
         return self.stream
@@ -16,14 +17,11 @@ class Cd(App):
     def init_and_check_stream(self, stream):
         self.stream = stream
         self.args = self.stream.getArgs()
-        if len(self.args) == 0 or len(self.args) > 1:
-            raise Exception("Cd: Invalid number of command line arguments")
-        if self.stream.params:
-            raise Exception("Cd: Should not take parameters")
+        self.exceptions.argsLenCheck(self.args, equalOne=True)
+        self.exceptions.paramsLenCheck(self.stream.getParams(), empty=True)
 
     def exec(self, stream: "Stream") -> "Stream":
-        if stream == None:
-            raise Exception("Cd: No stream to process")
+        self.exceptions.notNoneCheck(stream)
         self.init_and_check_stream(stream)
         try:
             os.chdir(self.args[0])

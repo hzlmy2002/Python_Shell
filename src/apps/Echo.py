@@ -1,10 +1,28 @@
 from apps.App import App
+from Stream import Stream
+from StreamType import streamType
+from types import MethodType
+import apps.tools
 
 
 class Echo(App):
     def __init__(self) -> None:
-        super().__init__()
+        self.exceptions = standardStreamExceptions("Echo")
 
-    def exec(self):
-        output = " ".join(self.args) + "\n"
-        return [output]
+    def exec(self, stream: "Stream") -> "Stream":
+        self.stream = stream
+        output = " ".join(self.stream.getArgs()) + "\n"
+        return Stream(
+            sType=streamType.output,
+            app="",
+            params=[],
+            args=[output],
+            env={},
+        )
+
+
+class EchoUnsafe(Echo):
+    def exec(self, stream: "Stream") -> "Stream":
+        c = Echo()
+        c.exec = MethodType(apps.tools.unsafeDecorator(c.exec), c)
+        return c.exec(stream)

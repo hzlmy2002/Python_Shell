@@ -1,7 +1,7 @@
 from .Cat import Cat, CatUnsafe
 from .Cd import Cd, CdUnsafe
 from .Cut import Cut
-from .Echo import Echo
+from .Echo import Echo, EchoUnsafe
 from .Find import Find
 from .Grep import Grep
 from .Head import Head

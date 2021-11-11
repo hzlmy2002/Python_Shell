@@ -51,13 +51,10 @@ class testApps(unittest.TestCase):
         self.assertTrue(
             "Invalid number of command line arguments" in cdUnsafe.exec(stream1).args[0]
         )
-        self.assertTrue(
-            "Invalid number of command line parameters"
-            in cdUnsafe.exec(stream2).args[0]
-        )
+        self.assertTrue("Should not take parameters" in cdUnsafe.exec(stream2).args[0])
         self.assertTrue("Invalid Directory" in cdUnsafe.exec(stream3).args[0])
         self.assertTrue("No stream to process" in cdUnsafe.exec(stream4).args[0])
 
 
 if __name__ == "__main__":
-    unittest.main(verbosity=2)
+    unittest.main(verbosity=1)
