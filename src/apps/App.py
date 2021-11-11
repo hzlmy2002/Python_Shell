@@ -5,7 +5,7 @@ from typing import List, Dict
 
 class App(ABC):
     @abstractmethod
-    def __init__(self, stream: "Stream") -> None:
+    def __init__(self) -> None:
         pass
 
     @abstractmethod
@@ -13,6 +13,6 @@ class App(ABC):
         raise NotImplementedError("Please Implement this method")
 
     @abstractmethod
-    def exec(self) -> "Stream":
+    def exec(self, stream: "Stream") -> "Stream":
         # exec should return an output stream
         raise NotImplementedError("Please Implement this method")

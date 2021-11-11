@@ -12,6 +12,12 @@ def isStdin(input:str)->bool:
     else:
         return input[0]=="\0" and input[-1]=="\0"
 
+def str2stdin(input:str)->str:
+    """
+    for any string, if it starts and ends with "\0", then it is stdin
+    """
+    return "\0"+input+"\0"
+
 def stdin2str(input:str)->str:
     """
     read stdin and return a string
@@ -23,10 +29,13 @@ def stdin2str(input:str)->str:
     
 
 def unsafeDecorator(func):
-    def wrapper(app:"App"):
+    def wrapper(app:"App",stream:"Stream"):
         try:
-            return func()
+            return func(stream)
         except Exception as e:
             tb=traceback.format_exc()
-            return Stream(streamType=-1,app=app.getStream().getApp(),params=[],args=[tb],env={})
+            try:
+                return Stream(streamType=-1,app=stream.getApp(),params=[],args=[tb],env={})
+            except Exception:
+                return Stream(streamType=-1,app="unknown",params=[],args=[tb],env={})
     return wrapper

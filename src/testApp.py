@@ -2,24 +2,61 @@ from apps import *
 from Stream import *
 from apps import tools
 
-def testCat():
-    stream1 = Stream(
-        streamType=1,
-        app="cat",
-        params=[],
-        args=["\0/tmp/a", "/tmp/b"],
-        env={},
-    )
-    stream2= Stream(
-        streamType=1,
-        app="cat",
-        params=[],
-        args=["\0HelloWorld!\n\0"],
-        env={},
-    )        
-    cat = CatUnsafe(stream2)
-    output = cat.exec()
-    
-    print(output.args[0],end="")
+import unittest,os
 
-testCat()
+class testApps(unittest.TestCase):
+
+    def setUp(self) -> None:
+        with open(".testCatA.txt","w") as file:
+            file.write("testCatA\n")
+        with open(".testCatB.txt","w") as file:
+            file.write("testCatB")
+
+    def tearDown(self) -> None:
+        os.remove(".testCatA.txt")
+        os.remove(".testCatB.txt")
+
+
+    def testCatFile(self):
+        stream=Stream(0,"cat",[],[".testCatA.txt",".testCatB.txt"],{})
+        cat1=Cat()
+        cat2=CatUnsafe()
+        result1=cat1.exec(stream)
+        result2=cat2.exec(stream)
+        self.assertEqual(result1.args[0],result2.args[0])
+        self.assertEqual(result1.args[0],"testCatA\ntestCatB")
+
+    def testCatStdin(self):
+        stream=Stream(0,"cat",[],[tools.str2stdin("Hello World!\n")],{})
+        cat1=Cat()
+        cat2=CatUnsafe()
+        result1=cat1.exec(stream)
+        result2=cat2.exec(stream)
+        self.assertEqual(result1.args[0],result2.args[0])
+        self.assertEqual(result1.args[0],"Hello World!\n")
+
+    def testCatExceptions(self):
+        stream1=Stream(0,"cat",[],["^^^"],{})
+        stream2=Stream(0,"cat",["a"],[""],{})
+        stream3=Stream(0,"cat",[],[tools.str2stdin("aaaa"),""],{})
+        stream4=None
+        cat1=Cat()
+        cat2=CatUnsafe()
+        with self.assertRaises(FileNotFoundError):
+            cat1.exec(stream1)
+        with self.assertRaises(Exception):
+            cat1.exec(stream2)
+        with self.assertRaises(Exception):
+            cat1.exec(stream3)
+        with self.assertRaises(Exception):
+            cat1.exec(stream4)
+        self.assertTrue("FileNotFoundError" in cat2.exec(stream1).args[0])
+        self.assertTrue("Invalid number of parameters" in cat2.exec(stream2).args[0])
+        self.assertTrue("Ilegal stdin" in cat2.exec(stream3).args[0])
+        self.assertTrue("No stream to process" in cat2.exec(stream4).args[0])
+
+
+
+if __name__ == '__main__':
+    unittest.main()
+    

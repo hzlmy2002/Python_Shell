@@ -3,33 +3,45 @@ from typing import List, Dict
 from Stream import Stream
 import apps.tools
 from types import MethodType
+import os
 
 class Cat(App):
-    def __init__(self, stream: "Stream") -> None:
-        self.stream = stream
+    def __init__(self) -> None:
+        self.stream = None
+    
+    def processStdin(self):
+        if len(self.stream.args) != 1:
+            raise Exception("Cat: Ilegal stdin")
 
-    def exec(self) -> "Stream":
+        return Stream(streamType=1, app="", params=[], args=[apps.tools.stdin2str(self.stream.args[0])], env={})
+
+    def processFiles(self):
+        output=[]
+        for arg in self.stream.args:
+            if os.path.exists(arg):
+                with open(arg, "r") as f:
+                    output.append(f.read())
+            else:
+                raise FileNotFoundError("Cat: File not found")
+        ouputStream = Stream(streamType=1, app="", params=[], args=["".join(output)], env={})
+        return ouputStream
+
+    def exec(self,stream: "Stream") -> "Stream":
+        self.stream = stream
+        if self.stream == None:
+            raise Exception("Cat: No stream to process")
         if len(self.stream.params) != 0 or len(self.stream.getArgs()) == 0:
             raise Exception("Cat: Invalid number of parameters")
-        output = []
-        args=self.stream.args
-        if apps.tools.isStdin(args[0]):
-            return Stream(streamType=1, app="", params=[], args=[apps.tools.stdin2str(args[0])], env={}) 
-        for arg in args:
-            with open(arg, "r") as f:
-                content=f.read()
-                if len(content) > 1:
-                    output.append(content[:-1]) # remove newline                 
-                else:
-                    output.append(content)
-        ouputStream = Stream(streamType=1, app="", params=[], args=["\n".join(output)], env={})
-        return ouputStream
+        if apps.tools.isStdin(self.stream.getArgs()[0]):
+            return self.processStdin()
+        else:
+            return self.processFiles()
     
     def getStream(self) -> "Stream":
         return self.stream
     
 class CatUnsafe(Cat):
-    def exec(self) -> "Stream":
-        c=Cat(self.stream)
+    def exec(self,stream:"Stream") -> "Stream":
+        c=Cat()
         c.exec=MethodType(apps.tools.unsafeDecorator(c.exec),c)
-        return c.exec()
+        return c.exec(stream)
