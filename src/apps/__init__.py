@@ -1,5 +1,5 @@
-from .Cat import Cat,CatUnsafe
-from .Cd import Cd
+from .Cat import Cat, CatUnsafe
+from .Cd import Cd, CdUnsafe
 from .Cut import Cut
 from .Echo import Echo
 from .Find import Find

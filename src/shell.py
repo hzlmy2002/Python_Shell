@@ -9,10 +9,10 @@ from testParser import Parser
 
 
 class Shell:
-    def __init__(self, env=None) -> None:
+    def __init__(self, working_dir) -> None:
         self.manager = AppManager()
-        self.parser = Parser()      
-        self.env = env
+        self.parser = Parser()
+        self.env = {"working_dir": working_dir}
 
     def get_raw(self, cmdline):
         raw_commands = []
@@ -38,7 +38,7 @@ class Shell:
 
 if __name__ == "__main__":
     args_num = len(sys.argv) - 1
-    sh = Shell()
+    sh = Shell(os.getcwd())
     if args_num > 0:
         if args_num != 2:
             raise ValueError("wrong number of command line arguments")
