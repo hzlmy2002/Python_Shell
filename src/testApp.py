@@ -17,7 +17,9 @@ class testApps(unittest.TestCase):
         os.remove(".testCatB.txt")
 
     def testCatFile(self):
-        stream = Stream(0, "cat", [], [".testCatA.txt", ".testCatB.txt"], {})
+        stream = Stream(
+            streamType.input, "cat", [], [".testCatA.txt", ".testCatB.txt"], {}
+        )
         cat1 = Cat()
         cat2 = CatUnsafe()
         result1 = cat1.exec(stream)
@@ -26,7 +28,9 @@ class testApps(unittest.TestCase):
         self.assertEqual(result1.args[0], "testCatA\ntestCatB")
 
     def testCatStdin(self):
-        stream = Stream(0, "cat", [], [tools.str2stdin("Hello World!\n")], {})
+        stream = Stream(
+            streamType.input, "cat", [], [tools.str2stdin("Hello World!\n")], {}
+        )
         cat1 = Cat()
         cat2 = CatUnsafe()
         result1 = cat1.exec(stream)

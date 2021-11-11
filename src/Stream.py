@@ -17,7 +17,7 @@ class Stream:
         self.param (List of String)
         self.args (List of String)
         """
-        self.stream_type = sType
+        self.sType = sType
         self.app = app
         self.params = params[:]
         self.args = args[:]
