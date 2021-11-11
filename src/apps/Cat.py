@@ -3,30 +3,40 @@ from typing import List, Dict
 from Stream import Stream
 import apps.tools
 from types import MethodType
+from StreamType import streamType
 import os
+
 
 class Cat(App):
     def __init__(self) -> None:
         self.stream = None
-    
+
     def processStdin(self):
         if len(self.stream.args) != 1:
             raise Exception("Cat: Ilegal stdin")
 
-        return Stream(streamType=1, app="", params=[], args=[apps.tools.stdin2str(self.stream.args[0])], env={})
+        return Stream(
+            sType=streamType.output,
+            app="",
+            params=[],
+            args=[apps.tools.stdin2str(self.stream.args[0])],
+            env={},
+        )
 
     def processFiles(self):
-        output=[]
+        output = []
         for arg in self.stream.args:
             if os.path.exists(arg):
                 with open(arg, "r") as f:
                     output.append(f.read())
             else:
                 raise FileNotFoundError("Cat: File not found")
-        ouputStream = Stream(streamType=1, app="", params=[], args=["".join(output)], env={})
+        ouputStream = Stream(
+            sType=streamType.output, app="", params=[], args=["".join(output)], env={}
+        )
         return ouputStream
 
-    def exec(self,stream: "Stream") -> "Stream":
+    def exec(self, stream: "Stream") -> "Stream":
         self.stream = stream
         if self.stream == None:
             raise Exception("Cat: No stream to process")
@@ -36,12 +46,13 @@ class Cat(App):
             return self.processStdin()
         else:
             return self.processFiles()
-    
+
     def getStream(self) -> "Stream":
         return self.stream
-    
+
+
 class CatUnsafe(Cat):
-    def exec(self,stream:"Stream") -> "Stream":
-        c=Cat()
-        c.exec=MethodType(apps.tools.unsafeDecorator(c.exec),c)
+    def exec(self, stream: "Stream") -> "Stream":
+        c = Cat()
+        c.exec = MethodType(apps.tools.unsafeDecorator(c.exec), c)
         return c.exec(stream)

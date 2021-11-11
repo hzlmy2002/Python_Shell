@@ -1,47 +1,46 @@
 from apps import *
 from Stream import *
 from apps import tools
+from StreamType import streamType
+import unittest, os
 
-import unittest,os
 
 class testApps(unittest.TestCase):
-
     def setUp(self) -> None:
-        with open(".testCatA.txt","w") as file:
+        with open(".testCatA.txt", "w") as file:
             file.write("testCatA\n")
-        with open(".testCatB.txt","w") as file:
+        with open(".testCatB.txt", "w") as file:
             file.write("testCatB")
 
     def tearDown(self) -> None:
         os.remove(".testCatA.txt")
         os.remove(".testCatB.txt")
 
-
     def testCatFile(self):
-        stream=Stream(0,"cat",[],[".testCatA.txt",".testCatB.txt"],{})
-        cat1=Cat()
-        cat2=CatUnsafe()
-        result1=cat1.exec(stream)
-        result2=cat2.exec(stream)
-        self.assertEqual(result1.args[0],result2.args[0])
-        self.assertEqual(result1.args[0],"testCatA\ntestCatB")
+        stream = Stream(0, "cat", [], [".testCatA.txt", ".testCatB.txt"], {})
+        cat1 = Cat()
+        cat2 = CatUnsafe()
+        result1 = cat1.exec(stream)
+        result2 = cat2.exec(stream)
+        self.assertEqual(result1.args[0], result2.args[0])
+        self.assertEqual(result1.args[0], "testCatA\ntestCatB")
 
     def testCatStdin(self):
-        stream=Stream(0,"cat",[],[tools.str2stdin("Hello World!\n")],{})
-        cat1=Cat()
-        cat2=CatUnsafe()
-        result1=cat1.exec(stream)
-        result2=cat2.exec(stream)
-        self.assertEqual(result1.args[0],result2.args[0])
-        self.assertEqual(result1.args[0],"Hello World!\n")
+        stream = Stream(0, "cat", [], [tools.str2stdin("Hello World!\n")], {})
+        cat1 = Cat()
+        cat2 = CatUnsafe()
+        result1 = cat1.exec(stream)
+        result2 = cat2.exec(stream)
+        self.assertEqual(result1.args[0], result2.args[0])
+        self.assertEqual(result1.args[0], "Hello World!\n")
 
     def testCatExceptions(self):
-        stream1=Stream(0,"cat",[],["^^^"],{})
-        stream2=Stream(0,"cat",["a"],[""],{})
-        stream3=Stream(0,"cat",[],[tools.str2stdin("aaaa"),""],{})
-        stream4=None
-        cat1=Cat()
-        cat2=CatUnsafe()
+        stream1 = Stream(streamType.input, "cat", [], ["^^^"], {})
+        stream2 = Stream(streamType.input, "cat", ["a"], [""], {})
+        stream3 = Stream(streamType.input, "cat", [], [tools.str2stdin("aaaa"), ""], {})
+        stream4 = None
+        cat1 = Cat()
+        cat2 = CatUnsafe()
         with self.assertRaises(FileNotFoundError):
             cat1.exec(stream1)
         with self.assertRaises(Exception):
@@ -56,7 +55,5 @@ class testApps(unittest.TestCase):
         self.assertTrue("No stream to process" in cat2.exec(stream4).args[0])
 
 
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
-    

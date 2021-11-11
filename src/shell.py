@@ -11,7 +11,7 @@ from testParser import Parser
 class Shell:
     def __init__(self, env=None) -> None:
         self.manager = AppManager()
-        self.parser = Parser()
+        self.parser = Parser()      
         self.env = env
 
     def get_raw(self, cmdline):

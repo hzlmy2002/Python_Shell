@@ -129,14 +129,11 @@ dmypy.json
 .pyre/
 
 
-
+test.txt
+test2.txt
 
 #Tools
 sh
 tools/analysis
 tools/coverage
 tools/test
-
-
-test.txt
-test2.txt

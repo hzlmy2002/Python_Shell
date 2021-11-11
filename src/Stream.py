@@ -1,14 +1,15 @@
 from typing import List, Dict
+from StreamType import streamType
 
 
 class Stream:
     def __init__(
         self,
-        streamType: int,
+        sType: streamType,
         app: str,
         params: List[str],
         args: List[str],
-        env: Dict[str,str],
+        env: Dict[str, str],
     ) -> None:
         """
         self.stream_type (int) : 0 represents input, 1 represents output, -1 represents error
@@ -16,7 +17,7 @@ class Stream:
         self.param (List of String)
         self.args (List of String)
         """
-        self.stream_type = streamType
+        self.stream_type = sType
         self.app = app
         self.params = params[:]
         self.args = args[:]
