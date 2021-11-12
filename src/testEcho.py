@@ -1,7 +1,6 @@
 from apps import *
 from Stream import *
 from apps import tools
-from StreamType import streamType
 import unittest, os
 
 
@@ -50,7 +49,7 @@ class testApps(unittest.TestCase):
             cd.exec(stream4)
         self.assertTrue(
             "Invalid number of command line arguments" in cdUnsafe.exec(stream1).args[0]
-        )
+        ) 
         self.assertTrue("Should not take parameters" in cdUnsafe.exec(stream2).args[0])
         self.assertTrue("Invalid Directory" in cdUnsafe.exec(stream3).args[0])
         self.assertTrue("No stream to process" in cdUnsafe.exec(stream4).args[0])
