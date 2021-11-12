@@ -5,11 +5,12 @@ import apps.tools
 from types import MethodType
 
 import os
+from standardStreamExceptions import standardStreamExceptions
 
 
 class Cat(App):
     def __init__(self) -> None:
-        self.stream = None
+        self.exceptions = standardStreamExceptions("Cat")
 
     def processStdin(self):
         if len(self.stream.args) != 1:
@@ -38,10 +39,9 @@ class Cat(App):
 
     def exec(self, stream: "Stream") -> "Stream":
         self.stream = stream
-        if self.stream == None:
-            raise Exception("Cat: No stream to process")
-        if len(self.stream.params) != 0 or len(self.stream.getArgs()) == 0:
-            raise Exception("Cat: Invalid number of parameters")
+        self.exceptions.notNoneCheck(stream)
+        self.exceptions.argsLenCheck(self.stream.getArgs(), notEmpty=True)
+        self.exceptions.paramsLenCheck(self.stream.getParams(), empty=True)
         if apps.tools.isStdin(self.stream.getArgs()[0]):
             return self.processStdin()
         else:
