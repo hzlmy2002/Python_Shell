@@ -1,6 +1,6 @@
 from apps.App import App
-from Stream import Stream
-from StreamType import streamType
+from Stream import *
+from standardStreamExceptions import *
 from types import MethodType
 import apps.tools
 from standardStreamExceptions import standardStreamExceptions

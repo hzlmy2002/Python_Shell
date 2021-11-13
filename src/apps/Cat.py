@@ -1,9 +1,9 @@
 from apps.App import App
 from typing import List, Dict
-from Stream import Stream
+from Stream import *
 import apps.tools
 from types import MethodType
-from StreamType import streamType
+
 import os
 from standardStreamExceptions import standardStreamExceptions
 

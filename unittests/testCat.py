@@ -5,7 +5,6 @@ sys.path.insert(1, "../src")
 from apps import *
 from Stream import *
 from apps import tools
-from StreamType import streamType
 import unittest, os
 
 

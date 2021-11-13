@@ -1,6 +1,5 @@
 from typing import List, Dict
-from Stream import Stream
-from StreamType import streamType
+from Stream import *
 from apps.App import App
 import traceback
 

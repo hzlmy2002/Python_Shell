@@ -1,14 +1,6 @@
-import sys
-
-sys.path.insert(1, "../src")
-
 from apps import *
 from Stream import *
-<<<<<<< HEAD:unittests/testCd.py
-from StreamType import streamType
-=======
 from apps import tools
->>>>>>> 99c620155ca7b0366d939996dccfb0b04cced067:src/testCd.py
 import unittest, os
 
 
@@ -19,6 +11,7 @@ class testApps(unittest.TestCase):
 
     def tearDown(self) -> None:
         os.chdir(self.cwd)
+        print("CWD: ", self.cwd)
         os.rmdir("testDir")
 
     def testCdChangeDir(self):
@@ -56,14 +49,11 @@ class testApps(unittest.TestCase):
             cd.exec(stream4)
         self.assertTrue(
             "Invalid number of command line arguments" in cdUnsafe.exec(stream1).args[0]
-        )
-        self.assertTrue(
-            "Invalid number of command line parameters"
-            in cdUnsafe.exec(stream2).args[0]
-        )
+        ) 
+        self.assertTrue("Should not take parameters" in cdUnsafe.exec(stream2).args[0])
         self.assertTrue("Invalid Directory" in cdUnsafe.exec(stream3).args[0])
         self.assertTrue("No stream to process" in cdUnsafe.exec(stream4).args[0])
 
 
 if __name__ == "__main__":
-    unittest.main(verbosity=2)
+    unittest.main(verbosity=1)
