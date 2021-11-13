@@ -1,7 +1,7 @@
 import sys
 
 sys.path.insert(1, "../src")
-
+from apps import tools
 from apps import *
 from Stream import *
 import unittest, os
@@ -10,31 +10,36 @@ from standardStreamExceptions import *
 
 class testApps(unittest.TestCase):
     def setUp(self) -> None:
-        os.mkdir("testDir")
-        self.cwd = os.getcwd()
+        with open("testA.txt", "w") as file:
+            file.write("testA\n")
+        with open("testB.txt", "w") as file:
+            file.write("testB")
 
     def tearDown(self) -> None:
-        os.chdir(self.cwd)
-        os.rmdir("testDir")
+        os.remove("testA.txt")
+        os.remove("testB.txt")
 
-    def testPwdChangeDir(self):
-        stream = Stream(streamType.input, "pwd", [], [], {})
+    def testGrepFindPattern(self):
+        stream = Stream(streamType.input, "grep", [], [], {})
         app = Grep()
-        appUnsafe = Grep()
+        appUnsafe = GrepUnsafe()
         result1 = app.exec(stream)
         result2 = appUnsafe.exec(stream)
-        os.chdir("testDir")
-        result3 = app.exec(stream)
-        result4 = appUnsafe.exec(stream)
-        self.assertEqual(result1.env, result2.env)
-        self.assertEqual(result1.getArgs()[0], self.cwd + "\n")
-        self.assertEqual(result3.env, result4.env)
-        self.assertEqual(result3.getArgs()[0], self.cwd + "/testDir" + "\n")
-        os.chdir(self.cwd)
 
-    def testPwdExceptions(self):
+    def testGrepStdin(self):
+        stream = Stream(
+            streamType.input, "grep", [], [tools.str2stdin("Hello World!\n")], {}
+        )
+        app = Grep()
+        appUnsafe = GrepUnsafe()
+        result1 = app.exec(stream)
+        result2 = appUnsafe.exec(stream)
+        self.assertEqual(result1.args[0], result2.args[0])
+        self.assertEqual(result1.args[0], "Hello World!\n")
+
+    def testGrepExceptions(self):
         msg = stdExceptionMessage()
-        stream1 = Stream(streamType.input, "pwd", [], ["smh"], {})  # Contains argument
+        """stream1 = Stream(streamType.input, "pwd", [], ["smh"], {})  # Contains argument
         stream2 = Stream(
             streamType.input, "pwd", [], ["smh", "smh"], {}
         )  # Contains arguments
@@ -69,7 +74,7 @@ class testApps(unittest.TestCase):
         )
         self.assertTrue(
             msg.exceptionMsg(exceptionType.none) in appUnsafe.exec(stream5).args[0]
-        )
+        )"""
 
 
 if __name__ == "__main__":

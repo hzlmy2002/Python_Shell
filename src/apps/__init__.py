@@ -3,7 +3,7 @@ from .Cd import Cd, CdUnsafe
 from .Cut import Cut
 from .Echo import Echo, EchoUnsafe
 from .Find import Find
-from .Grep import Grep,Grep
+from .Grep import Grep, GrepUnsafe
 from .Head import Head, HeadUnsafe
 from .Ls import Ls, LsUnsafe
 from .Pwd import Pwd, PwdUnsafe

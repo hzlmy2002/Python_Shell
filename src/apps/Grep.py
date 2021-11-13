@@ -15,7 +15,7 @@ class Grep(CanStdIn):
     args = [FILENAME, FILNAME2....]  stores the file names specified"""
 
     def __init__(self) -> None:
-        self.exceptions = stdStreamExceptions()
+        self.exceptions = stdStreamExceptions("Grep")
 
     def getStream(self) -> "Stream":
         return self.stream
