@@ -3,12 +3,12 @@ from Stream import *
 from standardStreamExceptions import *
 from types import MethodType
 import apps.tools
-from standardStreamExceptions import standardStreamExceptions
+from standardStreamExceptions import *
 
 
 class Echo(App):
     def __init__(self) -> None:
-        self.exceptions = standardStreamExceptions("Echo")
+        self.exceptions = stdStreamExceptions("Echo")
 
     def getStream(self) -> "Stream":
         return self.stream
@@ -16,8 +16,12 @@ class Echo(App):
     def exec(self, stream: "Stream") -> "Stream":
         self.stream = stream
         self.exceptions.notNoneCheck(stream)
-        self.exceptions.argsLenCheck(self.stream.getArgs(), notEmpty=True)
-        self.exceptions.paramsLenCheck(self.stream.getParams(), empty=True)
+        self.exceptions.lenCheck(
+            self.stream.getArgs(), exceptionType.args, notEmpty=True
+        )
+        self.exceptions.lenCheck(
+            self.stream.getParams(), exceptionType.params, empty=True
+        )
         output = " ".join(self.stream.getArgs()) + "\n"
         return Stream(
             sType=streamType.output,

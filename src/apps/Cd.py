@@ -4,29 +4,31 @@ from Stream import *
 from types import MethodType
 import apps.tools
 import os
-from standardStreamExceptions import standardStreamExceptions
+from standardStreamExceptions import *
 
 
 class Cd(App):
     def __init__(self) -> None:
-        self.exceptions = standardStreamExceptions("Cd")
+        self.exceptions = stdStreamExceptions("Cd")
 
     def getStream(self) -> "Stream":
         return self.stream
 
     def initAndCheckStream(self, stream):
         self.stream = stream
+        self.exceptions.notNoneCheck(stream)
         self.args = self.stream.getArgs()
-        self.exceptions.argsLenCheck(self.args, equalOne=True)
-        self.exceptions.paramsLenCheck(self.stream.getParams(), empty=True)
+        self.exceptions.lenCheck(self.args, exceptionType.args, equalOne=True)
+        self.exceptions.lenCheck(
+            self.stream.getParams(), exceptionType.params, empty=True
+        )
 
     def exec(self, stream: "Stream") -> "Stream":
-        self.exceptions.notNoneCheck(stream)
-        self.init_and_check_stream(stream)
+        self.initAndCheckStream(stream)
         try:
             os.chdir(self.args[0])
         except:
-            raise Exception("Invalid Directory")
+            self.exceptions.raiseException(exceptionType.dir)
         new_env = self.stream.getEnv()
         new_env["working_dir"] = os.getcwd()
         return Stream(

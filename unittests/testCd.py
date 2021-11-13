@@ -5,6 +5,7 @@ sys.path.insert(1, "../src")
 from apps import *
 from Stream import *
 import unittest, os
+from standardStreamExceptions import *
 
 
 class testApps(unittest.TestCase):
@@ -35,6 +36,7 @@ class testApps(unittest.TestCase):
         self.assertEqual(result2.env["working_dir"], self.cwd)
 
     def testCdExceptions(self):
+        msg = stdExceptionMessage()
         stream1 = Stream(streamType.input, "cat", [], ["testDir", "smh"], {})
         stream2 = Stream(streamType.input, "cat", ["a"], ["testDir"], {})
         stream3 = Stream(streamType.input, "cat", [], ["smh"], {})
@@ -50,14 +52,17 @@ class testApps(unittest.TestCase):
         with self.assertRaises(Exception):
             cd.exec(stream4)
         self.assertTrue(
-            "Invalid number of command line arguments" in cdUnsafe.exec(stream1).args[0]
+            msg.exceptionMsg(exceptionType.args) in cdUnsafe.exec(stream1).args[0]
         )
         self.assertTrue(
-            "Invalid number of command line parameters"
-            in cdUnsafe.exec(stream2).args[0]
+            msg.exceptionMsg(exceptionType.params) in cdUnsafe.exec(stream2).args[0]
         )
-        self.assertTrue("Invalid Directory" in cdUnsafe.exec(stream3).args[0])
-        self.assertTrue("No stream to process" in cdUnsafe.exec(stream4).args[0])
+        self.assertTrue(
+            msg.exceptionMsg(exceptionType.dir) in cdUnsafe.exec(stream3).args[0]
+        )
+        self.assertTrue(
+            msg.exceptionMsg(exceptionType.none) in cdUnsafe.exec(stream4).args[0]
+        )
 
 
 if __name__ == "__main__":

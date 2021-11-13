@@ -4,52 +4,50 @@ from Stream import *
 from types import MethodType
 import apps.tools
 import os
-from standardStreamExceptions import standardStreamExceptions
+from standardStreamExceptions import *
 
 
 class Ls(App):
     def __init__(self) -> None:
-        self.exceptions = standardStreamExceptions("Cd")
+        self.exceptions = stdStreamExceptions("Ls")
 
     def getStream(self) -> "Stream":
         return self.stream
 
     def listDirectory(self, ls_dir):
+        # Returns a list containing a single string of directories that are followed by \n
         dirs = []
-        for file in os.listdir(ls_dir):
-            if not file.startswith("."):
-                dirs.append(file + "\n")
-        return dirs
+        try:
+            for file in os.listdir(ls_dir):
+                if not file.startswith("."):
+                    dirs.append(file + "\n")
+        except:
+            self.exceptions.raiseException(exceptionType.dir)
+        return ["".join(dirs)]
 
     def exec(self, stream: "Stream") -> "Stream":
         self.stream = stream
-        self.exceptions.notNoneCheck()
-        self.exceptions.argsLenCheck(self.stream.getArgs(), oneOrZero=True)
-        self.exceptions.paramsLenCheck(self.stream.getParams, empty=True)
-        if not self.args:
+        self.exceptions.notNoneCheck(stream)
+        self.exceptions.lenCheck(
+            self.stream.getArgs(), exceptionType.args, oneOrZero=True
+        )
+        self.exceptions.lenCheck(
+            self.stream.getParams(), exceptionType.params, empty=True
+        )
+        if not self.stream.getArgs():
             ls_dir = os.getcwd()
         else:
-            ls_dir = self.args[0]
+            ls_dir = self.stream.getArgs()[0]
         return Stream(
             sType=streamType.output,
             app="",
             params=[],
-            args=[ls_dir],
+            args=self.listDirectory(ls_dir),
             env={},
         )
 
-    """def exec(self):
-        if len(self.args) == 0:
-            ls_dir = os.getcwd()
-        elif len(self.args) > 1:
-            raise ValueError("wrong number of command line arguments")
-        else:
-            ls_dir = self.args[0]
-        self.list_directory(ls_dir)
-        return self.output"""
 
-
-class LsUnsafe(Cd):
+class LsUnsafe(Ls):
     def exec(self, stream: "Stream") -> "Stream":
         c = Ls()
         c.exec = MethodType(apps.tools.unsafeDecorator(c.exec), c)

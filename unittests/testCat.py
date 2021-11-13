@@ -1,6 +1,9 @@
 import sys
 
 sys.path.insert(1, "../src")
+from standardStreamExceptions import *
+
+sys.path.insert(1, "../src")
 
 from apps import *
 from Stream import *
@@ -42,6 +45,7 @@ class testApps(unittest.TestCase):
         self.assertEqual(result1.args[0], "Hello World!\n")
 
     def testCatExceptions(self):
+        msg = stdExceptionMessage()
         stream1 = Stream(streamType.input, "cat", [], ["^^^"], {})
         stream2 = Stream(streamType.input, "cat", ["a"], [""], {})
         stream3 = Stream(streamType.input, "cat", [], [tools.str2stdin("aaaa"), ""], {})
@@ -49,7 +53,7 @@ class testApps(unittest.TestCase):
         stream5 = Stream(streamType.input, "cat", ["a"], [], {})
         cat1 = Cat()
         cat2 = CatUnsafe()
-        with self.assertRaises(FileNotFoundError):
+        with self.assertRaises(Exception):
             cat1.exec(stream1)
         with self.assertRaises(Exception):
             cat1.exec(stream2)
@@ -59,14 +63,20 @@ class testApps(unittest.TestCase):
             cat1.exec(stream4)
         with self.assertRaises(Exception):
             cat1.exec(stream5)
-        self.assertTrue("FileNotFoundError" in cat2.exec(stream1).args[0])
         self.assertTrue(
-            "Invalid number of command line parameters" in cat2.exec(stream2).args[0]
+            msg.exceptionMsg(exceptionType.file) in cat2.exec(stream1).args[0]
         )
-        self.assertTrue("Ilegal stdin" in cat2.exec(stream3).args[0])
-        self.assertTrue("No stream to process" in cat2.exec(stream4).args[0])
         self.assertTrue(
-            "Invalid number of command line arguments" in cat2.exec(stream5).args[0]
+            msg.exceptionMsg(exceptionType.params) in cat2.exec(stream2).args[0]
+        )
+        self.assertTrue(
+            msg.exceptionMsg(exceptionType.stdin) in cat2.exec(stream3).args[0]
+        )
+        self.assertTrue(
+            msg.exceptionMsg(exceptionType.none) in cat2.exec(stream4).args[0]
+        )
+        self.assertTrue(
+            msg.exceptionMsg(exceptionType.args) in cat2.exec(stream5).args[0]
         )
 
 

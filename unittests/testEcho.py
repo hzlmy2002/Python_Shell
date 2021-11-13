@@ -5,6 +5,7 @@ sys.path.insert(1, "../src")
 from apps import *
 from Stream import *
 import unittest
+from standardStreamExceptions import *
 
 
 class testApps(unittest.TestCase):
@@ -23,6 +24,7 @@ class testApps(unittest.TestCase):
         self.assertEqual(result3.args[0], result4.args[0])
 
     def testEchoExceptions(self):
+        msg = stdExceptionMessage()
         stream1 = Stream(
             streamType.input, "echo", ["a"], ["testDir"], {}
         )  # Has param case
@@ -37,14 +39,14 @@ class testApps(unittest.TestCase):
         with self.assertRaises(Exception):
             echo.exec(stream3)
         self.assertTrue(
-            "Invalid number of command line parameters"
-            in echoUnsafe.exec(stream1).args[0]
+            msg.exceptionMsg(exceptionType.params) in echoUnsafe.exec(stream1).args[0]
         )
         self.assertTrue(
-            "Invalid number of command line arguments"
-            in echoUnsafe.exec(stream2).args[0]
+            msg.exceptionMsg(exceptionType.args) in echoUnsafe.exec(stream2).args[0]
         )
-        self.assertTrue("No stream to process" in echoUnsafe.exec(stream3).args[0])
+        self.assertTrue(
+            msg.exceptionMsg(exceptionType.none) in echoUnsafe.exec(stream3).args[0]
+        )
 
 
 if __name__ == "__main__":
