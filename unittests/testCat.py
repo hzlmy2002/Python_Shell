@@ -67,7 +67,7 @@ class testApps(unittest.TestCase):
             msg.exceptionMsg(exceptionType.file) in cat2.exec(stream1).args[0]
         )
         self.assertTrue(
-            msg.exceptionMsg(exceptionType.params) in cat2.exec(stream2).args[0]
+            msg.exceptionMsg(exceptionType.paramNum) in cat2.exec(stream2).args[0]
         )
         self.assertTrue(
             msg.exceptionMsg(exceptionType.stdin) in cat2.exec(stream3).args[0]
@@ -76,7 +76,7 @@ class testApps(unittest.TestCase):
             msg.exceptionMsg(exceptionType.none) in cat2.exec(stream4).args[0]
         )
         self.assertTrue(
-            msg.exceptionMsg(exceptionType.args) in cat2.exec(stream5).args[0]
+            msg.exceptionMsg(exceptionType.argNum) in cat2.exec(stream5).args[0]
         )
 
 

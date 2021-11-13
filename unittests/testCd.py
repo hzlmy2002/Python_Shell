@@ -52,10 +52,10 @@ class testApps(unittest.TestCase):
         with self.assertRaises(Exception):
             cd.exec(stream4)
         self.assertTrue(
-            msg.exceptionMsg(exceptionType.args) in cdUnsafe.exec(stream1).args[0]
+            msg.exceptionMsg(exceptionType.argNum) in cdUnsafe.exec(stream1).args[0]
         )
         self.assertTrue(
-            msg.exceptionMsg(exceptionType.params) in cdUnsafe.exec(stream2).args[0]
+            msg.exceptionMsg(exceptionType.paramNum) in cdUnsafe.exec(stream2).args[0]
         )
         self.assertTrue(
             msg.exceptionMsg(exceptionType.dir) in cdUnsafe.exec(stream3).args[0]

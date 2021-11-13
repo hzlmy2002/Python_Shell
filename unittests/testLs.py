@@ -14,6 +14,7 @@ class testApps(unittest.TestCase):
         parent = "testDir/"
         os.makedirs(parent + "test1")
         os.makedirs(parent + "test2")
+        os.makedirs(parent + ".test3")
         os.mkdir("testDir2")
 
     def tearDown(self) -> None:
@@ -59,10 +60,10 @@ class testApps(unittest.TestCase):
         with self.assertRaises(Exception):
             ls.exec(stream4)
         self.assertTrue(
-            msg.exceptionMsg(exceptionType.args) in lsUnsafe.exec(stream1).args[0]
+            msg.exceptionMsg(exceptionType.argNum) in lsUnsafe.exec(stream1).args[0]
         )
         self.assertTrue(
-            msg.exceptionMsg(exceptionType.params) in lsUnsafe.exec(stream2).args[0]
+            msg.exceptionMsg(exceptionType.paramNum) in lsUnsafe.exec(stream2).args[0]
         )
         self.assertTrue(
             msg.exceptionMsg(exceptionType.dir) in lsUnsafe.exec(stream3).args[0]

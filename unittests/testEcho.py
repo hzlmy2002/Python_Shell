@@ -39,10 +39,10 @@ class testApps(unittest.TestCase):
         with self.assertRaises(Exception):
             echo.exec(stream3)
         self.assertTrue(
-            msg.exceptionMsg(exceptionType.params) in echoUnsafe.exec(stream1).args[0]
+            msg.exceptionMsg(exceptionType.paramNum) in echoUnsafe.exec(stream1).args[0]
         )
         self.assertTrue(
-            msg.exceptionMsg(exceptionType.args) in echoUnsafe.exec(stream2).args[0]
+            msg.exceptionMsg(exceptionType.argNum) in echoUnsafe.exec(stream2).args[0]
         )
         self.assertTrue(
             msg.exceptionMsg(exceptionType.none) in echoUnsafe.exec(stream3).args[0]
