@@ -16,6 +16,7 @@ class standardStreamExceptions:
         notEmpty=False,
         empty=False,
         equalOne=False,
+        oneOrZero=False,
     ):
         length = len(checkList)
 
@@ -23,6 +24,7 @@ class standardStreamExceptions:
             (notEmpty and length == 0)
             or (empty and length != 0)
             or (equalOne and length != 1)
+            or (oneOrZero and length > 1)
         ):
             raise Exception(f"{self.appname}: Invalid number of command line {type}")
 

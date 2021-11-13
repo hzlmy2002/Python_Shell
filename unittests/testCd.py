@@ -4,11 +4,6 @@ sys.path.insert(1, "../src")
 
 from apps import *
 from Stream import *
-<<<<<<< HEAD:unittests/testCd.py
-from StreamType import streamType
-=======
-from apps import tools
->>>>>>> 99c620155ca7b0366d939996dccfb0b04cced067:src/testCd.py
 import unittest, os
 
 

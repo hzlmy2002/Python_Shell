@@ -23,7 +23,8 @@ class Grep(App):
                     else:
                         self.matched.append(line)
 
-    def exec(self):
+    def exec(self, stream: "Stream") -> "Stream":
+        self.stream = stream
         self.matched = []
         pattern = self.param[0]
         for filename in self.args:

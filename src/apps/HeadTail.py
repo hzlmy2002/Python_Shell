@@ -34,7 +34,8 @@ class HeadTail(App):
             return 2
         raise ValueError("wrong number of command line arguments")'''
 
-    def exec(self):
+    def exec(self, stream: "Stream") -> "Stream":
+        self.stream = stream
         self.output = []
         self.process_stream()
         file = self.args[-1]

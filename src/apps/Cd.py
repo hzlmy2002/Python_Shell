@@ -14,7 +14,7 @@ class Cd(App):
     def getStream(self) -> "Stream":
         return self.stream
 
-    def init_and_check_stream(self, stream):
+    def initAndCheckStream(self, stream):
         self.stream = stream
         self.args = self.stream.getArgs()
         self.exceptions.argsLenCheck(self.args, equalOne=True)

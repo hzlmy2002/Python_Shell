@@ -4,7 +4,6 @@ sys.path.insert(1, "../src")
 
 from apps import *
 from Stream import *
-from StreamType import streamType
 import unittest
 
 
@@ -49,4 +48,4 @@ class testApps(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    unittest.main(verbosity=1)
+    unittest.main(verbosity=2)
