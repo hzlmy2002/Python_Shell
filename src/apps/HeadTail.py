@@ -12,7 +12,7 @@ class HeadTail(App):
 
     def __init__(self):
         self.num_lines = None
-        self.exceptions = stdStreamExceptions("H")
+        self.exceptions = None
 
     def getStream(self) -> "Stream":
         return self.stream
