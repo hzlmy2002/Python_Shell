@@ -1,3 +1,7 @@
+import sys
+
+sys.path.insert(1, "../src")
+
 from apps import *
 from Stream import *
 from apps import tools
