@@ -1,31 +1,20 @@
 from apps.App import App
 from typing import List, Dict
 from Stream import *
+from apps.CanStdIn import CanStdIn
 import apps.tools
 from types import MethodType
 import os
 from standardStreamExceptions import *
 
 
-class Cat(App):
+class Cat(CanStdIn):
     def __init__(self) -> None:
         self.exceptions = stdStreamExceptions("Cat")
 
-    def processStdin(self):
-        if len(self.stream.args) != 1:
-            self.exceptions.raiseException(exceptionType.stdin)
-
-        return Stream(
-            sType=streamType.output,
-            app="",
-            params=[],
-            args=[apps.tools.stdin2str(self.stream.args[0])],
-            env={},
-        )
-
     def processFiles(self):
         output = []
-        for arg in self.stream.args:
+        for arg in self.args:
             if os.path.exists(arg):
                 with open(arg, "r") as f:
                     output.append(f.read())
@@ -37,15 +26,15 @@ class Cat(App):
         return ouputStream
 
     def exec(self, stream: "Stream") -> "Stream":
-        self.stream = stream
         self.exceptions.notNoneCheck(stream)
-        self.exceptions.lenCheck(
-            self.stream.getArgs(), exceptionType.argNum, notEmpty=True
-        )
+        self.stream = stream
+        self.args = self.stream.getArgs()
+        self.exceptions.lenCheck(self.args, exceptionType.argNum, notEmpty=True)
         self.exceptions.lenCheck(
             self.stream.getParams(), exceptionType.paramNum, empty=True
         )
-        if apps.tools.isStdin(self.stream.getArgs()[0]):
+
+        if apps.tools.isStdin(self.args[0]):
             return self.processStdin()
         else:
             return self.processFiles()

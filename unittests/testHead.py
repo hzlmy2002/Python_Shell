@@ -43,10 +43,10 @@ class testApps(unittest.TestCase):
         )
         head = Head()
         headUnsafe = HeadUnsafe()
-        """result1 = head.exec(stream)
+        result1 = head.exec(stream)
         result2 = headUnsafe.exec(stream)
         self.assertEqual(result1.args[0], result2.args[0])
-        self.assertEqual(result1.args[0], "Hello World!\n")"""
+        self.assertEqual(result1.args[0], "Hello World!\n")
 
     def testHeadExceptions(self):
         msg = stdExceptionMessage()

@@ -43,10 +43,10 @@ class testApps(unittest.TestCase):
         )
         tail = Tail()
         tailUnsafe = TailUnsafe()
-        """result1 = head.exec(stream)
-        result2 = headUnsafe.exec(stream)
+        result1 = tail.exec(stream)
+        result2 = tailUnsafe.exec(stream)
         self.assertEqual(result1.args[0], result2.args[0])
-        self.assertEqual(result1.args[0], "Hello World!\n")"""
+        self.assertEqual(result1.args[0], "Hello World!\n")
 
     def testTailExceptions(self):
         msg = stdExceptionMessage()

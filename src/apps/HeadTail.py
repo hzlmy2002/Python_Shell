@@ -1,9 +1,11 @@
 from apps.App import App
+from apps.CanStdIn import CanStdIn
 from standardStreamExceptions import exceptionType, stdStreamExceptions
 from Stream import *
+import apps.tools
 
 
-class HeadTail(App):
+class HeadTail(CanStdIn):
     """
     STREAM:
     app = head/tail
@@ -39,7 +41,7 @@ class HeadTail(App):
         else:
             self.exceptions.raiseException(exceptionType.argNum)
 
-    def processFile(self):
+    def processFiles(self):
         file = self.args[-1]
         output = []
         try:
@@ -59,4 +61,4 @@ class HeadTail(App):
     def exec(self, stream: "Stream") -> "Stream":
         self.initExec(stream)
         self.process_stream()
-        return self.processFile()
+        return self.fileStdinExec()
