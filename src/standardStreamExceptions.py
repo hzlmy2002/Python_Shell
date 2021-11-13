@@ -4,8 +4,9 @@ from enum import Enum
 
 
 class exceptionType(Enum):
-    args = "arguments"
-    params = "parameters"
+    argNum = "arguments"
+    paramNum = "parameters"
+    paramType = "parameterType"
     file = "file"
     dir = "directory"
     stdin = "stdin"
@@ -18,8 +19,9 @@ class stdExceptionMessage:
             exceptionType.none: "No stream to process",
             exceptionType.file: "File not found",
             exceptionType.stdin: "Ilegal stdin",
-            exceptionType.args: "Invalid number of command line arguments",
-            exceptionType.params: "Invalid number of command line parameters",
+            exceptionType.argNum: "Invalid number of command line arguments",
+            exceptionType.paramNum: "Invalid number of command line parameters",
+            exceptionType.paramType: "Invalid parameter type",
             exceptionType.dir: "Invalid Directory",
         }
 

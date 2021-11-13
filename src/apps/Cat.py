@@ -40,10 +40,10 @@ class Cat(App):
         self.stream = stream
         self.exceptions.notNoneCheck(stream)
         self.exceptions.lenCheck(
-            self.stream.getArgs(), exceptionType.args, notEmpty=True
+            self.stream.getArgs(), exceptionType.argNum, notEmpty=True
         )
         self.exceptions.lenCheck(
-            self.stream.getParams(), exceptionType.params, empty=True
+            self.stream.getParams(), exceptionType.paramNum, empty=True
         )
         if apps.tools.isStdin(self.stream.getArgs()[0]):
             return self.processStdin()
@@ -59,6 +59,3 @@ class CatUnsafe(Cat):
         c = Cat()
         c.exec = MethodType(apps.tools.unsafeDecorator(c.exec), c)
         return c.exec(stream)
-
-
-

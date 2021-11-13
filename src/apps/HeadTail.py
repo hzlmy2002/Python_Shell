@@ -1,4 +1,6 @@
 from apps.App import App
+from standardStreamExceptions import exceptionType, stdStreamExceptions
+from Stream import *
 
 
 class HeadTail(App):
@@ -9,37 +11,52 @@ class HeadTail(App):
     args = [FILENAME] / [num_line,FILENAME] if -n specified in param"""
 
     def __init__(self):
-        super().__init__()
         self.num_lines = None
+        self.exceptions = stdStreamExceptions("H")
+
+    def getStream(self) -> "Stream":
+        return self.stream
 
     def file_op(self, lines):
         """Requires implementation of child class"""
         raise NotImplementedError("Please Implement this method")
 
-    def process_stream(self) -> int:
-        if not self.param:
-            self.num_lines = 10
-        else:
-            self.num_lines = int(self.args[0])
+    def initExec(self, stream):
+        self.exceptions.notNoneCheck(stream)
+        self.stream = stream
+        self.args = self.stream.getArgs()
+        self.params = self.stream.getParams()
 
-    '''def process_args(self) -> int:
-        """Process arguments passed and returns index in args of which file name is stored"""
+    def process_stream(self) -> int:
         if len(self.args) == 1:
+            self.exceptions.lenCheck(self.params, exceptionType.paramNum, empty=True)
             self.num_lines = 10
-            return 0
-        if len(self.args) == 3:
-            if self.args[0] != "-n":
-                raise ValueError("wrong flags")
-            self.num_lines = int(self.args[1])
-            return 2
-        raise ValueError("wrong number of command line arguments")'''
+        elif len(self.args) == 2:
+            self.exceptions.lenCheck(self.params, exceptionType.paramNum, equalOne=True)
+            if self.params[0] != "-n":
+                self.exceptions.raiseException(exceptionType.paramType)
+            self.num_lines = int(self.args[0])
+        else:
+            self.exceptions.raiseException(exceptionType.argNum)
+
+    def processFile(self):
+        file = self.args[-1]
+        output = []
+        try:
+            with open(file) as f:
+                lines = f.readlines()
+                output = self.file_op(lines)
+        except:
+            self.exceptions.raiseException(exceptionType.file)
+        return Stream(
+            sType=streamType.output,
+            app="",
+            params=[],
+            args=output,
+            env={},
+        )
 
     def exec(self, stream: "Stream") -> "Stream":
-        self.stream = stream
-        self.output = []
+        self.initExec(stream)
         self.process_stream()
-        file = self.args[-1]
-        with open(file) as f:
-            lines = f.readlines()
-            self.file_op(lines)
-        return self.output
+        return self.processFile()

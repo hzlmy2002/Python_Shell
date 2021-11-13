@@ -18,9 +18,9 @@ class Cd(App):
         self.stream = stream
         self.exceptions.notNoneCheck(stream)
         self.args = self.stream.getArgs()
-        self.exceptions.lenCheck(self.args, exceptionType.args, equalOne=True)
+        self.exceptions.lenCheck(self.args, exceptionType.argNum, equalOne=True)
         self.exceptions.lenCheck(
-            self.stream.getParams(), exceptionType.params, empty=True
+            self.stream.getParams(), exceptionType.paramNum, empty=True
         )
 
     def exec(self, stream: "Stream") -> "Stream":

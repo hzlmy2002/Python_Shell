@@ -29,10 +29,10 @@ class Ls(App):
         self.stream = stream
         self.exceptions.notNoneCheck(stream)
         self.exceptions.lenCheck(
-            self.stream.getArgs(), exceptionType.args, oneOrZero=True
+            self.stream.getArgs(), exceptionType.argNum, oneOrZero=True
         )
         self.exceptions.lenCheck(
-            self.stream.getParams(), exceptionType.params, empty=True
+            self.stream.getParams(), exceptionType.paramNum, empty=True
         )
         if not self.stream.getArgs():
             ls_dir = os.getcwd()
