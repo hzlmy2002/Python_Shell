@@ -10,3 +10,4 @@ from .Pwd import Pwd, PwdUnsafe
 from .Sort import Sort
 from .Tail import Tail, TailUnsafe
 from .Uniq import Uniq
+from .App import App
