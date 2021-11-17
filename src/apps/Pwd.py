@@ -14,14 +14,9 @@ class Pwd(App):
         return self.stream
 
     def exec(self, stream: "Stream") -> "Stream":
-        self.exceptions.notNoneCheck(stream)
-        self.stream = stream
-        self.exceptions.lenCheck(
-            self.stream.getArgs(), exceptionType.argNum, empty=True
-        )
-        self.exceptions.lenCheck(
-            self.stream.getParams(), exceptionType.paramNum, empty=True
-        )
+        self.initExec(stream)
+        self.exceptions.lenCheck(self.args, exceptionType.argNum, empty=True)
+        self.exceptions.lenCheck(self.param, exceptionType.paramNum, empty=True)
         output = os.getcwd() + "\n"
         return Stream(
             sType=streamType.output,

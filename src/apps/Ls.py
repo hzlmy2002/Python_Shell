@@ -26,18 +26,13 @@ class Ls(App):
         return ["".join(dirs)]
 
     def exec(self, stream: "Stream") -> "Stream":
-        self.stream = stream
-        self.exceptions.notNoneCheck(stream)
-        self.exceptions.lenCheck(
-            self.stream.getArgs(), exceptionType.argNum, oneOrZero=True
-        )
-        self.exceptions.lenCheck(
-            self.stream.getParams(), exceptionType.paramNum, empty=True
-        )
+        self.initExec(stream)
+        self.exceptions.lenCheck(self.args, exceptionType.argNum, oneOrZero=True)
+        self.exceptions.lenCheck(self.param, exceptionType.paramNum, empty=True)
         if not self.stream.getArgs():
             ls_dir = os.getcwd()
         else:
-            ls_dir = self.stream.getArgs()[0]
+            ls_dir = self.args[0]
         return Stream(
             sType=streamType.output,
             app="",

@@ -23,19 +23,13 @@ class HeadTail(CanStdIn):
         """Requires implementation of child class"""
         raise NotImplementedError("Please Implement this method")
 
-    def initExec(self, stream):
-        self.exceptions.notNoneCheck(stream)
-        self.stream = stream
-        self.args = self.stream.getArgs()
-        self.params = self.stream.getParams()
-
     def process_stream(self) -> int:
         if len(self.args) == 1:
-            self.exceptions.lenCheck(self.params, exceptionType.paramNum, empty=True)
+            self.exceptions.lenCheck(self.param, exceptionType.paramNum, empty=True)
             self.num_lines = 10
         elif len(self.args) == 2:
-            self.exceptions.lenCheck(self.params, exceptionType.paramNum, equalOne=True)
-            if self.params[0] != "-n":
+            self.exceptions.lenCheck(self.param, exceptionType.paramNum, equalOne=True)
+            if self.param[0] != "-n":
                 self.exceptions.raiseException(exceptionType.paramType)
             self.num_lines = int(self.args[0])
         else:

@@ -20,13 +20,6 @@ class Grep(CanStdIn):
     def getStream(self) -> "Stream":
         return self.stream
 
-    def initExec(self, stream):
-        self.exceptions.notNoneCheck(stream)
-        self.stream = stream
-        self.args = self.stream.getArgs()
-        self.param = self.stream.getParams()
-        self.matched = ""
-
     def checkStream(self):
         self.exceptions.lenCheck(self.args, exceptionType.argNum, notEmpty=True)
         self.exceptions.lenCheck(self.param, exceptionType.paramNum, equalOne=True)
@@ -61,6 +54,7 @@ class Grep(CanStdIn):
 
     def exec(self, stream: "Stream") -> "Stream":
         self.initExec(stream)
+        self.matched = ""
         self.checkStream()
         return self.fileStdinExec()
 

@@ -14,15 +14,10 @@ class Echo(App):
         return self.stream
 
     def exec(self, stream: "Stream") -> "Stream":
-        self.stream = stream
-        self.exceptions.notNoneCheck(stream)
-        self.exceptions.lenCheck(
-            self.stream.getArgs(), exceptionType.argNum, notEmpty=True
-        )
-        self.exceptions.lenCheck(
-            self.stream.getParams(), exceptionType.paramNum, empty=True
-        )
-        output = " ".join(self.stream.getArgs()) + "\n"
+        self.initExec(stream)
+        self.exceptions.lenCheck(self.args, exceptionType.argNum, notEmpty=True)
+        self.exceptions.lenCheck(self.param, exceptionType.paramNum, empty=True)
+        output = " ".join(self.args) + "\n"
         return Stream(
             sType=streamType.output,
             app="",

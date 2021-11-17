@@ -14,17 +14,10 @@ class Cd(App):
     def getStream(self) -> "Stream":
         return self.stream
 
-    def initAndCheckStream(self, stream):
-        self.stream = stream
-        self.exceptions.notNoneCheck(stream)
-        self.args = self.stream.getArgs()
-        self.exceptions.lenCheck(self.args, exceptionType.argNum, equalOne=True)
-        self.exceptions.lenCheck(
-            self.stream.getParams(), exceptionType.paramNum, empty=True
-        )
-
     def exec(self, stream: "Stream") -> "Stream":
-        self.initAndCheckStream(stream)
+        self.initExec(stream)
+        self.exceptions.lenCheck(self.args, exceptionType.argNum, equalOne=True)
+        self.exceptions.lenCheck(self.param, exceptionType.paramNum, empty=True)
         try:
             os.chdir(self.args[0])
         except:

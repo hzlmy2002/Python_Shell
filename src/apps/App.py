@@ -18,3 +18,9 @@ class App(ABC):
     def exec(self, stream: "Stream") -> "Stream":
         # exec should return an output stream
         raise NotImplementedError("Please Implement this method")
+
+    def initExec(self, stream):
+        self.exceptions.notNoneCheck(stream)
+        self.stream = stream
+        self.args = self.stream.getArgs()
+        self.param = self.stream.getParams()
