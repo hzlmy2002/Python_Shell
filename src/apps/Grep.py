@@ -52,8 +52,7 @@ class Grep(CanStdIn):
             env={},
         )
 
-    def exec(self, stream: "Stream") -> "Stream":
-        self.initExec(stream)
+    def appOperations(self) -> "Stream":
         self.matched = ""
         self.checkStream()
         return self.fileStdinExec()

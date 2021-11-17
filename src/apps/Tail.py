@@ -9,7 +9,7 @@ class Tail(HeadTail):
         super().__init__()
         self.exceptions = stdStreamExceptions("Tail")
 
-    def file_op(self, lines):
+    def fileOp(self, lines):
         output = ""
         display_length = min(len(lines), self.num_lines)
         for i in range(0, display_length):

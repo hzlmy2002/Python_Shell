@@ -19,11 +19,11 @@ class HeadTail(CanStdIn):
     def getStream(self) -> "Stream":
         return self.stream
 
-    def file_op(self, lines):
+    def fileOp(self, lines):
         """Requires implementation of child class"""
         raise NotImplementedError("Please Implement this method")
 
-    def process_stream(self) -> int:
+    def processStream(self) -> int:
         if len(self.args) == 1:
             self.exceptions.lenCheck(self.param, exceptionType.paramNum, empty=True)
             self.num_lines = 10
@@ -41,7 +41,7 @@ class HeadTail(CanStdIn):
         try:
             with open(file) as f:
                 lines = f.readlines()
-                output = self.file_op(lines)
+                output = self.fileOp(lines)
         except:
             self.exceptions.raiseException(exceptionType.file)
         return Stream(
@@ -52,7 +52,6 @@ class HeadTail(CanStdIn):
             env={},
         )
 
-    def exec(self, stream: "Stream") -> "Stream":
-        self.initExec(stream)
-        self.process_stream()
+    def appOperations(self) -> "Stream":
+        self.processStream()
         return self.fileStdinExec()

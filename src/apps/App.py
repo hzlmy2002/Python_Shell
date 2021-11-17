@@ -15,9 +15,14 @@ class App(ABC):
         raise NotImplementedError("Please Implement this method")
 
     @abstractmethod
+    def appOperations(self):
+        # appOperations should return an output stream
+        raise NotImplementedError("Please Implement this method")
+
     def exec(self, stream: "Stream") -> "Stream":
         # exec should return an output stream
-        raise NotImplementedError("Please Implement this method")
+        self.initExec(stream)
+        return self.appOperations()
 
     def initExec(self, stream):
         self.exceptions.notNoneCheck(stream)

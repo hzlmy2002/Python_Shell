@@ -9,7 +9,7 @@ class Head(HeadTail):
         super().__init__()
         self.exceptions = stdStreamExceptions("Head")
 
-    def file_op(self, lines):
+    def fileOp(self, lines):
         output = ""
         for i in range(0, min(len(lines), self.num_lines)):
             output += lines[i]

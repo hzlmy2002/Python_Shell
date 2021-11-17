@@ -7,8 +7,7 @@ from abc import abstractmethod
 
 class CanStdIn(App):
     def __init__(self) -> None:
-        self.exceptions = None
-        self.args = None
+        pass
 
     def processStdin(self):
         if len(self.args) != 1:

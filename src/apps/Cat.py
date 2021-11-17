@@ -25,11 +25,9 @@ class Cat(CanStdIn):
         )
         return ouputStream
 
-    def exec(self, stream: "Stream") -> "Stream":
-        self.initExec(stream)
+    def appOperations(self) -> "Stream":
         self.exceptions.lenCheck(self.args, exceptionType.argNum, notEmpty=True)
         self.exceptions.lenCheck(self.param, exceptionType.paramNum, empty=True)
-
         if apps.tools.isStdin(self.args[0]):
             return self.processStdin()
         else:
