@@ -16,11 +16,11 @@ class App(ABC):
 
     @abstractmethod
     def appOperations(self):
-        # appOperations should return an output stream
+        # appOperations carries out app specific operatoins and should return an output stream
         raise NotImplementedError("Please Implement this method")
 
     def exec(self, stream: "Stream") -> "Stream":
-        # exec should return an output stream
+        # exec runs the initilization and return output of app operation
         self.initExec(stream)
         return self.appOperations()
 
