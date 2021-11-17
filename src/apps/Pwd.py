@@ -13,8 +13,7 @@ class Pwd(App):
     def getStream(self) -> "Stream":
         return self.stream
 
-    def exec(self, stream: "Stream") -> "Stream":
-        self.initExec(stream)
+    def appOperations(self) -> "Stream":
         self.exceptions.lenCheck(self.args, exceptionType.argNum, empty=True)
         self.exceptions.lenCheck(self.param, exceptionType.paramNum, empty=True)
         output = os.getcwd() + "\n"

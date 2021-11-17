@@ -25,11 +25,10 @@ class Ls(App):
             self.exceptions.raiseException(exceptionType.dir)
         return ["".join(dirs)]
 
-    def exec(self, stream: "Stream") -> "Stream":
-        self.initExec(stream)
+    def appOperations(self) -> "Stream":
         self.exceptions.lenCheck(self.args, exceptionType.argNum, oneOrZero=True)
         self.exceptions.lenCheck(self.param, exceptionType.paramNum, empty=True)
-        if not self.stream.getArgs():
+        if not self.args:
             ls_dir = os.getcwd()
         else:
             ls_dir = self.args[0]
