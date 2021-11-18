@@ -1,7 +1,7 @@
 # comp0010psh
 
 
-# Next Meeting: 2021.11.08 14:00
+# Next Meeting: 2021.11.22 15:00
 
 To discuss:
 - Design and implementation of improving existing functionality
