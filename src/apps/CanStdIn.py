@@ -1,6 +1,6 @@
 from apps.App import App
 from Stream import *
-from standardStreamExceptions import exceptionType
+from apps.standardStreamExceptions import exceptionType
 import apps.tools
 from abc import abstractmethod
 
@@ -23,6 +23,7 @@ class CanStdIn(App):
 
     @abstractmethod
     def processFiles(self) -> "Stream":
+        # Specify method of processing argument of file/files, returns the result in Stream format
         raise NotImplementedError("Please Implement this method")
 
     def fileStdinExec(self):

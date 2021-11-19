@@ -5,7 +5,7 @@ from apps.CanStdIn import CanStdIn
 import apps.tools
 from types import MethodType
 import os
-from standardStreamExceptions import *
+from apps.standardStreamExceptions import *
 
 
 class Cat(CanStdIn):

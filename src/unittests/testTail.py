@@ -1,10 +1,6 @@
 import sys
 
-sys.path.insert(1, "../src")
-from standardStreamExceptions import *
-
-sys.path.insert(1, "../src")
-
+sys.path.insert(0, "..")
 from apps import *
 from Stream import *
 from apps import tools

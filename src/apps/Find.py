@@ -4,7 +4,7 @@ from Stream import *
 from types import MethodType
 import apps.tools
 import os
-from standardStreamExceptions import *
+from apps.standardStreamExceptions import *
 
 
 class Find(App):

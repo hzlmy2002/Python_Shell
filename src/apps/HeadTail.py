@@ -1,6 +1,6 @@
 from apps.App import App
 from apps.CanStdIn import CanStdIn
-from standardStreamExceptions import exceptionType, stdStreamExceptions
+from apps.standardStreamExceptions import exceptionType, stdStreamExceptions
 from Stream import *
 import apps.tools
 

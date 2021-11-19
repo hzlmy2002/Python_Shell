@@ -1,11 +1,10 @@
 import sys
 
-sys.path.insert(1, "../src")
+sys.path.insert(0, "..")
 from apps import tools
 from apps import *
 from Stream import *
 import unittest, os
-from standardStreamExceptions import *
 
 
 class testApps(unittest.TestCase):

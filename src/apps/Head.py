@@ -1,5 +1,5 @@
 from apps.HeadTail import HeadTail
-from standardStreamExceptions import *
+from apps.standardStreamExceptions import *
 import apps.tools
 from types import MethodType
 

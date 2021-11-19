@@ -5,10 +5,22 @@ from Stream import *
 from types import MethodType
 import apps.tools
 import os
-from standardStreamExceptions import *
+from apps.standardStreamExceptions import *
 
 
 class Uniq(CanStdIn):
+    def getStream(self) -> "Stream":
+        return self.stream
+
+    def processFiles(self) -> "Stream":
+        return Stream(
+            sType=streamType.output,
+            app="",
+            params=[],
+            args=[],
+            env={},
+        )
+
     def exec(self, stream):
         self.initExec(stream)
 

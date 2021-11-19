@@ -1,11 +1,10 @@
 import sys
 
-sys.path.insert(1, "../src")
+sys.path.insert(0, "..")
 
 from apps import *
 from Stream import *
 import unittest, os
-from standardStreamExceptions import *
 
 
 class testApps(unittest.TestCase):
@@ -29,7 +28,7 @@ class testApps(unittest.TestCase):
         self.assertEqual(result1.env, result2.env)
         self.assertEqual(result1.getArgs()[0], self.cwd + "\n")
         self.assertEqual(result3.env, result4.env)
-        self.assertEqual(result3.getArgs()[0], self.cwd + "/testDir" + "\n")
+        self.assertEqual(result3.getArgs()[0], self.cwd + os.sep + "testDir" + "\n")
         os.chdir(self.cwd)
 
     def testPwdExceptions(self):

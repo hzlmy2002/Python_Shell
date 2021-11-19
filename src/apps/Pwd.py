@@ -3,7 +3,7 @@ import os
 from types import MethodType
 import apps.tools
 from Stream import *
-from standardStreamExceptions import *
+from apps.standardStreamExceptions import *
 
 
 class Pwd(App):

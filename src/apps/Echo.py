@@ -1,9 +1,8 @@
 from apps.App import App
 from Stream import *
-from standardStreamExceptions import *
+from apps.standardStreamExceptions import *
 from types import MethodType
 import apps.tools
-from standardStreamExceptions import *
 
 
 class Echo(App):
