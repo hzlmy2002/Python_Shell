@@ -28,7 +28,9 @@ class appName(Enum):
 
 
 inputLengthRestrict = Enum(
-    "inputLengthRestrict", ["NotEmpty", "Empty", "EqualOne", "OneOrZero", "OneOrTwo"]
+    # Restrictions on length that the input list could take
+    "inputLengthRestrict",
+    ["NotEmpty", "Empty", "EqualOne", "OneOrZero", "OneOrTwo"],
 )
 
 
