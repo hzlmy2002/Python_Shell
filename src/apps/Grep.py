@@ -15,14 +15,10 @@ class Grep(CanStdIn):
     args = [FILENAME, FILNAME2....]  stores the file names specified"""
 
     def __init__(self) -> None:
-        self.exceptions = stdStreamExceptions("Grep")
+        self.exceptions = stdStreamExceptions(appName.grep)
 
     def getStream(self) -> "Stream":
         return self.stream
-
-    def checkStream(self):
-        self.exceptions.lenCheck(self.args, exceptionType.argNum, notEmpty=True)
-        self.exceptions.lenCheck(self.param, exceptionType.paramNum, equalOne=True)
 
     def match_line(self, filename, pattern):
         """Finds matching pattern given by args returns matched lines"""
@@ -54,7 +50,6 @@ class Grep(CanStdIn):
 
     def appOperations(self) -> "Stream":
         self.matched = ""
-        self.checkStream()
         return self.fileStdinExec()
 
     """def exec(self):

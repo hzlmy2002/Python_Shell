@@ -7,14 +7,12 @@ import apps.tools
 
 class Echo(App):
     def __init__(self) -> None:
-        self.exceptions = stdStreamExceptions("Echo")
+        self.exceptions = stdStreamExceptions(appName.echo)
 
     def getStream(self) -> "Stream":
         return self.stream
 
     def appOperations(self) -> "Stream":
-        self.exceptions.lenCheck(self.args, exceptionType.argNum, notEmpty=True)
-        self.exceptions.lenCheck(self.param, exceptionType.paramNum, empty=True)
         output = " ".join(self.args) + "\n"
         return Stream(
             sType=streamType.output,

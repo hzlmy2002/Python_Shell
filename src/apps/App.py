@@ -29,3 +29,5 @@ class App(ABC):
         self.stream = stream
         self.args = self.stream.getArgs()
         self.param = self.stream.getParams()
+        self.exceptions.argsLenCheck(self.args)
+        self.exceptions.paramsLenCheck(self.param)

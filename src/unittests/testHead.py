@@ -77,7 +77,7 @@ class testApps(unittest.TestCase):
             msg.exceptionMsg(exceptionType.argNum) in headUnsafe.exec(stream2).args[0]
         )
         self.assertTrue(
-            msg.exceptionMsg(exceptionType.paramNum) in headUnsafe.exec(stream3).args[0]
+            msg.exceptionMsg(exceptionType.argNum) in headUnsafe.exec(stream3).args[0]
         )
         self.assertTrue(
             msg.exceptionMsg(exceptionType.paramType)

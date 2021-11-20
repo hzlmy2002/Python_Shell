@@ -1,6 +1,5 @@
 from apps.CanStdIn import CanStdIn
 from Stream import *
-
 from types import MethodType
 import apps.tools
 import os

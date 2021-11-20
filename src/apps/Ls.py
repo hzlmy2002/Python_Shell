@@ -9,7 +9,7 @@ from apps.standardStreamExceptions import *
 
 class Ls(App):
     def __init__(self) -> None:
-        self.exceptions = stdStreamExceptions("Ls")
+        self.exceptions = stdStreamExceptions(appName.ls)
 
     def getStream(self) -> "Stream":
         return self.stream
@@ -26,8 +26,6 @@ class Ls(App):
         return ["".join(dirs)]
 
     def appOperations(self) -> "Stream":
-        self.exceptions.lenCheck(self.args, exceptionType.argNum, oneOrZero=True)
-        self.exceptions.lenCheck(self.param, exceptionType.paramNum, empty=True)
         if not self.args:
             ls_dir = os.getcwd()
         else:

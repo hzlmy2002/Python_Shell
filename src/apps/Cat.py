@@ -10,7 +10,7 @@ from apps.standardStreamExceptions import *
 
 class Cat(CanStdIn):
     def __init__(self) -> None:
-        self.exceptions = stdStreamExceptions("Cat")
+        self.exceptions = stdStreamExceptions(appName.cat)
 
     def processFiles(self):
         output = []
@@ -26,8 +26,8 @@ class Cat(CanStdIn):
         return ouputStream
 
     def appOperations(self) -> "Stream":
-        self.exceptions.lenCheck(self.args, exceptionType.argNum, notEmpty=True)
-        self.exceptions.lenCheck(self.param, exceptionType.paramNum, empty=True)
+        # self.exceptions.lenCheck(self.args, exceptionType.argNum, notEmpty=True)
+        # self.exceptions.lenCheck(self.param, exceptionType.paramNum, empty=True)
         if apps.tools.isStdin(self.args[0]):
             return self.processStdin()
         else:

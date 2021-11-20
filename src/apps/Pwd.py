@@ -8,14 +8,12 @@ from apps.standardStreamExceptions import *
 
 class Pwd(App):
     def __init__(self) -> None:
-        self.exceptions = stdStreamExceptions("Pwd")
+        self.exceptions = stdStreamExceptions(appName.pwd)
 
     def getStream(self) -> "Stream":
         return self.stream
 
     def appOperations(self) -> "Stream":
-        self.exceptions.lenCheck(self.args, exceptionType.argNum, empty=True)
-        self.exceptions.lenCheck(self.param, exceptionType.paramNum, empty=True)
         output = os.getcwd() + "\n"
         return Stream(
             sType=streamType.output,

@@ -9,14 +9,12 @@ from apps.standardStreamExceptions import *
 
 class Cd(App):
     def __init__(self) -> None:
-        self.exceptions = stdStreamExceptions("Cd")
+        self.exceptions = stdStreamExceptions(appName.cd)
 
     def getStream(self) -> "Stream":
         return self.stream
 
     def appOperations(self) -> "Stream":
-        self.exceptions.lenCheck(self.args, exceptionType.argNum, equalOne=True)
-        self.exceptions.lenCheck(self.param, exceptionType.paramNum, empty=True)
         try:
             os.chdir(self.args[0])
         except:

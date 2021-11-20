@@ -7,7 +7,7 @@ from types import MethodType
 class Head(HeadTail):
     def __init__(self) -> None:
         super().__init__()
-        self.exceptions = stdStreamExceptions("Head")
+        self.exceptions = stdStreamExceptions(appName.head)
 
     def fileOp(self, lines):
         output = ""
