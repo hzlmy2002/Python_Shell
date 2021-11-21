@@ -30,7 +30,7 @@ class appName(Enum):
 inputLengthRestrict = Enum(
     # Restrictions on length that the input list could take
     "inputLengthRestrict",
-    ["NotEmpty", "Empty", "EqualOne", "OneOrZero", "OneOrTwo"],
+    ["NotEmpty", "Empty", "EqualsOne", "OneOrZero", "OneOrTwo"],
 )
 
 
@@ -55,12 +55,12 @@ class stdStreamExceptions:
         self.appname = appname
         """[args length restriction, params length restriction]"""
         self.lenRestrictMap = {
-            appName.cat: [inputLengthRestrict.NotEmpty, inputLengthRestrict.Empty],
-            appName.cd: [inputLengthRestrict.EqualOne, inputLengthRestrict.Empty],
+            appName.cat: [inputLengthRestrict.NotEmpty, inputLengthRestrict.EqualsOne],
+            appName.cd: [inputLengthRestrict.EqualsOne, inputLengthRestrict.Empty],
             appName.cut: [],
             appName.echo: [inputLengthRestrict.NotEmpty, inputLengthRestrict.Empty],
             appName.find: [],
-            appName.grep: [inputLengthRestrict.NotEmpty, inputLengthRestrict.EqualOne],
+            appName.grep: [inputLengthRestrict.NotEmpty, inputLengthRestrict.EqualsOne],
             appName.head: [inputLengthRestrict.OneOrTwo, inputLengthRestrict.OneOrZero],
             appName.ls: [inputLengthRestrict.OneOrZero, inputLengthRestrict.Empty],
             appName.pwd: [inputLengthRestrict.Empty, inputLengthRestrict.Empty],
@@ -88,7 +88,7 @@ class stdStreamExceptions:
         if (
             (restrictLengthType == inputLengthRestrict.NotEmpty and listLength == 0)
             or (restrictLengthType == inputLengthRestrict.Empty and listLength != 0)
-            or (restrictLengthType == inputLengthRestrict.EqualOne and listLength != 1)
+            or (restrictLengthType == inputLengthRestrict.EqualsOne and listLength != 1)
             or (restrictLengthType == inputLengthRestrict.OneOrZero and listLength > 1)
             or (
                 restrictLengthType == inputLengthRestrict.OneOrTwo

@@ -1,10 +1,9 @@
-from Stream import Stream
 from abc import ABC, abstractmethod
 from typing import List, Dict
-from apps.standardStreamExceptions import *
-from Stream import *
+from .standardStreamExceptions import *
+from .Stream import *
 
-
+print(__name__)
 class App(ABC):
     @abstractmethod
     def __init__(self) -> None:
@@ -27,7 +26,6 @@ class App(ABC):
     def initExec(self, stream):
         self.exceptions.notNoneCheck(stream)
         self.stream = stream
-        self.args = self.stream.getArgs()
-        self.param = self.stream.getParams()
-        self.exceptions.argsLenCheck(self.args)
-        self.exceptions.paramsLenCheck(self.param)
+        self.params = self.stream.getParams()
+        self.exceptions.argsLenCheck(list(filter(lambda x:len(x)!=0,self.params.values())))
+        self.exceptions.paramsLenCheck(self.params.keys())

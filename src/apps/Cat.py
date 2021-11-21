@@ -1,11 +1,11 @@
-from apps.App import App
+from .App import App
 from typing import List, Dict
-from Stream import *
-from apps.CanStdIn import CanStdIn
-import apps.tools
+from .Stream import *
+from .CanStdIn import CanStdIn
+from . import tools
 from types import MethodType
 import os
-from apps.standardStreamExceptions import *
+from .standardStreamExceptions import *
 
 
 class Cat(CanStdIn):
@@ -14,22 +14,25 @@ class Cat(CanStdIn):
 
     def processFiles(self):
         output = []
-        for arg in self.args:
+        for arg in self.params["main"]:
             if os.path.exists(arg):
                 with open(arg, "r") as f:
                     output.append(f.read())
             else:
                 self.exceptions.raiseException(exceptionType.file)
         ouputStream = Stream(
-            sType=streamType.output, app="", params=[], args=["".join(output)], env={}
+            sType=streamType.output, app="", params={"main": ["".join(output)]}, env={}
         )
         return ouputStream
 
     def appOperations(self) -> "Stream":
         # self.exceptions.lenCheck(self.args, exceptionType.argNum, notEmpty=True)
         # self.exceptions.lenCheck(self.param, exceptionType.paramNum, empty=True)
-        if apps.tools.isStdin(self.args[0]):
-            return self.processStdin()
+        if tools.isStdin(self.params["main"][0]):
+            if len(self.params["main"])==1:
+                return self.processStdin()
+            else:
+                raise self.exceptions.raiseException(exceptionType.stdin)
         else:
             return self.processFiles()
 
@@ -40,5 +43,5 @@ class Cat(CanStdIn):
 class CatUnsafe(Cat):
     def exec(self, stream: "Stream") -> "Stream":
         c = Cat()
-        c.exec = MethodType(apps.tools.unsafeDecorator(c.exec), c)
+        c.exec = MethodType(tools.unsafeDecorator(c.exec), c)
         return c.exec(stream)
