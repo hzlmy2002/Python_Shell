@@ -11,7 +11,7 @@ class Find(App):
     def __init__(self) -> None:
         self.exceptions = stdStreamExceptions(appName.find)
 
-    def matchFileName(self):
+    def matchedFileName(self):
         pass
 
     def findFiles(self, root):
