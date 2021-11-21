@@ -24,7 +24,7 @@ class HeadTail(CanStdIn):
         raise NotImplementedError("Please Implement this method")
 
     def processFiles(self):
-        file = self.args[-1]
+        file = self.params["main"][-1]
         output = []
         try:
             with open(file) as f:
@@ -35,20 +35,15 @@ class HeadTail(CanStdIn):
         return Stream(
             sType=streamType.output,
             app="",
-            params=[],
-            args=output,
+            params={"main": output},
             env={},
         )
 
     def appOperations(self) -> "Stream":
-        if len(self.param) == 0:
-            if len(self.args) != 1:
-                self.exceptions.raiseException(exceptionType.argNum)
+        if "n" not in self.params:
+            self.exceptions.raiseException(exceptionType.paramType)
+        if len(self.params["n"]) == 0:
             self.num_lines = 10
-        elif len(self.param) == 1:
-            if self.param[0] != "-n":
-                self.exceptions.raiseException(exceptionType.paramType)
-            if len(self.args) != 2:
-                self.exceptions.raiseException(exceptionType.argNum)
-            self.num_lines = int(self.args[0])
+        elif len(self.params["n"]) == 1:
+            self.num_lines = int(self.params["n"][0])
         return self.fileStdinExec()

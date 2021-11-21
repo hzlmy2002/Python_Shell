@@ -27,7 +27,7 @@ class Grep(CanStdIn):
                 lines = f.readlines()
                 for line in lines:
                     if re.match(pattern, line):
-                        if len(self.args) > 1:
+                        if len(self.params["main"]) > 1:
                             self.matched += f"{filename}:{line}"
                         else:
                             self.matched += line
@@ -35,35 +35,21 @@ class Grep(CanStdIn):
             self.exceptions.raiseException(exceptionType.file)
 
     def processFiles(self):
-        pattern = self.param[0]
-        for filename in self.args:
+        pattern = self.params["pattern"][0]
+        for filename in self.params["main"]:
             self.match_line(filename, pattern)
         if not self.matched.endswith("\n"):
             self.matched += "\n"
         return Stream(
             sType=streamType.output,
             app="",
-            params=[],
-            args=[self.matched],
+            params={"main": [self.matched]},
             env={},
         )
 
     def appOperations(self) -> "Stream":
         self.matched = ""
         return self.fileStdinExec()
-
-    """def exec(self):
-        self.outputs = []
-        print(self.args)
-        if len(self.args) < 2:
-            raise ValueError("wrong number of command line arguments")
-        pattern = self.args[0]
-        files = self.args[1:]
-        filelen = len(files)
-        for filename in files:
-            self.match_line(filename, filelen, pattern)
-        print(self.outputs)
-        return self.outputs"""
 
 
 class GrepUnsafe(Grep):

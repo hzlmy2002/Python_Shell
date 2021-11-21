@@ -4,6 +4,8 @@ from .standardStreamExceptions import *
 from .Stream import *
 
 print(__name__)
+
+
 class App(ABC):
     @abstractmethod
     def __init__(self) -> None:
@@ -27,5 +29,8 @@ class App(ABC):
         self.exceptions.notNoneCheck(stream)
         self.stream = stream
         self.params = self.stream.getParams()
-        self.exceptions.argsLenCheck(list(filter(lambda x:len(x)!=0,self.params.values())))
         self.exceptions.paramsLenCheck(self.params.keys())
+        self.exceptions.mainArgsLenCheck(self.params["main"])
+        self.exceptions.tagArgsLenCheck(
+            dict(filter(lambda x: x[0] != "main", self.params.items())).values()
+        )

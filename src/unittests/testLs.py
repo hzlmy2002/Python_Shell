@@ -2,7 +2,7 @@ import sys
 
 sys.path.insert(0, "..")
 from apps import *
-from Stream import *
+from apps.Stream import *
 import unittest, os
 import shutil
 
@@ -22,8 +22,8 @@ class testApps(unittest.TestCase):
         shutil.rmtree("testDir2")
 
     def testLsListDir(self):
-        stream1 = Stream(streamType.input, "ls", [], ["testDir"], {})
-        stream2 = Stream(streamType.input, "ls", [], [], {})
+        stream1 = Stream(streamType.input, "ls", {"main": ["testDir"]}, {})
+        stream2 = Stream(streamType.input, "ls", {"main": []}, {})
         ls = Ls()
         lsUnsafe = LsUnsafe()
         result1 = ls.exec(stream1)
@@ -31,21 +31,21 @@ class testApps(unittest.TestCase):
         os.chdir("testDir")
         result3 = ls.exec(stream2)
         result4 = lsUnsafe.exec(stream2)
-        self.assertEqual(result1.getArgs()[0], result2.getArgs()[0])
-        self.assertEqual(result3.getArgs()[0], result4.getArgs()[0])
-        self.assertEqual(result1.getArgs()[0], result3.getArgs()[0])
-        self.assertEqual(result1.getArgs()[0], "test1\ntest2\n")
+        self.assertEqual(result1.params["main"][0], result2.params["main"][0])
+        self.assertEqual(result3.params["main"][0], result4.params["main"][0])
+        self.assertEqual(result1.params["main"][0], result3.params["main"][0])
+        self.assertEqual(result1.params["main"][0], "test1\ntest2\n")
 
     def testCdExceptions(self):
         msg = stdExceptionMessage()
         stream1 = Stream(
-            streamType.input, "ls", [], ["testDir", "testDir2"], {}
-        )  # Two paths specified
+            streamType.input, "ls", {"main": ["testDir", "testDir2"]}, {}
+        )  # Two main args specified
         stream2 = Stream(
-            streamType.input, "ls", ["a"], ["testDir"], {}
-        )  # contains parameter
+            streamType.input, "ls", {"smh": ["a"], "main": ["testDir"]}, {}
+        )  # 2 parameters specified
         stream3 = Stream(
-            streamType.input, "ls", [], ["smh"], {}
+            streamType.input, "ls", {"main": ["smh"]}, {}
         )  # Non existing dir specified
         stream4 = None
         ls = Ls()
@@ -59,16 +59,20 @@ class testApps(unittest.TestCase):
         with self.assertRaises(Exception):
             ls.exec(stream4)
         self.assertTrue(
-            msg.exceptionMsg(exceptionType.argNum) in lsUnsafe.exec(stream1).args[0]
+            msg.exceptionMsg(exceptionType.argNum)
+            in lsUnsafe.exec(stream1).params["main"][0]
         )
         self.assertTrue(
-            msg.exceptionMsg(exceptionType.paramNum) in lsUnsafe.exec(stream2).args[0]
+            msg.exceptionMsg(exceptionType.paramNum)
+            in lsUnsafe.exec(stream2).params["main"][0]
         )
         self.assertTrue(
-            msg.exceptionMsg(exceptionType.dir) in lsUnsafe.exec(stream3).args[0]
+            msg.exceptionMsg(exceptionType.dir)
+            in lsUnsafe.exec(stream3).params["main"][0]
         )
         self.assertTrue(
-            msg.exceptionMsg(exceptionType.none) in lsUnsafe.exec(stream4).args[0]
+            msg.exceptionMsg(exceptionType.none)
+            in lsUnsafe.exec(stream4).params["main"][0]
         )
 
 

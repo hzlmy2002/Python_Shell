@@ -23,18 +23,17 @@ class Ls(App):
                     dirs.append(file + "\n")
         except:
             self.exceptions.raiseException(exceptionType.dir)
-        return ["".join(dirs)]
+        return "".join(dirs)
 
     def appOperations(self) -> "Stream":
-        if not self.args:
+        if not self.params["main"]:
             ls_dir = os.getcwd()
         else:
-            ls_dir = self.args[0]
+            ls_dir = self.params["main"][0]
         return Stream(
             sType=streamType.output,
             app="",
-            params=[],
-            args=self.listDirectory(ls_dir),
+            params={"main": [self.listDirectory(ls_dir)]},
             env={},
         )
 

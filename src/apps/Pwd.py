@@ -18,8 +18,7 @@ class Pwd(App):
         return Stream(
             sType=streamType.output,
             app="",
-            params=[],
-            args=[output],
+            params={"main": [output]},
             env={},
         )
 

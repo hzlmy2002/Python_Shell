@@ -3,7 +3,7 @@ import sys
 sys.path.insert(0, "..")
 from apps import tools
 from apps import *
-from Stream import *
+from apps.Stream import *
 import unittest, os
 
 
@@ -19,16 +19,24 @@ class testApps(unittest.TestCase):
         os.remove("testB.txt")
 
     def findPatternHelper(self, result1, result2, stringPattern):
-        self.assertEqual(result1.getArgs(), result2.getArgs())
-        self.assertEqual(result1.getArgs()[0], stringPattern)
+        self.assertEqual(result1.params["main"], result2.params["main"])
+        self.assertEqual(result1.params["main"][0], stringPattern)
 
     def testGrepFindPattern(self):
-        stream = Stream(streamType.input, "grep", ["AAA"], ["testA.txt"], {})
+        stream = Stream(
+            streamType.input, "grep", {"pattern": ["AAA"], "main": ["testA.txt"]}, {}
+        )
         stream2 = Stream(
-            streamType.input, "grep", ["AAA"], ["testA.txt", "testB.txt"], {}
+            streamType.input,
+            "grep",
+            {"pattern": ["AAA"], "main": ["testA.txt", "testB.txt"]},
+            {},
         )
         stream3 = Stream(
-            streamType.input, "grep", ["BBB"], ["testA.txt", "testB.txt"], {}
+            streamType.input,
+            "grep",
+            {"pattern": ["BBB"], "main": ["testA.txt", "testB.txt"]},
+            {},
         )
         app = Grep()
         appUnsafe = GrepUnsafe()
@@ -46,30 +54,32 @@ class testApps(unittest.TestCase):
         stream = Stream(
             streamType.input,
             "grep",
-            ["pattern"],
-            [tools.str2stdin("Hello World!\n")],
+            {"main": [tools.str2stdin("Hello World!\n")], "pattern": ["pattern"]},
             {},
         )
         app = Grep()
         appUnsafe = GrepUnsafe()
         result1 = app.exec(stream)
         result2 = appUnsafe.exec(stream)
-        self.assertEqual(result1.args[0], result2.args[0])
-        self.assertEqual(result1.args[0], "Hello World!\n")
+        self.assertEqual(result1.params["main"], result2.params["main"])
+        self.assertEqual(result1.params["main"][0], "Hello World!\n")
 
     def testGrepExceptions(self):
         msg = stdExceptionMessage()
         stream1 = Stream(
-            streamType.input, "grep", [], ["testA.txt"], {}
-        )  # No Pattern specified
+            streamType.input, "grep", {"main": ["testA.txt"]}, {}
+        )  # No Pattern specified (wrong param num)
         stream2 = Stream(
-            streamType.input, "grep", ["pattern"], [], {}
-        )  # No File specified
+            streamType.input, "grep", {"pattern": ["pattern"], "main": []}, {}
+        )  # No File specified (wrong main arg)
         stream3 = Stream(
-            streamType.input, "pwd", ["AAA", "BBB"], ["test.txt"], {}
-        )  # Multiple patterns specified
+            streamType.input,
+            "grep",
+            {"pattern": ["AAA", "BBB"], "main": ["test.txt"]},
+            {},
+        )  # Multiple patterns(tags) specified
         stream4 = Stream(
-            streamType.input, "pwd", ["AAA"], ["smh"], {}
+            streamType.input, "grep", {"pattern": ["AAA"], "main": ["smh"]}, {}
         )  # Invalid File specified
         stream5 = None
         app = Grep()
@@ -85,19 +95,24 @@ class testApps(unittest.TestCase):
         with self.assertRaises(Exception):
             app.exec(stream5)
         self.assertTrue(
-            msg.exceptionMsg(exceptionType.paramNum) in appUnsafe.exec(stream1).args[0]
+            msg.exceptionMsg(exceptionType.paramNum)
+            in appUnsafe.exec(stream1).params["main"][0]
         )
         self.assertTrue(
-            msg.exceptionMsg(exceptionType.argNum) in appUnsafe.exec(stream2).args[0]
+            msg.exceptionMsg(exceptionType.argNum)
+            in appUnsafe.exec(stream2).params["main"][0]
         )
         self.assertTrue(
-            msg.exceptionMsg(exceptionType.paramNum) in appUnsafe.exec(stream3).args[0]
+            msg.exceptionMsg(exceptionType.tagNum)
+            in appUnsafe.exec(stream3).params["main"][0]
         )
         self.assertTrue(
-            msg.exceptionMsg(exceptionType.file) in appUnsafe.exec(stream4).args[0]
+            msg.exceptionMsg(exceptionType.file)
+            in appUnsafe.exec(stream4).params["main"][0]
         )
         self.assertTrue(
-            msg.exceptionMsg(exceptionType.none) in appUnsafe.exec(stream5).args[0]
+            msg.exceptionMsg(exceptionType.none)
+            in appUnsafe.exec(stream5).params["main"][0]
         )
 
 

@@ -19,14 +19,13 @@ class Find(App):
         pass
 
     def appOperations(self):
-        rootPath = self.args[0]
-        self.pattern = self.param[0]
+        rootPath = self.params["main"][0]
+        self.pattern = self.params["pattern"][0]
         relativePaths = self.findFiles(rootPath)
         return Stream(
             sType=streamType.output,
             app="",
-            params=[],
-            args=[relativePaths],
+            params={"main": [relativePaths]},
             env={},
         )
 

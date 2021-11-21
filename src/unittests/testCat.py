@@ -21,7 +21,7 @@ class testApps(unittest.TestCase):
 
     def testCatFile(self):
         stream = Stream(
-            streamType.input, "cat", {"main":[".testCatA.txt", ".testCatB.txt"]}, {}
+            streamType.input, "cat", {"main": [".testCatA.txt", ".testCatB.txt"]}, {}
         )
         cat1 = Cat()
         cat2 = CatUnsafe()
@@ -32,7 +32,7 @@ class testApps(unittest.TestCase):
 
     def testCatStdin(self):
         stream = Stream(
-            streamType.input, "cat", {"main":[tools.str2stdin("Hello World!\n")]}, {}
+            streamType.input, "cat", {"main": [tools.str2stdin("Hello World!\n")]}, {}
         )
         cat1 = Cat()
         cat2 = CatUnsafe()
@@ -41,14 +41,15 @@ class testApps(unittest.TestCase):
         self.assertEqual(result1.params["main"], result2.params["main"])
         self.assertEqual(result1.params["main"][0], "Hello World!\n")
 
-
     def testCatExceptions(self):
         msg = stdExceptionMessage()
-        stream1 = Stream(streamType.input, "cat", {"main":["^^^"]}, {})
-        stream2 = Stream(streamType.input, "cat", {"a": [""],"main":[]}, {})
-        stream3 = Stream(streamType.input, "cat", {"main":[tools.str2stdin("aaaa"), ""]}, {})
+        stream1 = Stream(streamType.input, "cat", {"main": ["^^^"]}, {})
+        stream2 = Stream(streamType.input, "cat", {"a": [""], "main": []}, {})
+        stream3 = Stream(
+            streamType.input, "cat", {"main": [tools.str2stdin("aaaa"), ""]}, {}
+        )
         stream4 = None
-        stream5 = Stream(streamType.input, "cat", {"a": [],"main":[]}, {})
+        stream5 = Stream(streamType.input, "cat", {"a": [], "main": []}, {})
         cat1 = Cat()
         cat2 = CatUnsafe()
         with self.assertRaises(Exception):
@@ -65,16 +66,19 @@ class testApps(unittest.TestCase):
             msg.exceptionMsg(exceptionType.file) in cat2.exec(stream1).params["main"][0]
         )
         self.assertTrue(
-            msg.exceptionMsg(exceptionType.paramNum) in cat2.exec(stream2).params["main"][0]
+            msg.exceptionMsg(exceptionType.paramNum)
+            in cat2.exec(stream2).params["main"][0]
         )
         self.assertTrue(
-            msg.exceptionMsg(exceptionType.stdin) in cat2.exec(stream3).params["main"][0]
+            msg.exceptionMsg(exceptionType.stdin)
+            in cat2.exec(stream3).params["main"][0]
         )
         self.assertTrue(
             msg.exceptionMsg(exceptionType.none) in cat2.exec(stream4).params["main"][0]
         )
         self.assertTrue(
-            msg.exceptionMsg(exceptionType.argNum) in cat2.exec(stream5).params["main"][0]
+            msg.exceptionMsg(exceptionType.paramNum)
+            in cat2.exec(stream5).params["main"][0]
         )
 
 

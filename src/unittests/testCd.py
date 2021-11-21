@@ -3,7 +3,7 @@ import sys
 sys.path.insert(0, "..")
 
 from apps import *
-from Stream import *
+from apps.Stream import *
 import unittest, os
 
 
@@ -18,9 +18,11 @@ class testApps(unittest.TestCase):
 
     def testCdChangeDir(self):
         stream1 = Stream(
-            streamType.input, "cd", [], ["testDir"], {"working_dir": self.cwd}
+            streamType.input, "cd", {"main": ["testDir"]}, {"working_dir": self.cwd}
         )
-        stream2 = Stream(streamType.input, "cd", [], [".."], {"working_dir": self.cwd})
+        stream2 = Stream(
+            streamType.input, "cd", {"main": [".."]}, {"working_dir": self.cwd}
+        )
         cd = Cd()
         cdUnsafe = CdUnsafe()
         os.chdir(self.cwd)
@@ -36,9 +38,9 @@ class testApps(unittest.TestCase):
 
     def testCdExceptions(self):
         msg = stdExceptionMessage()
-        stream1 = Stream(streamType.input, "cat", [], ["testDir", "smh"], {})
-        stream2 = Stream(streamType.input, "cat", ["a"], ["testDir"], {})
-        stream3 = Stream(streamType.input, "cat", [], ["smh"], {})
+        stream1 = Stream(streamType.input, "cat", {"main": ["testDir", "smh"]}, {})
+        stream2 = Stream(streamType.input, "cat", {"a": [""], "main": ["testDir"]}, {})
+        stream3 = Stream(streamType.input, "cat", {"main": ["smh"]}, {})
         stream4 = None
         cd = Cat()
         cdUnsafe = CdUnsafe()
@@ -51,16 +53,20 @@ class testApps(unittest.TestCase):
         with self.assertRaises(Exception):
             cd.exec(stream4)
         self.assertTrue(
-            msg.exceptionMsg(exceptionType.argNum) in cdUnsafe.exec(stream1).args[0]
+            msg.exceptionMsg(exceptionType.argNum)
+            in cdUnsafe.exec(stream1).params["main"][0]
         )
         self.assertTrue(
-            msg.exceptionMsg(exceptionType.paramNum) in cdUnsafe.exec(stream2).args[0]
+            msg.exceptionMsg(exceptionType.paramNum)
+            in cdUnsafe.exec(stream2).params["main"][0]
         )
         self.assertTrue(
-            msg.exceptionMsg(exceptionType.dir) in cdUnsafe.exec(stream3).args[0]
+            msg.exceptionMsg(exceptionType.dir)
+            in cdUnsafe.exec(stream3).params["main"][0]
         )
         self.assertTrue(
-            msg.exceptionMsg(exceptionType.none) in cdUnsafe.exec(stream4).args[0]
+            msg.exceptionMsg(exceptionType.none)
+            in cdUnsafe.exec(stream4).params["main"][0]
         )
 
 

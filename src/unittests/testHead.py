@@ -2,7 +2,7 @@ import sys
 
 sys.path.insert(0, "..")
 from apps import *
-from Stream import *
+from apps.Stream import *
 from apps import tools
 import unittest, os
 
@@ -16,45 +16,56 @@ class testApps(unittest.TestCase):
         os.remove("test.txt")
 
     def testHeadFile(self):
-        stream1 = Stream(streamType.input, "head", [], ["test.txt"], {})
-        stream2 = Stream(streamType.input, "head", ["-n"], [11, "test.txt"], {})
+        stream1 = Stream(streamType.input, "head", {"n": [], "main": ["test.txt"]}, {})
+        stream2 = Stream(
+            streamType.input, "head", {"n": [11], "main": ["test.txt"]}, {}
+        )
         head = Head()
         headUnsafe = HeadUnsafe()
         result1 = head.exec(stream1)
         result2 = headUnsafe.exec(stream1)
         result3 = head.exec(stream2)
         result4 = headUnsafe.exec(stream2)
-        self.assertEqual(result1.getArgs()[0], result2.getArgs()[0])
+        self.assertEqual(result1.params["main"][0], result2.params["main"][0])
         self.assertEqual(
-            result1.getArgs()[0], "l1\nl2\nl3\nl4\nl5\nl6\nl7\nl8\nl9\nl10\n"
+            result1.params["main"][0], "l1\nl2\nl3\nl4\nl5\nl6\nl7\nl8\nl9\nl10\n"
         )
-        self.assertEqual(result3.getArgs()[0], result4.getArgs()[0])
+        self.assertEqual(result3.params["main"][0], result4.params["main"][0])
         self.assertEqual(
-            result3.getArgs()[0], "l1\nl2\nl3\nl4\nl5\nl6\nl7\nl8\nl9\nl10\nl11\n"
+            result3.params["main"][0], "l1\nl2\nl3\nl4\nl5\nl6\nl7\nl8\nl9\nl10\nl11\n"
         )
 
     def testHeadStdin(self):
         stream = Stream(
-            streamType.input, "head", [], [tools.str2stdin("Hello World!\n")], {}
+            streamType.input,
+            "head",
+            {"n": [], "main": [tools.str2stdin("Hello World!\n")]},
+            {},
         )
-        head = Head()
-        headUnsafe = HeadUnsafe()
-        result1 = head.exec(stream)
-        result2 = headUnsafe.exec(stream)
-        self.assertEqual(result1.args[0], result2.args[0])
-        self.assertEqual(result1.args[0], "Hello World!\n")
+        app = Head()
+        appUnsafe = HeadUnsafe()
+        result1 = app.exec(stream)
+        result2 = appUnsafe.exec(stream)
+        self.assertEqual(result1.params["main"], result2.params["main"])
+        self.assertEqual(result1.params["main"][0], "Hello World!\n")
 
     def testHeadExceptions(self):
         msg = stdExceptionMessage()
-        stream1 = Stream(streamType.input, "head", [], [], {})  # No param no arg
-        stream2 = Stream(streamType.input, "head", ["a"], [], {})  # Param with no arg
+        stream1 = Stream(
+            streamType.input, "head", {"n": [], "main": []}, {}
+        )  # Empty main arg
+        stream2 = Stream(
+            streamType.input, "head", {"a": [11], "main": ["test.txt"]}, {}
+        )  # Invalid option a, only accepts n
         stream3 = Stream(
-            streamType.input, "head", [], [11, "test.txt"], {}
-        )  # Two arg with no param
+            streamType.input, "head", {"n": [11], "main": ["test.txt", "smh"]}, {}
+        )  # Too many main arguments
         stream4 = Stream(
-            streamType.input, "head", ["smh"], [11, "test.txt"], {}
-        )  # Invalid param tag
-        stream5 = Stream(streamType.input, "head", [], ["smh"], {})  # Not existing file
+            streamType.input, "head", {"n": [11], "main": ["test.txt"], "a": [12]}, {}
+        )  # Too many options provided
+        stream5 = Stream(
+            streamType.input, "head", {"n": [], "main": ["smh"]}, {}
+        )  # Not existing file
         stream6 = None
         head = Head()
         headUnsafe = HeadUnsafe()
@@ -71,23 +82,28 @@ class testApps(unittest.TestCase):
         with self.assertRaises(Exception):
             head.exec(stream6)
         self.assertTrue(
-            msg.exceptionMsg(exceptionType.argNum) in headUnsafe.exec(stream1).args[0]
-        )
-        self.assertTrue(
-            msg.exceptionMsg(exceptionType.argNum) in headUnsafe.exec(stream2).args[0]
-        )
-        self.assertTrue(
-            msg.exceptionMsg(exceptionType.argNum) in headUnsafe.exec(stream3).args[0]
+            msg.exceptionMsg(exceptionType.argNum)
+            in headUnsafe.exec(stream1).params["main"][0]
         )
         self.assertTrue(
             msg.exceptionMsg(exceptionType.paramType)
-            in headUnsafe.exec(stream4).args[0]
+            in headUnsafe.exec(stream2).params["main"][0]
         )
         self.assertTrue(
-            msg.exceptionMsg(exceptionType.file) in headUnsafe.exec(stream5).args[0]
+            msg.exceptionMsg(exceptionType.argNum)
+            in headUnsafe.exec(stream3).params["main"][0]
         )
         self.assertTrue(
-            msg.exceptionMsg(exceptionType.none) in headUnsafe.exec(stream6).args[0]
+            msg.exceptionMsg(exceptionType.paramNum)
+            in headUnsafe.exec(stream4).params["main"][0]
+        )
+        self.assertTrue(
+            msg.exceptionMsg(exceptionType.file)
+            in headUnsafe.exec(stream5).params["main"][0]
+        )
+        self.assertTrue(
+            msg.exceptionMsg(exceptionType.none)
+            in headUnsafe.exec(stream6).params["main"][0]
         )
 
 

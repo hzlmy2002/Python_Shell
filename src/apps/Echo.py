@@ -13,12 +13,11 @@ class Echo(App):
         return self.stream
 
     def appOperations(self) -> "Stream":
-        output = " ".join(self.args) + "\n"
+        output = " ".join(self.params["main"]) + "\n"
         return Stream(
             sType=streamType.output,
             app="",
-            params=[],
-            args=[output],
+            params={"main": [output]},
             env={},
         )
 

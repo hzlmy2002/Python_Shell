@@ -16,7 +16,7 @@ class Cd(App):
 
     def appOperations(self) -> "Stream":
         try:
-            os.chdir(self.args[0])
+            os.chdir(self.params["main"][0])
         except:
             self.exceptions.raiseException(exceptionType.dir)
         new_env = self.stream.getEnv()
@@ -24,8 +24,7 @@ class Cd(App):
         return Stream(
             sType=streamType.output,
             app="",
-            params=[],
-            args=[],
+            params={"main": []},
             env=new_env,
         )
 

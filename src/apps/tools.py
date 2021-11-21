@@ -41,13 +41,12 @@ def unsafeDecorator(func):
                 return Stream(
                     sType=streamType.error,
                     app=stream.getApp(),
-                    params=[],
-                    args=[tb],
+                    params={"main": [tb]},
                     env={},
                 )
             except Exception:
                 return Stream(
-                    sType=streamType.error, app="unknown", params={"main":[tb]}, env={}
+                    sType=streamType.error, app="unknown", params={"main": [tb]}, env={}
                 )
 
     return wrapper
