@@ -1,5 +1,6 @@
 from typing import List, Dict
-from Stream import *
+from .Stream import *
+from .App import App
 import traceback
 
 
@@ -46,7 +47,7 @@ def unsafeDecorator(func):
                 )
             except Exception:
                 return Stream(
-                    sType=streamType.error, app="unknown", params=[], args=[tb], env={}
+                    sType=streamType.error, app="unknown", params={"main":[tb]}, env={}
                 )
 
     return wrapper

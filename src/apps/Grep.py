@@ -1,6 +1,6 @@
 from apps.App import App
 import re
-from Stream import *
+from .Stream import *
 from apps.CanStdIn import CanStdIn
 from apps.standardStreamExceptions import *
 from types import MethodType

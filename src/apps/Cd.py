@@ -1,10 +1,10 @@
-from apps.App import App
-from Stream import *
+from .App import App
+from .Stream import *
 
 from types import MethodType
-import apps.tools
+from . import tools
 import os
-from apps.standardStreamExceptions import *
+from .standardStreamExceptions import *
 
 
 class Cd(App):
@@ -33,5 +33,5 @@ class Cd(App):
 class CdUnsafe(Cd):
     def exec(self, stream: "Stream") -> "Stream":
         c = Cd()
-        c.exec = MethodType(apps.tools.unsafeDecorator(c.exec), c)
+        c.exec = MethodType(tools.unsafeDecorator(c.exec), c)
         return c.exec(stream)

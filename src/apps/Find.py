@@ -1,5 +1,5 @@
 from apps.App import App
-from Stream import *
+from .Stream import *
 
 from types import MethodType
 import apps.tools

@@ -14,8 +14,7 @@ class Stream:
         self,
         sType: streamType,
         app: str,
-        params: List[str],
-        args: List[str],
+        params: Dict[str, str],
         env: Dict[str, str],
     ) -> None:
         """
@@ -26,18 +25,16 @@ class Stream:
         """
         self.sType = sType
         self.app = app
-        self.params = params[:]
-        self.args = args[:]
+        self.params = params.copy()
+        if "main" not in self.params:
+            self.params["main"] = []
         self.env = env.copy()
 
     def getApp(self):
         return self.app
 
     def getParams(self):
-        return self.params
-
-    def getArgs(self):
-        return self.args
+        return self.params.copy()
 
     def getEnv(self):
         return self.env

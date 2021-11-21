@@ -2,7 +2,7 @@ from apps.App import App
 import os
 from types import MethodType
 import apps.tools
-from Stream import *
+from .Stream import *
 from apps.standardStreamExceptions import *
 
 

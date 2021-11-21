@@ -1,7 +1,7 @@
-from apps.App import App
-from Stream import *
-from apps.standardStreamExceptions import exceptionType
-import apps.tools
+from .App import App
+from .Stream import *
+from .standardStreamExceptions import exceptionType
+from . import tools
 from abc import abstractmethod
 
 
@@ -10,14 +10,13 @@ class CanStdIn(App):
         pass
 
     def processStdin(self):
-        if len(self.args) != 1:
+        if len(self.params["main"]) != 1:
             self.exceptions.raiseException(exceptionType.stdin)
 
         return Stream(
             sType=streamType.output,
             app="",
-            params=[],
-            args=[apps.tools.stdin2str(self.args[0])],
+            params={"main": [tools.stdin2str(self.params["main"][-1])]},
             env={},
         )
 
@@ -27,7 +26,10 @@ class CanStdIn(App):
         raise NotImplementedError("Please Implement this method")
 
     def fileStdinExec(self):
-        if apps.tools.isStdin(self.args[-1]):
-            return self.processStdin()
+        if tools.isStdin(self.params["main"][0]):
+            if len(self.params["main"])==1:
+                return self.processStdin()
+            else:
+                raise self.exceptions.raiseException(exceptionType.stdin)
         else:
             return self.processFiles()
