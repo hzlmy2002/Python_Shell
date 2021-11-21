@@ -8,14 +8,25 @@ from apps.standardStreamExceptions import *
 
 
 class Find(App):
-    def exec(self, stream):
-        self.initExec(stream)
+    def __init__(self) -> None:
+        self.exceptions = stdStreamExceptions(appName.find)
 
+    def matchFileName(self):
+        pass
+
+    def findFiles(self, root):
+        # Returns string of the relative path to the root of the specified file pattern
+        pass
+
+    def appOperations(self):
+        rootPath = self.args[0]
+        self.pattern = self.param[0]
+        relativePaths = self.findFiles(rootPath)
         return Stream(
             sType=streamType.output,
             app="",
             params=[],
-            args=[],
+            args=[relativePaths],
             env={},
         )
 
