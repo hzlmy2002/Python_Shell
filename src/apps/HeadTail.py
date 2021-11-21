@@ -1,7 +1,7 @@
 from apps.App import App
 from apps.CanStdIn import CanStdIn
 from apps.standardStreamExceptions import *
-from Stream import *
+from .Stream import *
 import apps.tools
 
 
