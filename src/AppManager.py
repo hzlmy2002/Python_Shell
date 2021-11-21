@@ -2,18 +2,22 @@ from collections import defaultdict
 from apps import *
 
 
+class AppNotFoundError(RuntimeError):
+    pass
+
+
 def def_val():
     raise ValueError("unsupported application")
 
 
-class AppManager:
-    def __init__(self) -> None:
+class AppFactory:
+    def __init__(self):
         self.appMap = defaultdict(def_val)
         self.appMap["pwd"] = Pwd()
         self.appMap["echo"] = Echo()
         self.appMap["cd"] = Cd()
         self.appMap["cat"] = Cat()
-        self.appMap["_cat"]= CatUnsafe()
+        self.appMap["_cat"] = CatUnsafe()
         self.appMap["ls"] = Ls()
         self.appMap["head"] = Head()
         self.appMap["tail"] = Tail()
