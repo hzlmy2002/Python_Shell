@@ -82,6 +82,12 @@ class testApps(unittest.TestCase):
             streamType.input, "grep", {"pattern": ["AAA"], "main": ["smh"]}, {}
         )  # Invalid File specified
         stream5 = None
+        stream6 = Stream(
+            streamType.input,
+            "grep",
+            {"pattern": ["AAA"], "pattern2": ["vvv"], "main": ["test.txt"]},
+            {},
+        )  # Too many parameters
         app = Grep()
         appUnsafe = GrepUnsafe()
         with self.assertRaises(Exception):
@@ -113,6 +119,11 @@ class testApps(unittest.TestCase):
         self.assertTrue(
             msg.exceptionMsg(exceptionType.none)
             in appUnsafe.exec(stream5).params["main"][0]
+        )
+
+        self.assertTrue(
+            msg.exceptionMsg(exceptionType.paramNum)
+            in appUnsafe.exec(stream6).params["main"][0]
         )
 
 

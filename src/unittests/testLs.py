@@ -36,7 +36,7 @@ class testApps(unittest.TestCase):
         self.assertEqual(result1.params["main"][0], result3.params["main"][0])
         self.assertEqual(result1.params["main"][0], "test1\ntest2\n")
 
-    def testCdExceptions(self):
+    def testLsExceptions(self):
         msg = stdExceptionMessage()
         stream1 = Stream(
             streamType.input, "ls", {"main": ["testDir", "testDir2"]}, {}

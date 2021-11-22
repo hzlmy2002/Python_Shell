@@ -10,6 +10,7 @@ class exceptionType(Enum):
     file = "file"
     dir = "directory"
     stdin = "stdin"
+    pattern = "pattern"
     none = "none"
 
 
@@ -46,6 +47,7 @@ class stdExceptionMessage:
             exceptionType.paramNum: "Invalid number of command line parameters",
             exceptionType.paramType: "Invalid parameter type",
             exceptionType.dir: "Invalid Directory",
+            exceptionType.pattern: "Invalid Pattern",
         }
 
     def exceptionMsg(self, type: "exceptionType"):
@@ -75,7 +77,7 @@ class stdStreamExceptions:
             ],
             appName.find: [
                 inputLengthRestrict.OneOrZero,
-                inputLengthRestrict.EqualsOne,
+                inputLengthRestrict.EqualsTwo,
                 inputLengthRestrict.EqualsOne,
             ],
             appName.grep: [

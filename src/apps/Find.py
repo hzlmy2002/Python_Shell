@@ -4,24 +4,46 @@ from .Stream import *
 from types import MethodType
 import apps.tools
 import os
+import fnmatch
 from apps.standardStreamExceptions import *
 
 
 class Find(App):
     def __init__(self) -> None:
         self.exceptions = stdStreamExceptions(appName.find)
+        self.invalidPattern = ["\\", "/", "?", '"', "<", ">", "|"]
 
-    def matchedFileName(self):
-        pass
+    def getStream(self) -> "Stream":
+        return self.stream
 
-    def findFiles(self, root):
-        # Returns string of the relative path to the root of the specified file pattern
-        pass
+    def isInvalidPattern(self, pattern):
+        return any(char in self.invalidPattern for char in pattern)
+
+    def findFiles(self):
+        result = ""
+        for root, _, files in os.walk(self.rootPath):
+            for fName in files:
+                if fnmatch.fnmatch(fName, self.pattern):
+                    result += root + os.sep + fName + "\n"
+        return result
+
+    def checkExcept(self):
+        if "pattern" not in self.params:
+            self.exceptions.raiseException(exceptionType.paramType)
+
+        if self.isInvalidPattern(self.params["pattern"][0]):
+            self.exceptions.raiseException(exceptionType.pattern)
+
+        rootPath = self.params["main"][0]
+        if rootPath != "":
+            if not (os.path.exists(rootPath) and os.path.isdir(rootPath)):
+                self.exceptions.raiseException(exceptionType.dir)
 
     def appOperations(self):
-        rootPath = self.params["main"][0]
+        self.checkExcept()
+        self.rootPath = self.params["main"][0]
         self.pattern = self.params["pattern"][0]
-        relativePaths = self.findFiles(rootPath)
+        relativePaths = self.findFiles()
         return Stream(
             sType=streamType.output,
             app="",
