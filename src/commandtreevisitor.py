@@ -17,6 +17,11 @@ class CommandTreeVisitor:
         self.stream.addArg(arg)
 
     @visit.register
+    def _(self, node: "Parameter") -> None:
+        param = node.getParam()
+        self.stream.addParam(param)
+
+    @visit.register
     def _(self, node: "InRedirection") -> None:
         path = node.getPath()
         self.stream.setStdIn(path)
@@ -32,7 +37,7 @@ class CommandTreeVisitor:
         args = node.getArgs()
         for a in args:
             a.accept(self)
-        app.exec(self.stream)
+        self.stream = app.exec(self.stream)
 
     @visit.register
     def _(self, node: "Seq") -> None:

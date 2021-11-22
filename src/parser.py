@@ -1,6 +1,6 @@
 from parsita import *
 from appfactory import AppNotFoundError, appFactory
-from commandtree import Argument, InRedirection, OutRedirection, Call, Seq
+from commandtree import Argument, InRedirection, OutRedirection, Call, Seq, Parameter
 from apps.App import App
 
 
@@ -12,16 +12,17 @@ class CommandParsers(TextParsers, whitespace=None):
     )  # concatenate list returned by rep() into single quote string
     quoted = singleQuoted | backQuoted | doubleQuoted
 
-    unquoted = reg(r"[^\s'\"`;|<>]*")
+    unquoted = reg(r"[^-][^\s'\"`;|<>]*")
 
     argument = (quoted | unquoted) > Argument
+    parameter = reg(r"-[^\s'\"`;|<>]+") > Parameter
 
     whitespace = reg(r"[ \t]+")
     inRedirection = (">" >> whitespace >> argument) > InRedirection
     outRedirection = ("<" >> whitespace >> argument) > OutRedirection
     redirection = inRedirection | outRedirection
 
-    atom = argument | redirection
+    atom = argument | redirection | parameter
 
     def getApp(arg: "Argument") -> Parser[str, "App"]:
         appName = arg.getArg()
@@ -50,7 +51,7 @@ class CommandParsers(TextParsers, whitespace=None):
 
 
 if __name__ == "__main__":
-    command = CommandParsers.command.parse("echo hello world").or_die()
+    command = CommandParsers.command.parse("head -n test.txt").or_die()
     call = command.getCommands()[0]
     print(call.getApp())
-    print(call.getParams())
+    print(call.getArgs())

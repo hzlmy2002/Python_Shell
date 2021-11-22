@@ -16,6 +16,14 @@ class Argument(CommandTreeNode):
         return self.arg
 
 
+class Parameter(CommandTreeNode):
+    def __init__(self, param: str):
+        self.param = param
+
+    def getParam(self) -> str:
+        return self.param
+
+
 class Redirection(CommandTreeNode):
     def __init__(self, path: str):
         self.path = path
