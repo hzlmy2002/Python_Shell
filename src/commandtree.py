@@ -4,8 +4,8 @@ from apps import App
 
 
 class CommandTreeNode(ABC):
-    def visit(self, visitor) -> None:
-        visitor.accept(self)
+    def accept(self, visitor) -> None:
+        visitor.visit(self)
 
 
 class Argument(CommandTreeNode):
@@ -33,15 +33,15 @@ class OutRedirection(Redirection):
 
 
 class Call(CommandTreeNode):
-    def __init__(self, app: "App", params: List[CommandTreeNode]):
+    def __init__(self, app: "App", args: List[CommandTreeNode]):
         self.app = app
-        self.params = params
+        self.args = args
 
     def getApp(self) -> "App":
         return self.app
 
-    def getParams(self) -> List[CommandTreeNode]:
-        return self.params
+    def getArgs(self) -> List[CommandTreeNode]:
+        return self.args
 
 
 class Seq(CommandTreeNode):
