@@ -31,7 +31,7 @@ class Grep(CanStdIn):
                             self.matched += f"{filename}:{line}"
                         else:
                             self.matched += line
-        except:
+        except FileNotFoundError:
             self.exceptions.raiseException(exceptionType.file)
 
     def processFiles(self):

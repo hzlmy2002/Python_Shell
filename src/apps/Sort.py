@@ -9,7 +9,6 @@ from apps.standardStreamExceptions import *
 
 
 class Sort(CanStdIn):
-
     def getStream(self) -> "Stream":
         return self.stream
 
@@ -17,21 +16,13 @@ class Sort(CanStdIn):
         return Stream(
             sType=streamType.output,
             app="",
-            params=[],
-            args=[],
+            params={},
             env={},
         )
 
-    def exec(self, stream):
-        self.initExec(stream)
-
-        return Stream(
-            sType=streamType.output,
-            app="",
-            params=[],
-            args=[],
-            env={},
-        )
+    def appOperations(self):
+        
+        return self.fileStdinExec()
 
 
 class SortUnsafe(Sort):

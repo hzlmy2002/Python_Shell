@@ -7,27 +7,24 @@ from apps.standardStreamExceptions import *
 
 
 class Cut(CanStdIn):
+    def __init__(self) -> None:
+        self.exceptions = stdStreamExceptions(appName.cut)
+
     def getStream(self) -> "Stream":
         return self.stream
 
     def processFiles(self) -> "Stream":
+        
         return Stream(
             sType=streamType.output,
             app="",
-            params=[],
-            args=[],
+            params={},
             env={},
         )
 
     def appOperations(self):
 
-        return Stream(
-            sType=streamType.output,
-            app="",
-            params=[],
-            args=[],
-            env={},
-        )
+        return self.fileStdinExec()
 
 
 class CutUnsafe(Cut):

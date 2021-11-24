@@ -100,13 +100,21 @@ class stdStreamExceptions:
                 inputLengthRestrict.EqualsOne,
                 inputLengthRestrict.Empty,
             ],
-            appName.sort: [],
+            appName.sort: [
+                inputLengthRestrict.EqualsOne,
+                inputLengthRestrict.OneOrTwo,
+                inputLengthRestrict.Empty,
+            ],
             appName.tail: [
                 inputLengthRestrict.EqualsOne,
                 inputLengthRestrict.OneOrTwo,
                 inputLengthRestrict.OneOrZero,
             ],
-            appName.uniq: [],
+            appName.uniq: [
+                inputLengthRestrict.EqualsOne,
+                inputLengthRestrict.OneOrTwo,
+                inputLengthRestrict.Empty,
+            ],
         }
         self.stdMsg = stdExceptionMessage()
         self.argLenRestrict = self.lenRestrictMap[self.appname][0]

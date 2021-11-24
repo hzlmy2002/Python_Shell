@@ -9,28 +9,41 @@ from apps.standardStreamExceptions import *
 
 
 class Uniq(CanStdIn):
+    def __init__(self) -> None:
+        self.exceptions = stdStreamExceptions(appName.uniq)
+
     def getStream(self) -> "Stream":
         return self.stream
 
     def processFiles(self) -> "Stream":
+        fileName = self.params["main"][0]
+        if not os.path.isfile(fileName):
+            self.exceptions.raiseException(exceptionType.file)
+        res = ""
+        last = ""
+        with open(fileName, "r") as f:
+            content = f.readlines()
+            for i in range(0, len(content)):
+                line = content[i]
+                compLine = line
+                if self.caseSensitive:
+                    compLine = compLine.upper()
+                if not compLine == last:
+                    last = compLine
+                    res += line
+
         return Stream(
             sType=streamType.output,
             app="",
-            params=[],
-            args=[],
+            params={"main": [res]},
             env={},
         )
 
-    def exec(self, stream):
-        self.initExec(stream)
-
-        return Stream(
-            sType=streamType.output,
-            app="",
-            params=[],
-            args=[],
-            env={},
-        )
+    def appOperations(self):
+        self.caseSensitive = "i" in self.params
+        if len(self.params) == 2 and not self.caseSensitive:
+            self.exceptions.raiseException(exceptionType.paramType)
+        return self.fileStdinExec()
 
 
 class UniqUnsafe(Uniq):
