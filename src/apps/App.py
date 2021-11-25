@@ -3,8 +3,6 @@ from typing import List, Dict
 from .standardStreamExceptions import *
 from .Stream import *
 
-print(__name__)
-
 
 class App(ABC):
     @abstractmethod

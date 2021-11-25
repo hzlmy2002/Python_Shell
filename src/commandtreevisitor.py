@@ -1,5 +1,5 @@
-from commandtree import *
-from stream import Stream
+from commandTree import *
+from stream import Stream # should use app.Stream instead
 from functools import singledispatchmethod
 
 

@@ -1,6 +1,6 @@
 from typing import Dict, List
 
-
+# should use app.Stream instead
 class Stream:
     def __init__(self):
         self.args: List[str] = []

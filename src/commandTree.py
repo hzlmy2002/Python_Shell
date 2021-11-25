@@ -41,15 +41,15 @@ class OutRedirection(Redirection):
 
 
 class Call(CommandTreeNode):
-    def __init__(self, app: "App", args: List[CommandTreeNode]):
+    def __init__(self, app: str, args: List[CommandTreeNode]):
         self.app = app
         self.args = args
 
-    def getApp(self) -> "App":
+    def getApp(self) -> str:
         return self.app
 
     def getArgs(self) -> List[CommandTreeNode]:
-        return self.args
+        return self.args[:]
 
 
 class Seq(CommandTreeNode):
@@ -57,4 +57,4 @@ class Seq(CommandTreeNode):
         self.commands = commands
 
     def getCommands(self) -> List[CommandTreeNode]:
-        return self.commands
+        return self.commands[:]
