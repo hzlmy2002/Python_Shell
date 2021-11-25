@@ -16,7 +16,7 @@ class testApps(unittest.TestCase):
         os.remove("test.txt")
 
     def testHeadFile(self):
-        stream1 = Stream(streamType.input, "head", {"n": [], "main": ["test.txt"]}, {})
+        stream1 = Stream(streamType.input, "head", {"main": ["test.txt"]}, {})
         stream2 = Stream(
             streamType.input, "head", {"n": [11], "main": ["test.txt"]}, {}
         )

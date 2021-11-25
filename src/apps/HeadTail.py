@@ -40,9 +40,9 @@ class HeadTail(CanStdIn):
         )
 
     def appOperations(self) -> "Stream":
-        if "n" not in self.params:
+        if len(self.params) == 2 and "n" not in self.params:
             self.exceptions.raiseException(exceptionType.paramType)
-        if len(self.params["n"]) == 0:
+        if "n" not in self.params:
             self.num_lines = 10
         elif len(self.params["n"]) == 1:
             self.num_lines = int(self.params["n"][0])

@@ -16,7 +16,7 @@ class testApps(unittest.TestCase):
         os.remove("test.txt")
 
     def testTailFile(self):
-        stream1 = Stream(streamType.input, "tail", {"n": [], "main": ["test.txt"]}, {})
+        stream1 = Stream(streamType.input, "tail", {"main": ["test.txt"]}, {})
         stream2 = Stream(
             streamType.input, "tail", {"n": [11], "main": ["test.txt"]}, {}
         )
@@ -52,7 +52,7 @@ class testApps(unittest.TestCase):
     def testTailExceptions(self):
         msg = stdExceptionMessage()
         stream1 = Stream(
-            streamType.input, "head", {"n": [], "main": []}, {}
+            streamType.input, "head", {"n": [11], "main": []}, {}
         )  # Empty main arg
         stream2 = Stream(
             streamType.input, "head", {"a": [11], "main": ["test.txt"]}, {}
@@ -67,6 +67,11 @@ class testApps(unittest.TestCase):
             streamType.input, "head", {"n": [], "main": ["smh"]}, {}
         )  # Not existing file
         stream6 = None
+
+        stream7 = Stream(
+            streamType.input, "head", {"n": [], "main": ["test.txt"]}, {}
+        )  # Empty n tag
+
         tail = Tail()
         tailUnsafe = TailUnsafe()
         with self.assertRaises(Exception):
