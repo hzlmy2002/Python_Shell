@@ -14,8 +14,7 @@ class AppManager():
         singleOptionApps={"uniq","sort","_uniq","_sort"} # They can be zero args as well
         zeroOptionApps={"pwd","ls","cat","head","_pwd","_ls","_cat","_head"}
 
-        s=Stream.Stream(sType=Stream.streamType.input,app="",params={},env=self.env)
-        s.app=call.getApp()
+        s=Stream.Stream(sType=Stream.streamType.input,app=call.getApp(),params={},env=self.env)
 
         if s.app in singleOptionApps: # app that has parameters but without corresponding args
             for i in call.getArgs():
@@ -55,7 +54,7 @@ class AppManager():
         return s
 
 def test():
-    cmd=CommandParsers.command.parse("tail -n 16 ./*").or_die()
+    cmd=CommandParsers.command.parse("cut -n 1-16,5- .").or_die()
     call=cmd.getCommands()[0]
 
     am=AppManager()
