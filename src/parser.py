@@ -1,6 +1,14 @@
 from parsita import *
 from appFactory import AppNotFoundError, appFactory
-from commandTree import Argument, InRedirection, OutRedirection, Call, Seq, Parameter
+from commandTree import (
+    Argument,
+    InRedirection,
+    OutRedirection,
+    Call,
+    Seq,
+    Parameter,
+    Pipe,
+)
 from apps.App import App
 
 
@@ -29,7 +37,6 @@ class CommandParsers(TextParsers, whitespace=None):
         if appName not in appFactory().appMap:
             return failure(f"Application {appName} not found.")
         return success(appName)
-        
 
     def makeCall(args) -> "Call":
         redirections = args[0]
@@ -46,11 +53,14 @@ class CommandParsers(TextParsers, whitespace=None):
         & (rep(whitespace >> atom) << opt(whitespace))
     ) > makeCall
 
-    command = rep1sep(call, ";") > Seq
+    seq = rep1sep(call, ";") > Seq
+    pipe = rep1sep(call, "|") > Pipe
+
+    command = seq | pipe
 
 
 if __name__ == "__main__":
-    command = CommandParsers.command.parse("find . -name \"adfasf\" ").or_die()
+    command = CommandParsers.command.parse('find . -name "adfasf" ').or_die()
     call = command.getCommands()[0]
     print(call.getApp())
     print(call.getArgs())

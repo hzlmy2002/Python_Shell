@@ -58,3 +58,11 @@ class Seq(CommandTreeNode):
 
     def getCommands(self) -> List[CommandTreeNode]:
         return self.commands[:]
+
+
+class Pipe(CommandTreeNode):
+    def __init__(self, calls: List[Call]):
+        self.calls = calls
+
+    def getCalls(self):
+        return self.calls
