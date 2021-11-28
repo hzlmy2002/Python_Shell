@@ -53,15 +53,14 @@ class CommandParsers(TextParsers, whitespace=None):
         & (rep(whitespace >> atom) << opt(whitespace))
     ) > makeCall
 
-    seq = rep1sep(call, ";") > Seq
     pipe = rep1sep(call, "|") > Pipe
-
-    command = longest(seq, pipe)
+    command = rep1sep(longest(call, pipe), ";") > Seq
 
 
 if __name__ == "__main__":
-    command = CommandParsers.command.parse("echo eee | echo fff").or_die()
-    call = command.getCalls()[0]
+    command = CommandParsers.command.parse("cd . ; echo eee | echo").or_die()
+    pipe = command.getCommands()[1]
+    call = pipe.getCalls()[0]
     print(call.getApp())
     for a in call.getArgs():
         print(a.getArg())
