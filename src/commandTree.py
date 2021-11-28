@@ -65,4 +65,4 @@ class Pipe(CommandTreeNode):
         self.calls = calls
 
     def getCalls(self):
-        return self.calls
+        return self.calls[:]

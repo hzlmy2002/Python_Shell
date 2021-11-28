@@ -20,7 +20,7 @@ class CommandParsers(TextParsers, whitespace=None):
     )  # concatenate list returned by rep() into single quote string
     quoted = singleQuoted | backQuoted | doubleQuoted
 
-    unquoted = reg(r"[^-][^\s'\"`;|<>]*")
+    unquoted = reg(r"[^-\s'\"`;|<>][^\s'\"`;|<>]*")
 
     argument = (quoted | unquoted) > Argument
     parameter = reg(r"-[^\s'\"`;|<>]+") > Parameter
@@ -56,11 +56,12 @@ class CommandParsers(TextParsers, whitespace=None):
     seq = rep1sep(call, ";") > Seq
     pipe = rep1sep(call, "|") > Pipe
 
-    command = seq | pipe
+    command = longest(seq, pipe)
 
 
 if __name__ == "__main__":
-    command = CommandParsers.command.parse('find . -name "adfasf" ').or_die()
-    call = command.getCommands()[0]
+    command = CommandParsers.command.parse("echo eee | echo fff").or_die()
+    call = command.getCalls()[0]
     print(call.getApp())
-    print(call.getArgs())
+    for a in call.getArgs():
+        print(a.getArg())
