@@ -41,3 +41,6 @@ class Stream:
 
     def addEnv(self, envName, envValue):
         self.env[envName] = envValue
+
+    def __repr__(self):
+        return f"<Stream Object> stype: {self.sType} | app: {self.app} | params: {self.params} | env: {self.env}"

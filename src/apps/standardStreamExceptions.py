@@ -5,12 +5,14 @@ from enum import Enum
 class exceptionType(Enum):
     argNum = "arguments"
     tagNum = "tags"
+    tagType = "tagType"
     paramNum = "parameters"
     paramType = "parameterType"
     file = "file"
     dir = "directory"
     stdin = "stdin"
     pattern = "pattern"
+    decRange = "decRange"
     none = "none"
 
 
@@ -35,6 +37,23 @@ inputLengthRestrict = Enum(
     ["NotEmpty", "Empty", "EqualsOne", "EqualsTwo", "OneOrZero", "OneOrTwo"],
 )
 
+"""exceptionType = Enum(
+    "exceptionType",
+    [
+        "argNum",
+        "tagNum",
+        "tagType",
+        "paramNum",
+        "paramType",
+        "file",
+        "dir",
+        "stdin",
+        "pattern",
+        "decRange",
+        "none",
+    ],
+)"""
+
 
 class stdExceptionMessage:
     def __init__(self) -> None:
@@ -44,10 +63,12 @@ class stdExceptionMessage:
             exceptionType.stdin: "Ilegal stdin",
             exceptionType.argNum: "Invalid number of command line arguments",
             exceptionType.tagNum: "Invalid number of command line tags",
+            exceptionType.tagType: "Invalid tags entered",
             exceptionType.paramNum: "Invalid number of command line parameters",
             exceptionType.paramType: "Invalid parameter type",
             exceptionType.dir: "Invalid Directory",
             exceptionType.pattern: "Invalid Pattern",
+            exceptionType.decRange: "Invalid decreasing range",
         }
 
     def exceptionMsg(self, type: "exceptionType"):
@@ -69,7 +90,11 @@ class stdStreamExceptions:
                 inputLengthRestrict.EqualsOne,
                 inputLengthRestrict.Empty,
             ],
-            appName.cut: [],
+            appName.cut: [
+                inputLengthRestrict.EqualsOne,
+                inputLengthRestrict.EqualsTwo,
+                inputLengthRestrict.NotEmpty,
+            ],
             appName.echo: [
                 inputLengthRestrict.NotEmpty,
                 inputLengthRestrict.EqualsOne,

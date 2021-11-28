@@ -5,7 +5,7 @@ class AppNotFoundError(RuntimeError):
     pass
 
 
-class appFactory():
+class appFactory:
     def __init__(self):
         self.appMap = {}
         self.appMap["pwd"] = Pwd()
@@ -17,7 +17,7 @@ class appFactory():
         self.appMap["head"] = Head()
         self.appMap["tail"] = Tail()
         self.appMap["grep"] = Grep()
-        #self.appMap["cut"] = Cut()
+        # self.appMap["cut"] = Cut()
         self.appMap["cut"] = None
         self.appMap["find"] = Find()
         self.appMap["uniq"] = Uniq()
@@ -29,7 +29,10 @@ class appFactory():
         else:
             raise AppNotFoundError(app_name)
 
+
 def test():
     af = appFactory().get("pwd")
     pass
+
+
 test()
