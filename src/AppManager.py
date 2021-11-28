@@ -18,7 +18,7 @@ class AppManager:
             "_uniq",
             "_sort",
         }  # They can be zero args as well
-        zeroOptionApps = {"pwd", "ls", "cat", "head", "_pwd", "_ls", "_cat", "_head"}
+        zeroOptionApps = {"pwd", "ls", "head", "_pwd", "_ls", "_head"}
 
         s = Stream.Stream(
             sType=Stream.streamType.input, app=call.getApp(), params={}, env=self.env
@@ -33,18 +33,15 @@ class AppManager:
                 else:
                     s.params["main"].append(i.getArg())
         elif s.app == "grep" or s.app == "_grep":  # find can only have args
-            if len(call.getArgs()) <= 0:
-                raise stdStreamExceptions(appName.grep).raiseException(
-                    exceptionType.paramNum
-                )
-            elif len(call.getArgs()) <= 2:
-                s.params["pattern"] = [call.getArgs()[0].getArg()]
-                if len(call.getArgs()) == 2:
-                    s.params["main"].append(call.getArgs()[1].getArg())
+            if len(call.getArgs()) >=1:
+                s.params["pattern"]=[call.getArgs()[0].getArg()]
+                if len(call.getArgs()) >=2:
+                    for i in range(1, len(call.getArgs())):
+                        s.params["main"].append(call.getArgs()[i].getArg())
             else:
                 raise stdStreamExceptions(appName.grep).raiseException(
                     exceptionType.paramNum
-                )
+                    )
         elif s.app == "find" or s.app == "_find":
             if (
                 len(call.getArgs()) == 2
@@ -61,6 +58,16 @@ class AppManager:
                 s.params["main"].append(call.getArgs()[0].getArg())
             else:
                 raise stdStreamExceptions(appName.find).raiseException(
+                    exceptionType.paramNum
+                )
+        elif s.app == "cat" or s.app == "_cat":
+            if len(call.getArgs()) == 0:
+                pass
+            elif len(call.getArgs()) >= 1:
+                for i in call.getArgs():
+                    s.params["main"].append(i.getArg())
+            else:
+                raise stdStreamExceptions(appName.cat).raiseException(
                     exceptionType.paramNum
                 )
         elif (
@@ -85,7 +92,7 @@ class AppManager:
 
 
 def test():
-    cmd = CommandParsers.command.parse("cut -n 1-16,5- .").or_die()
+    cmd = CommandParsers.command.parse("cat a b c").or_die()
     call = cmd.getCommands()[0]
     am = AppManager()
     s = am.call2stream(call)

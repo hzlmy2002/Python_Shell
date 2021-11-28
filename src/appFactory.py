@@ -17,8 +17,7 @@ class appFactory:
         self.appMap["head"] = Head()
         self.appMap["tail"] = Tail()
         self.appMap["grep"] = Grep()
-        # self.appMap["cut"] = Cut()
-        self.appMap["cut"] = None
+        self.appMap["cut"] = Cut()
         self.appMap["find"] = Find()
         self.appMap["uniq"] = Uniq()
         self.appMap["sort"] = Sort()
