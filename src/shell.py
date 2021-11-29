@@ -1,56 +1,41 @@
 import sys
 import os
-import re
-from collections import deque
-from AppManager import AppManager
-
-# from Parser import Parser
-from testParser import Parser
+from parser import parseCommand
+from typing import Dict
+from apps.stream import Stream
+from commandtreevisitor import CommandTreeVisitor
 
 
 class Shell:
-    def __init__(self, working_dir) -> None:
-        self.manager = AppManager()
-        self.parser = Parser()
-        self.env = {"working_dir": working_dir}
-
-    def get_raw(self, cmdline):
-        raw_commands = []
-        for m in re.finditer("([^\"';]+|\"[^\"]*\"|'[^']*')", cmdline):
-            if m.group(0):
-                raw_commands.append(m.group(0))
-        return raw_commands
-
-    def construct_command_list(self, raw_command):
-        command_list = []
-        for sing_com in raw_command:
-            stream = self.parser.parse(sing_com)
-            stream.add_env(self.env)
-            command_list.append(stream)
-        return command_list
+    def __init__(self, workingDir):
+        env = {"workingDir": workingDir}
+        self.stream = Stream(env)
+        self.commandTreeVisitor = CommandTreeVisitor(self.stream)
 
     def evaluate(self, cmdline):
-        # Returns list of outputs or error message if required
-        command_list = self.construct_command_list(self.get_raw(cmdline))
-        output_list = self.manager.run_app(command_list)
-        return output_list
+        commandTree = parseCommand(cmdline)
+        self.commandTreeVisitor.visit(commandTree)
+
+    def repl(self):
+        while True:
+            workingDir = self.stream.getEnv("workingDir")
+            print(workingDir + "> ", end="")
+            cmdline = input()
+            self.evaluate(cmdline)
 
 
 if __name__ == "__main__":
-    args_num = len(sys.argv) - 1
-    sh = Shell(os.getcwd())
-    if args_num > 0:
-        if args_num != 2:
-            raise ValueError("wrong number of command line arguments")
-        if sys.argv[1] != "-c":
-            raise ValueError(f"unexpected command line argument {sys.argv[1]}")
-        out = deque(sh.evaluate(sys.argv[2]))
-        while len(out) > 0:
-            print(out.popleft(), end="")
+    workingDir = os.getcwd()
+    sh = Shell(workingDir)
+
+    args = sys.argv[1:]
+    argsNum = len(args)
+
+    if argsNum > 0:
+        if argsNum != 2:
+            raise ValueError("Wrong number of command line arguments.")
+        if args[0] != "-c":
+            raise ValueError(f"Unexpected command line argument {args[0]}.")
+        sh.evaluate(args[1])
     else:
-        while True:
-            print(os.getcwd() + "> ", end="")
-            cmdline = input()
-            out = deque(sh.evaluate(cmdline))
-            while len(out) > 0:
-                print(out.popleft(), end="")
+        sh.repl()

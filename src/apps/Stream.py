@@ -1,46 +1,45 @@
-from typing import List, Dict
-
-from enum import Enum
+from typing import Dict, List, TextIO
 
 
-class streamType(Enum):
-    input = 0
-    output = 1
-    error = -1
+class StdInNotFound(RuntimeError):
+    pass
 
 
 class Stream:
-    def __init__(
-        self,
-        sType: streamType,
-        app: str,
-        params: Dict[str, str],
-        env: Dict[str, str],
-    ) -> None:
-        """
-        self.stream_type (int) : 0 represents input, 1 represents output, -1 represents error
-        self.app (String)
-        self.param (List of String)
-        self.args (List of String)
-        """
-        self.sType = sType
-        self.app = app
-        self.params = params.copy()
-        if "main" not in self.params:
-            self.params["main"] = []
-        self.env = env.copy()
+    def __init__(self, env: Dict[str, str]):
+        self.args: List[str] = []
+        self.env = env
+        self.stdin: TextIO = None
+        self.stdout: TextIO = None
 
-    def getApp(self):
-        return self.app
+    def addArg(self, arg: str) -> None:
+        self.args.append(arg)
 
-    def getParams(self):
-        return self.params.copy()
+    def getArgs(self) -> List[str]:
+        return self.args[:]
 
-    def getEnv(self):
-        return self.env
+    def addToEnv(self, key: str, val: str) -> None:
+        self.env[key] = val
 
-    def addEnv(self, envName, envValue):
-        self.env[envName] = envValue
+    def getEnv(self, key: str) -> str:
+        return self.env[key]
 
-    def __repr__(self):
-        return f"<Stream Object> stype: {self.sType} | app: {self.app} | params: {self.params} | env: {self.env}"
+    def setStdIn(self, path: str) -> None:
+        try:
+            self.stdin = open(path, "r")
+        except FileNotFoundError:
+            raise StdInNotFound("stdin not found.")
+
+    def getStdIn(self) -> TextIO:
+        return self.stdin
+
+    def setStdOut(self, path: str) -> None:
+        self.stdout = open(path, "w")
+
+    def getStdOut(self) -> TextIO:
+        return self.stdout
+
+    def clear(self) -> None:
+        self.args = []
+        self.stdin = None
+        self.stdout = None

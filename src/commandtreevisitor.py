@@ -1,5 +1,5 @@
-from commandTree import *
-from stream import Stream # should use app.Stream instead
+from commandtree import *
+from apps.stream import Stream
 from functools import singledispatchmethod
 
 
@@ -17,11 +17,6 @@ class CommandTreeVisitor:
         self.stream.addArg(arg)
 
     @visit.register
-    def _(self, node: "Parameter") -> None:
-        param = node.getParam()
-        self.stream.addParam(param)
-
-    @visit.register
     def _(self, node: "InRedirection") -> None:
         path = node.getPath()
         self.stream.setStdIn(path)
@@ -37,10 +32,11 @@ class CommandTreeVisitor:
         args = node.getArgs()
         for a in args:
             a.accept(self)
-        self.stream = app.exec(self.stream)
+        app(self.stream)
 
     @visit.register
-    def _(self, node: "Seq") -> None:
+    def _(self, node: "Seq"):
         commands = node.getCommands()
         for c in commands:
             c.accept(self)
+            self.stream.clear()
