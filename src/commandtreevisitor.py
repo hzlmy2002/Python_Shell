@@ -1,3 +1,4 @@
+from io import StringIO
 from commandtree import *
 from apps.stream import Stream
 from functools import singledispatchmethod
@@ -22,6 +23,7 @@ class CommandTreeVisitor:
 
     @visit.register
     def _(self, node: "InRedirection") -> None:
+        # TODO: relative, absolute and system-independent paths, globbing
         path = node.getPath()
         try:
             stdin = open(path, "r")
@@ -31,6 +33,7 @@ class CommandTreeVisitor:
 
     @visit.register
     def _(self, node: "OutRedirection") -> None:
+        # TODO: relative, absolute and system-independent paths, globbing
         path = node.getPath()
         stdout = open(path, "a", newline="\n")
         self.stream.setStdout(stdout)
@@ -45,10 +48,25 @@ class CommandTreeVisitor:
 
     @visit.register
     def _(self, node: "Seq"):
-        commands = node.getCommands()
         shellStdout = self.stream.getStdout()
+        commands = node.getCommands()
         for c in commands:
             c.accept(self)
             self.stream.clearArgs()
             self.stream.clearStdin()
             self.stream.setStdout(shellStdout)
+
+    @visit.register
+    def _(self, node: "Pipe"):
+        shellStdout = self.stream.getStdout()
+        calls = node.getCalls()
+        for i in range(len(calls) - 1):
+            stdout = StringIO()
+            self.stream.setStdout(stdout)
+
+            c = calls[i]
+            c.accept(self)
+            self.stream.setStdin(stdout)
+
+        self.stream.setStdout(shellStdout)
+        calls[-1].accept(self)

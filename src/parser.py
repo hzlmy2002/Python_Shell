@@ -17,6 +17,7 @@ class CommandParsers(TextParsers, whitespace=None):
 
     argument = (quoted | unquoted) > Argument
 
+    # TODO: relative, absolute and system-independent paths, globbing
     whitespace = reg(r"[ \t]+")
     inRedirection = (">" >> whitespace >> argument) > InRedirection
     outRedirection = ("<" >> whitespace >> argument) > OutRedirection

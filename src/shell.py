@@ -33,7 +33,7 @@ class Shell:
     def repl(self):
         while True:
             workingDir = self.stream.getEnv("workingDir")
-            print(workingDir + "> ", end="")
+            self.output(workingDir + "> ")
             cmdline = input()
             self.evaluate(cmdline)
 
