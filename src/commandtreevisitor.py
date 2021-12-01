@@ -54,6 +54,7 @@ class CommandTreeVisitor:
             c.accept(self)
             self.stream.clearArgs()
             self.stream.clearParams()
+            self.stream.clearFlags()
             self.stream.clearStdin()
             self.stream.setStdout(shellStdout)
 
@@ -71,6 +72,7 @@ class CommandTreeVisitor:
 
             self.stream.clearArgs()
             self.stream.clearParams()
+            self.stream.clearFlags()
 
         self.stream.setStdout(shellStdout)
         calls[-1].accept(self)
