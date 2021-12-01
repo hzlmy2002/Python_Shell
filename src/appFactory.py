@@ -1,6 +1,5 @@
 from typing import Callable
 
-from commandtree import Call
 from apps.stream import Stream
 from apps.pwd import pwd
 

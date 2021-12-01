@@ -1,16 +1,12 @@
 from typing import Dict, List, TextIO
 
 
-class StdInNotFound(RuntimeError):
-    pass
-
-
 class Stream:
-    def __init__(self, env: Dict[str, str]):
+    def __init__(self, env: Dict[str, str], stdout):
         self.args: List[str] = []
         self.env = env
-        self.stdin: TextIO = None
-        self.stdout: TextIO = None
+        self.stdin = None
+        self.stdout = stdout
 
     def addArg(self, arg: str) -> None:
         self.args.append(arg)
@@ -24,22 +20,20 @@ class Stream:
     def getEnv(self, key: str) -> str:
         return self.env[key]
 
-    def setStdIn(self, path: str) -> None:
-        try:
-            self.stdin = open(path, "r")
-        except FileNotFoundError:
-            raise StdInNotFound("stdin not found.")
+    def setStdin(self, stdin) -> None:
+        self.stdin = stdin
 
-    def getStdIn(self) -> TextIO:
+    def getStdin(self):
         return self.stdin
 
-    def setStdOut(self, path: str) -> None:
-        self.stdout = open(path, "w")
+    def setStdout(self, stdout) -> None:
+        self.stdout = stdout
 
-    def getStdOut(self) -> TextIO:
+    def getStdout(self):
         return self.stdout
 
-    def clear(self) -> None:
+    def clearArgs(self) -> None:
         self.args = []
+
+    def clearStdin(self) -> None:
         self.stdin = None
-        self.stdout = None

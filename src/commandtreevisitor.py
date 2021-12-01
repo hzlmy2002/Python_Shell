@@ -3,6 +3,10 @@ from apps.stream import Stream
 from functools import singledispatchmethod
 
 
+class StdinNotFoundError(RuntimeError):
+    pass
+
+
 class CommandTreeVisitor:
     def __init__(self, stream: "Stream"):
         self.stream = stream
@@ -19,12 +23,17 @@ class CommandTreeVisitor:
     @visit.register
     def _(self, node: "InRedirection") -> None:
         path = node.getPath()
-        self.stream.setStdIn(path)
+        try:
+            stdin = open(path, "r")
+        except FileNotFoundError:
+            raise StdinNotFoundError
+        self.stream.setStdin(stdin)
 
     @visit.register
     def _(self, node: "OutRedirection") -> None:
         path = node.getPath()
-        self.stream.setStdOut(path)
+        stdout = open(path, "a", newline="\n")
+        self.stream.setStdout(stdout)
 
     @visit.register
     def _(self, node: "Call") -> None:
@@ -37,6 +46,9 @@ class CommandTreeVisitor:
     @visit.register
     def _(self, node: "Seq"):
         commands = node.getCommands()
+        shellStdout = self.stream.getStdout()
         for c in commands:
             c.accept(self)
-            self.stream.clear()
+            self.stream.clearArgs()
+            self.stream.clearStdin()
+            self.stream.setStdout(shellStdout)

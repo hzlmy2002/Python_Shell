@@ -1,5 +1,5 @@
 from parsita import *
-from commandtree import *
+from commandtree import Argument, InRedirection, OutRedirection, Call, Pipe, Seq
 from appfactory import appFactory, AppNotFoundError
 from typing import Callable
 from apps.stream import Stream
@@ -22,7 +22,7 @@ class CommandParsers(TextParsers, whitespace=None):
     outRedirection = ("<" >> whitespace >> argument) > OutRedirection
     redirection = inRedirection | outRedirection
 
-    atom = argument | redirection
+    atom = redirection | argument
 
     def getApp(arg: "Argument") -> Parser[str, Callable[["Stream"], None]]:
         appName = arg.getArg()

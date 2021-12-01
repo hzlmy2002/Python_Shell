@@ -17,8 +17,8 @@ class Argument(CommandTreeNode):
 
 
 class Redirection(CommandTreeNode):
-    def __init__(self, path: str):
-        self.path = path
+    def __init__(self, path: "Argument"):
+        self.path = path.getArg()
 
     def getPath(self) -> str:
         return self.path
