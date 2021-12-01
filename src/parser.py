@@ -1,8 +1,8 @@
 from parsita import *
-from commandtree import Argument, InRedirection, OutRedirection, Call, Pipe, Seq
-from appfactory import appFactory, AppNotFoundError
+from commandTree import Argument, InRedirection, OutRedirection, Call, Pipe, Seq
+from appFactory import appFactory, AppNotFoundError
 from typing import Callable
-from apps.stream import Stream
+from apps.Stream import Stream
 
 
 class CommandParsers(TextParsers, whitespace=None):

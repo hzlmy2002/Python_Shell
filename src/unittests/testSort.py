@@ -7,7 +7,7 @@ from apps.Stream import *
 import unittest, os
 
 
-class testApps(unittest.TestCase):
+class testSort(unittest.TestCase):
     def setUp(self) -> None:
         with open("testA.txt", "w") as file:
             file.write(

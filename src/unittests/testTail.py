@@ -7,7 +7,7 @@ from apps import tools
 import unittest, os
 
 
-class testApps(unittest.TestCase):
+class testTail(unittest.TestCase):
     def setUp(self) -> None:
         with open("test.txt", "w") as file:
             file.write("l1\nl2\nl3\nl4\nl5\nl6\nl7\nl8\nl9\nl10\nl11\nl12\n")

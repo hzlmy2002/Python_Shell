@@ -1,6 +1,6 @@
 from io import StringIO
-from commandtree import *
-from apps.stream import Stream
+from commandTree import *
+from apps.Stream import Stream
 from functools import singledispatchmethod
 
 

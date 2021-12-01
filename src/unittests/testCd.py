@@ -5,9 +5,11 @@ sys.path.insert(0, "..")
 from apps import *
 from apps.Stream import *
 import unittest, os
+from StreamForTest import StreamForTest
+from apps.Exceptions import InvalidArgumentError, InvalidFileOrDir
 
 
-class testApps(unittest.TestCase):
+class testCd(unittest.TestCase):
     def setUp(self) -> None:
         os.mkdir("testDir")
         self.cwd = os.getcwd()
@@ -17,42 +19,35 @@ class testApps(unittest.TestCase):
         os.rmdir("testDir")
 
     def testCdChangeDir(self):
-        stream1 = Stream(
-            streamType.input, "cd", {"main": ["testDir"]}, {"working_dir": self.cwd}
+        stream1 = StreamForTest({"workingDir": self.cwd}, None, ["testDir"])
+        stream2 = StreamForTest(
+            {"workingDir": os.path.join(self.cwd, "testDir")}, None, [".."]
         )
-        stream2 = Stream(
-            streamType.input, "cd", {"main": [".."]}, {"working_dir": self.cwd}
-        )
-        cd = Cd()
-        cdUnsafe = CdUnsafe()
-        os.chdir(self.cwd)
-        result1 = cd.exec(stream1)
-        result2 = cd.exec(stream2)
-        os.chdir(self.cwd)
-        result3 = cdUnsafe.exec(stream1)
-        result4 = cdUnsafe.exec(stream2)
-        self.assertEqual(result1.env, result3.env)
-        self.assertEqual(result1.env["working_dir"], self.cwd + os.sep + "testDir")
-        self.assertEqual(result2.env, result4.env)
-        self.assertEqual(result2.env["working_dir"], self.cwd)
+        # cdUnsafe = CdUnsafe()
+        cd(stream1)
+        result1 = stream1.getEnv("workingDir")
+        cd(stream2)
+        result2 = stream2.getEnv("workingDir")
+        # result3 = cdUnsafe.exec(stream1)
+        # result4 = cdUnsafe.exec(stream2)
+        # self.assertEqual(result1.env, result3.env)
+        self.assertEqual(result1, os.path.join(self.cwd, "testDir"))
+        # self.assertEqual(result2.env, result4.env)
+        self.assertEqual(result2, self.cwd)
 
     def testCdExceptions(self):
-        msg = stdExceptionMessage()
-        stream1 = Stream(streamType.input, "cat", {"main": ["testDir", "smh"]}, {})
-        stream2 = Stream(streamType.input, "cat", {"a": [""], "main": ["testDir"]}, {})
-        stream3 = Stream(streamType.input, "cat", {"main": ["smh"]}, {})
-        stream4 = None
-        cd = Cat()
-        cdUnsafe = CdUnsafe()
-        with self.assertRaises(Exception):
-            cd.exec(stream1)
-        with self.assertRaises(Exception):
-            cd.exec(stream2)
-        with self.assertRaises(Exception):
-            cd.exec(stream3)
-        with self.assertRaises(Exception):
-            cd.exec(stream4)
-        self.assertTrue(
+        # cdUnsafe = CdUnsafe()
+        with self.assertRaises(InvalidArgumentError):
+            cd(
+                StreamForTest({"workingDir": self.cwd}, None, ["testDir", "smh"])
+            )  # Too many arguments
+        with self.assertRaises(InvalidArgumentError):
+            cd(StreamForTest({"workingDir": self.cwd}, None, []))  # No directory
+        with self.assertRaises(InvalidFileOrDir):
+            cd(
+                StreamForTest({"workingDir": self.cwd}, None, ["smh"])
+            )  # Not existing directory
+        """self.assertTrue(
             msg.exceptionMsg(exceptionType.argNum)
             in cdUnsafe.exec(stream1).params["main"][0]
         )
@@ -67,7 +62,7 @@ class testApps(unittest.TestCase):
         self.assertTrue(
             msg.exceptionMsg(exceptionType.none)
             in cdUnsafe.exec(stream4).params["main"][0]
-        )
+        )"""
 
 
 if __name__ == "__main__":

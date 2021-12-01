@@ -7,7 +7,7 @@ import unittest, os
 import shutil
 
 
-class testApps(unittest.TestCase):
+class testFind(unittest.TestCase):
     def setUp(self) -> None:
         os.makedirs("root/testDir/test1")
         os.mkdir("root/testDir2/")

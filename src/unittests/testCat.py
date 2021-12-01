@@ -3,34 +3,31 @@ from unittest.main import main
 
 sys.path.insert(0, "..")
 from apps import *
-from apps.Stream import *
-from apps import tools
 import unittest, os
+from appTests import appTests
+from apps.Exceptions import InvalidFileOrDir
 
 
-class testApps(unittest.TestCase):
+class testCat(unittest.TestCase):
     def setUp(self) -> None:
         with open(".testCatA.txt", "w") as file:
-            file.write("testCatA\n")
+            file.write("TestLineA\nTestLineAA\n")
         with open(".testCatB.txt", "w") as file:
             file.write("testCatB")
+        self.tester = appTests(cat)
 
     def tearDown(self) -> None:
         os.remove(".testCatA.txt")
         os.remove(".testCatB.txt")
 
     def testCatFile(self):
-        stream = Stream(
-            streamType.input, "cat", {"main": [".testCatA.txt", ".testCatB.txt"]}, {}
-        )
-        cat1 = Cat()
-        cat2 = CatUnsafe()
-        result1 = cat1.exec(stream)
-        result2 = cat2.exec(stream)
-        self.assertEqual(result1.params["main"], result2.params["main"])
-        self.assertEqual(result1.params["main"][0], "testCatA\ntestCatB")
+        # cat2 = CatUnsafe()
+        result1 = self.tester.doOuputTest([".testCatA.txt", ".testCatB.txt"])
+        # result2 = cat2.exec(stream)
+        # self.assertEqual(result1.params["main"], result2.params["main"])
+        self.assertEqual(result1, "TestLineA\nTestLineAA\ntestCatB")
 
-    def testCatStdin(self):
+    """def testCatStdin(self):
         stream = Stream(
             streamType.input, "cat", {"main": [tools.str2stdin("Hello World!\n")]}, {}
         )
@@ -39,30 +36,13 @@ class testApps(unittest.TestCase):
         result1 = cat1.exec(stream)
         result2 = cat2.exec(stream)
         self.assertEqual(result1.params["main"], result2.params["main"])
-        self.assertEqual(result1.params["main"][0], "Hello World!\n")
+        self.assertEqual(result1.params["main"][0], "Hello World!\n")"""
 
     def testCatExceptions(self):
-        msg = stdExceptionMessage()
-        stream1 = Stream(streamType.input, "cat", {"main": ["^^^"]}, {})
-        stream2 = Stream(streamType.input, "cat", {"a": [""], "main": []}, {})
-        stream3 = Stream(
-            streamType.input, "cat", {"main": [tools.str2stdin("aaaa"), ""]}, {}
-        )
-        stream4 = None
-        stream5 = Stream(streamType.input, "cat", {"a": [], "main": []}, {})
-        cat1 = Cat()
-        cat2 = CatUnsafe()
-        with self.assertRaises(Exception):
-            cat1.exec(stream1)
-        with self.assertRaises(Exception):
-            cat1.exec(stream2)
-        with self.assertRaises(Exception):
-            cat1.exec(stream3)
-        with self.assertRaises(Exception):
-            cat1.exec(stream4)
-        with self.assertRaises(Exception):
-            cat1.exec(stream5)
-        self.assertTrue(
+        # cat2 = CatUnsafe()
+        with self.assertRaises(InvalidFileOrDir):
+            self.tester.doOuputTest(["^^^"])  # Not existing file
+        """self.assertTrue(
             msg.exceptionMsg(exceptionType.file) in cat2.exec(stream1).params["main"][0]
         )
         self.assertTrue(
@@ -79,7 +59,7 @@ class testApps(unittest.TestCase):
         self.assertTrue(
             msg.exceptionMsg(exceptionType.paramNum)
             in cat2.exec(stream5).params["main"][0]
-        )
+        )"""
 
 
 if __name__ == "__main__":

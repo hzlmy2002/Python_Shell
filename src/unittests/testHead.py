@@ -1,14 +1,16 @@
 import sys
 
 sys.path.insert(0, "..")
+
 from apps import *
-from apps.Stream import *
-from apps import tools
 import unittest, os
+from apps.Exceptions import InvalidArgumentError, InvalidParamTagError, InvalidFileOrDir
+from appTests import appTests
 
 
-class testApps(unittest.TestCase):
+class testHead(unittest.TestCase):
     def setUp(self) -> None:
+        self.tester = appTests(head)
         with open("test.txt", "w") as file:
             file.write("l1\nl2\nl3\nl4\nl5\nl6\nl7\nl8\nl9\nl10\nl11\n")
 
@@ -16,26 +18,17 @@ class testApps(unittest.TestCase):
         os.remove("test.txt")
 
     def testHeadFile(self):
-        stream1 = Stream(streamType.input, "head", {"main": ["test.txt"]}, {})
-        stream2 = Stream(
-            streamType.input, "head", {"n": [11], "main": ["test.txt"]}, {}
-        )
-        head = Head()
-        headUnsafe = HeadUnsafe()
-        result1 = head.exec(stream1)
-        result2 = headUnsafe.exec(stream1)
-        result3 = head.exec(stream2)
-        result4 = headUnsafe.exec(stream2)
-        self.assertEqual(result1.params["main"][0], result2.params["main"][0])
-        self.assertEqual(
-            result1.params["main"][0], "l1\nl2\nl3\nl4\nl5\nl6\nl7\nl8\nl9\nl10\n"
-        )
-        self.assertEqual(result3.params["main"][0], result4.params["main"][0])
-        self.assertEqual(
-            result3.params["main"][0], "l1\nl2\nl3\nl4\nl5\nl6\nl7\nl8\nl9\nl10\nl11\n"
-        )
+        # appUnsafe = HeadUnsafe()
+        result1 = self.tester.doOuputTest(["test.txt"])
+        # result2 = headUnsafe.exec(stream1)
+        result3 = self.tester.doOuputTest(["-n", "11", "test.txt"])
+        # result4 = headUnsafe.exec(stream2)
+        # self.assertEqual(result1.params["main"][0], result2.params["main"][0])
+        self.assertEqual(result1, "l1\nl2\nl3\nl4\nl5\nl6\nl7\nl8\nl9\nl10\n")
+        # self.assertEqual(result3.params["main"][0], result4.params["main"][0])
+        self.assertEqual(result3, "l1\nl2\nl3\nl4\nl5\nl6\nl7\nl8\nl9\nl10\nl11\n")
 
-    def testHeadStdin(self):
+    """def testHeadStdin(self):
         stream = Stream(
             streamType.input,
             "head",
@@ -47,41 +40,19 @@ class testApps(unittest.TestCase):
         result1 = app.exec(stream)
         result2 = appUnsafe.exec(stream)
         self.assertEqual(result1.params["main"], result2.params["main"])
-        self.assertEqual(result1.params["main"][0], "Hello World!\n")
+        self.assertEqual(result1.params["main"][0], "Hello World!\n")"""
 
     def testHeadExceptions(self):
-        msg = stdExceptionMessage()
-        stream1 = Stream(
-            streamType.input, "head", {"n": [], "main": []}, {}
-        )  # Empty main arg
-        stream2 = Stream(
-            streamType.input, "head", {"a": [11], "main": ["test.txt"]}, {}
-        )  # Invalid option a, only accepts n
-        stream3 = Stream(
-            streamType.input, "head", {"n": [11], "main": ["test.txt", "smh"]}, {}
-        )  # Too many main arguments
-        stream4 = Stream(
-            streamType.input, "head", {"n": [11], "main": ["test.txt"], "a": [12]}, {}
-        )  # Too many options provided
-        stream5 = Stream(
-            streamType.input, "head", {"n": [], "main": ["smh"]}, {}
-        )  # Not existing file
-        stream6 = None
-        head = Head()
-        headUnsafe = HeadUnsafe()
-        with self.assertRaises(Exception):
-            head.exec(stream1)
-        with self.assertRaises(Exception):
-            head.exec(stream2)
-        with self.assertRaises(Exception):
-            head.exec(stream3)
-        with self.assertRaises(Exception):
-            head.exec(stream4)
-        with self.assertRaises(Exception):
-            head.exec(stream5)
-        with self.assertRaises(Exception):
-            head.exec(stream6)
-        self.assertTrue(
+        # headUnsafe = HeadUnsafe()
+        with self.assertRaises(InvalidParamTagError):
+            self.tester.doOuputTest(["-a", "11", "test.txt"])  # Invalid param tag -a
+        with self.assertRaises(InvalidArgumentError):
+            self.tester.doOuputTest(
+                ["-n", "11", "test.txt", "smh"]
+            )  # Way to many arguments
+        with self.assertRaises(InvalidFileOrDir):
+            self.tester.doOuputTest(["-n", "11", "smh.txt"])  # Not existing file
+        """self.assertTrue(
             msg.exceptionMsg(exceptionType.argNum)
             in headUnsafe.exec(stream1).params["main"][0]
         )
@@ -104,7 +75,7 @@ class testApps(unittest.TestCase):
         self.assertTrue(
             msg.exceptionMsg(exceptionType.none)
             in headUnsafe.exec(stream6).params["main"][0]
-        )
+        )"""
 
 
 if __name__ == "__main__":

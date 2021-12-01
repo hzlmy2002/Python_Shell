@@ -2,7 +2,7 @@ import sys
 import os
 from parser import parseCommand
 from typing import TextIO
-from apps.stream import Stream
+from apps.Stream import Stream
 from commandtreevisitor import CommandTreeVisitor
 
 

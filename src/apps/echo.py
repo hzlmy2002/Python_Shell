@@ -1,4 +1,4 @@
-from apps.stream import Stream
+from apps.Stream import Stream
 
 
 def echo(stream: "Stream"):
