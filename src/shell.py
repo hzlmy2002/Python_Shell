@@ -4,7 +4,6 @@ from parser import parseCommand
 from typing import TextIO
 from apps.stream import Stream
 from commandtreevisitor import CommandTreeVisitor
-from io import StringIO
 
 
 class ShellStdout:
