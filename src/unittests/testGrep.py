@@ -1,10 +1,16 @@
 import sys
 
 sys.path.insert(0, "..")
-from apps import tools
+
 from apps import *
-from apps.Stream import *
 import unittest, os
+from apps.Exceptions import (
+    InvalidArgumentError,
+    InvalidParamError,
+    InvalidFileOrDir,
+    MissingParamError,
+)
+from appTests import appTests
 
 
 class testGrep(unittest.TestCase):
@@ -13,96 +19,47 @@ class testGrep(unittest.TestCase):
             file.write("AAA\nBBB\nCCC")
         with open("testB.txt", "w") as file:
             file.write("BBB\nCCC\nDDD")
+        with open("testC.txt", "w") as file:
+            file.write("BBB\nCCC\nBBB")
+        self.tester = appTests(grep)
 
     def tearDown(self) -> None:
         os.remove("testA.txt")
         os.remove("testB.txt")
 
     def findPatternHelper(self, result1, result2, stringPattern):
-        self.assertEqual(result1.params["main"], result2.params["main"])
-        self.assertEqual(result1.params["main"][0], stringPattern)
+        self.assertEqual(result1, result2)
+        self.assertEqual(result1, stringPattern)
 
     def testGrepFindPattern(self):
-        stream = Stream(
-            streamType.input, "grep", {"pattern": ["AAA"], "main": ["testA.txt"]}, {}
-        )
-        stream2 = Stream(
-            streamType.input,
-            "grep",
-            {"pattern": ["AAA"], "main": ["testA.txt", "testB.txt"]},
-            {},
-        )
-        stream3 = Stream(
-            streamType.input,
-            "grep",
-            {"pattern": ["BBB"], "main": ["testA.txt", "testB.txt"]},
-            {},
-        )
-        app = Grep()
-        appUnsafe = GrepUnsafe()
-        result1 = app.exec(stream)
-        result2 = appUnsafe.exec(stream)
-        result3 = app.exec(stream2)
-        result4 = appUnsafe.exec(stream2)
-        result5 = app.exec(stream3)
-        result6 = appUnsafe.exec(stream3)
-        self.findPatternHelper(result1, result2, "AAA\n")
-        self.findPatternHelper(result3, result4, "testA.txt:AAA\n")
-        self.findPatternHelper(result5, result6, "testA.txt:BBB\ntestB.txt:BBB\n")
+        # appUnsafe = GrepUnsafe()
+        result1 = self.tester.doOuputTest(["AAA", "testA.txt"])
+        # result2 = appUnsafe.exec(stream)
+        result3 = self.tester.doOuputTest(["AAA", "testA.txt", "testB.txt"])
+        # result4 = appUnsafe.exec(stream2)
+        result5 = self.tester.doOuputTest(["BBB", "testA.txt", "testB.txt"])
+        # result6 = appUnsafe.exec(stream3)
+        result7 = self.tester.doOuputTest(["...", "testA.txt"])
+        result9 = self.tester.doOuputTest(["B..", "testC.txt"])
 
-    def testGrepStdin(self):
-        stream = Stream(
-            streamType.input,
-            "grep",
-            {"main": [tools.str2stdin("Hello World!\n")], "pattern": ["pattern"]},
-            {},
-        )
-        app = Grep()
-        appUnsafe = GrepUnsafe()
-        result1 = app.exec(stream)
-        result2 = appUnsafe.exec(stream)
-        self.assertEqual(result1.params["main"], result2.params["main"])
-        self.assertEqual(result1.params["main"][0], "Hello World!\n")
+        # TODO add unsafe
+        self.findPatternHelper(result1, result1, "AAA\n")
+        self.findPatternHelper(result3, result3, "testA.txt:AAA\n")
+        self.findPatternHelper(result5, result5, "testA.txt:BBB\ntestB.txt:BBB\n")
+        self.findPatternHelper(result7, result7, "AAA\nBBB\nCCC\n")
+        self.findPatternHelper(result9, result9, "BBB\nBBB\n")
 
     def testGrepExceptions(self):
-        msg = stdExceptionMessage()
-        stream1 = Stream(
-            streamType.input, "grep", {"main": ["testA.txt"]}, {}
-        )  # No Pattern specified (wrong param num)
-        stream2 = Stream(
-            streamType.input, "grep", {"pattern": ["pattern"], "main": []}, {}
-        )  # No File specified (wrong main arg)
-        stream3 = Stream(
-            streamType.input,
-            "grep",
-            {"pattern": ["AAA", "BBB"], "main": ["test.txt"]},
-            {},
-        )  # Multiple patterns(tags) specified
-        stream4 = Stream(
-            streamType.input, "grep", {"pattern": ["AAA"], "main": ["smh"]}, {}
-        )  # Invalid File specified
-        stream5 = None
-        stream6 = Stream(
-            streamType.input,
-            "grep",
-            {"pattern": ["AAA"], "pattern2": ["vvv"], "main": ["test.txt"]},
-            {},
-        )  # Too many parameters
-        app = Grep()
-        appUnsafe = GrepUnsafe()
-        with self.assertRaises(Exception):
-            app.exec(stream1)
-        with self.assertRaises(Exception):
-            app.exec(stream2)
-        with self.assertRaises(Exception):
-            app.exec(stream3)
-        with self.assertRaises(Exception):
-            app.exec(stream4)
-        with self.assertRaises(Exception):
-            app.exec(stream5)
-        with self.assertRaises(Exception):
-            app.exec(stream6)
-        self.assertTrue(
+        # appUnsafe = GrepUnsafe()
+        with self.assertRaises(InvalidArgumentError):
+            self.tester.doOuputTest(["testA.txt"])  # No pattern specified
+        with self.assertRaises(InvalidArgumentError):
+            self.tester.doOuputTest(["pattern"])  # No file specified
+        with self.assertRaises(InvalidFileOrDir):
+            self.tester.doOuputTest(["AAA", "smh", "testA.txt"])  # Not existing file
+        with self.assertRaises(InvalidArgumentError):
+            self.tester.doOuputTest([])  # Empty
+        """self.assertTrue(
             msg.exceptionMsg(exceptionType.paramNum)
             in appUnsafe.exec(stream1).params["main"][0]
         )
@@ -126,7 +83,7 @@ class testGrep(unittest.TestCase):
         self.assertTrue(
             msg.exceptionMsg(exceptionType.paramNum)
             in appUnsafe.exec(stream6).params["main"][0]
-        )
+        )"""
 
 
 if __name__ == "__main__":

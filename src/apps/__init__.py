@@ -1,13 +1,10 @@
 from .Cat import cat
 from .Cd import cd
-
-# from .Cut import Cut, CutUnsafe
+from .Cut import cut
 from .Echo import echo
-
-# from .Find import Find, FindUnsafe
-# from .Grep import Grep, GrepUnsafe
+from .Find import find
+from .Grep import grep
 from .Head import head
-
 from .Ls import ls
 from .Pwd import pwd
 

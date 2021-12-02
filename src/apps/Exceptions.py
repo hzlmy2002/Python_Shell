@@ -2,6 +2,10 @@ class MissingParamError(RuntimeError):
     pass
 
 
+class InvalidParamError(RuntimeError):
+    pass
+
+
 class InvalidParamTagError(RuntimeError):
     pass
 

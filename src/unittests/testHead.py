@@ -28,20 +28,6 @@ class testHead(unittest.TestCase):
         # self.assertEqual(result3.params["main"][0], result4.params["main"][0])
         self.assertEqual(result3, "l1\nl2\nl3\nl4\nl5\nl6\nl7\nl8\nl9\nl10\nl11\n")
 
-    """def testHeadStdin(self):
-        stream = Stream(
-            streamType.input,
-            "head",
-            {"n": [], "main": [tools.str2stdin("Hello World!\n")]},
-            {},
-        )
-        app = Head()
-        appUnsafe = HeadUnsafe()
-        result1 = app.exec(stream)
-        result2 = appUnsafe.exec(stream)
-        self.assertEqual(result1.params["main"], result2.params["main"])
-        self.assertEqual(result1.params["main"][0], "Hello World!\n")"""
-
     def testHeadExceptions(self):
         # headUnsafe = HeadUnsafe()
         with self.assertRaises(InvalidParamTagError):
@@ -52,6 +38,12 @@ class testHead(unittest.TestCase):
             )  # Way to many arguments
         with self.assertRaises(InvalidFileOrDir):
             self.tester.doOuputTest(["-n", "11", "smh.txt"])  # Not existing file
+
+        with self.assertRaises(InvalidArgumentError):
+            self.tester.doOuputTest(["-n", "11"])  # No file specified
+
+        with self.assertRaises(InvalidArgumentError):
+            self.tester.doOuputTest(["-n", "test.txt"])  # No param argument specified
         """self.assertTrue(
             msg.exceptionMsg(exceptionType.argNum)
             in headUnsafe.exec(stream1).params["main"][0]

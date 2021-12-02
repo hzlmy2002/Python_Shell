@@ -19,5 +19,11 @@ def appFactory(appName: str) -> Callable[["Stream"], None]:
         return cd
     if appName == "ls":
         return ls
+    if appName == "cut":
+        return cut
+    if appName == "find":
+        return find
+    if appName == "grep":
+        return grep
 
     raise AppNotFoundError("Application not found.")

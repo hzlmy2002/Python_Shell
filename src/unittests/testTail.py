@@ -1,10 +1,16 @@
 import sys
 
 sys.path.insert(0, "..")
+
 from apps import *
-from apps.Stream import *
-from apps import tools
 import unittest, os
+from apps.Exceptions import (
+    InvalidArgumentError,
+    InvalidParamError,
+    InvalidFileOrDir,
+    MissingParamError,
+)
+from appTests import appTests
 
 
 class testTail(unittest.TestCase):

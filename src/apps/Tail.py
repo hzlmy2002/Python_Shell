@@ -1,7 +1,6 @@
-from apps.HeadTail import HeadTail
-from apps.standardStreamExceptions import *
-import apps.tools
-from types import MethodType
+from apps.Stream import Stream
+from apps.decorators import *
+from apps.Exceptions import InvalidArgumentError
 
 
 class Tail(HeadTail):

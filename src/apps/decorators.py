@@ -4,10 +4,10 @@ from apps.Stream import Stream
 from apps.Exceptions import *
 
 
-def hasArgument(call: Callable[["Stream"], None]):
+def atMostOneArgument(call: Callable[["Stream"], None]):
     def wrapper(stream: "Stream"):
-        if not stream.getArgs():
-            raise InvalidArgumentError("Should take arguments")
+        if len(stream.getArgs()) != 0 and len(stream.getArgs()) != 1:
+            raise InvalidArgumentError("Should one or no argument")
         call(stream)
 
     return wrapper
@@ -22,8 +22,9 @@ def noArgument(call: Callable[["Stream"], None]):
     return wrapper
 
 
-def paramTag(intendKey):
+def onlyParamTag(intendKey):
     # If it has a key then it must be of value intendKey
+    # Used by apps of optional parameter
     def decoratorParamTag(call: Callable[["Stream"], None]):
         def wrapper(stream: "Stream"):
             args = stream.getArgs()
@@ -38,7 +39,7 @@ def paramTag(intendKey):
     return decoratorParamTag
 
 
-def intParam(key, required=False, defaultVal=0):
+def intParam(key: str, required: bool, defaultVal=0):
     def decoratorIntParam(call: Callable[["Stream"], None]):
         def wrapperIntParam(stream: "Stream"):
             args = stream.getArgs()
@@ -50,7 +51,7 @@ def intParam(key, required=False, defaultVal=0):
             except (ValueError, IndexError) as e:
                 if isinstance(e, IndexError):
                     raise MissingParamError(f"Missing argument for parameter {key}")
-                elif required:
+                elif required:  # and Value Error
                     raise MissingParamError(f"Missing parameter {key}")
                 else:
                     val = defaultVal

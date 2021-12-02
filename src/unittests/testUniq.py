@@ -1,10 +1,16 @@
 import sys
 
 sys.path.insert(0, "..")
-from apps import tools
+
 from apps import *
-from apps.Stream import *
 import unittest, os
+from apps.Exceptions import (
+    InvalidArgumentError,
+    InvalidParamError,
+    InvalidFileOrDir,
+    MissingParamError,
+)
+from appTests import appTests
 
 
 class testUniq(unittest.TestCase):

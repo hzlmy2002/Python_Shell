@@ -1,11 +1,7 @@
-from apps.App import App
-from apps.CanStdIn import CanStdIn
-from .Stream import *
-
-from types import MethodType
-import apps.tools
+from apps.Stream import Stream
+from apps.decorators import *
+from apps.Exceptions import InvalidArgumentError
 import os
-from apps.standardStreamExceptions import *
 
 
 class Uniq(CanStdIn):

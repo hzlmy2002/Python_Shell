@@ -1,26 +1,14 @@
 from apps.Stream import Stream
 from apps.decorators import *
-from apps.Exceptions import InvalidArgumentError, InvalidFileOrDir
+from apps.Tools import getLines
 
 
-@paramTag("n")
+@onlyParamTag("n")
 @intParam("n", required=False, defaultVal=10)
+@atMostOneArgument
 def head(stream: "Stream"):
     linesNum = stream.getParam("n")
-    args = stream.getArgs()
-    isFile = False
-    if len(args) == 0:  # no file specified
-        lines = stream.getStdin()
-    elif len(args) != 1:
-        raise InvalidArgumentError("Too many arguments specified")
-    else:
-        isFile = True
-        fileName = args[0]
-        try:
-            lines = open(fileName, "r")
-        except:
-            raise InvalidFileOrDir("File does not exist")
-
+    lines = getLines(stream)
     stdout = stream.getStdout()
     i = 0
     for l in lines:
@@ -28,5 +16,5 @@ def head(stream: "Stream"):
         i += 1
         if i == int(linesNum):
             break
-    if isFile:
+    if stream.getArgs() == 1:
         lines.close()
