@@ -19,28 +19,19 @@ class testPwd(unittest.TestCase):
         os.rmdir("testDir")
 
     def testPwdChangeDir(self):
-        # appUnsafe = PwdUnsafe()
         result1 = self.tester.doOuputTest(env={"workingDir": self.cwd})
-        # result2 = appUnsafe.exec(stream)
-        # os.chdir("testDir")
-        # result3 = app.exec(stream)
-        # result4 = appUnsafe.exec(stream)
-        # self.assertEqual(result1.env, result2.env)
+        result2 = self.tester.doOuputTest(env={"workingDir": self.cwd}, unsafeApp=True)
+        self.assertEqual(result1, result2)
         self.assertEqual(result1, self.cwd + "\n")
-        # self.assertEqual(result3.env, result4.env)
-        """self.assertEqual(
-            result3.params["main"][0], self.cwd + os.sep + "testDir" + "\n"
-        )"""
-        os.chdir(self.cwd)
 
     def testPwdExceptions(self):
         # appUnsafe = PwdUnsafe()
         with self.assertRaises(InvalidArgumentError):
             self.tester.doOuputTest(["some args"])
-        """self.assertTrue(
-            msg.exceptionMsg(exceptionType.argNum)
-            in appUnsafe.exec(stream1).params["main"][0]
-        )"""
+        self.assertTrue(
+            "InvalidArgumentError"
+            in self.tester.doOuputTest(["some args"], unsafeApp=True)
+        )
 
 
 if __name__ == "__main__":

@@ -12,8 +12,9 @@ class testEcho(unittest.TestCase):
 
     def testEchoOutput(self):
         result1 = self.tester.doOuputTest(["Hello"])
-        # result2 = echoUnsafe.exec(stream1)
+        result2 = self.tester.doOuputTest(["Hello"], unsafeApp=True)
         self.assertEqual(result1, "Hello\n")
+        self.assertEqual(result1, result2)
 
 
 if __name__ == "__main__":

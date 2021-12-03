@@ -30,11 +30,10 @@ class testSort(unittest.TestCase):
         self.assertEqual(result1, stringPattern)
 
     def testSortFile(self):
-        # appUnsafe = SortUnsafe()
         result1 = self.tester.doOuputTest(["testA.txt"])
-        # result2 = appUnsafe.exec(stream)
+        result2 = self.tester.doOuputTest(["testA.txt"], unsafeApp=True)
         result3 = self.tester.doOuputTest(["-r", "testA.txt"])
-        # result4 = appUnsafe.exec(stream2)
+        result4 = self.tester.doOuputTest(["-r", "testA.txt"], unsafeApp=True)
         answer = [
             "And be one traveler,long I stood\n",
             "And looked down one as far as I could\n",
@@ -46,13 +45,12 @@ class testSort(unittest.TestCase):
         # Add unsafe later
         self.matchHelper(
             result1,
-            result1,
+            result2,
             "".join(answer),
         )
-        self.matchHelper(result3, result3, "".join(answer[::-1]))
+        self.matchHelper(result3, result4, "".join(answer[::-1]))
 
     def testSortExceptions(self):
-        # appUnsafe = SortUnsafe()
         with self.assertRaises(InvalidArgumentError):
             self.tester.doOuputTest(["testB.txt", "testA.txt"])  # Too many arguments
         with self.assertRaises(InvalidArgumentError):
@@ -63,31 +61,24 @@ class testSort(unittest.TestCase):
             self.tester.doOuputTest(["-r", "smh"])  # Not existing file
         with self.assertRaises(InvalidParamTagError):
             self.tester.doOuputTest(["-a", "testA.txt"])  # Invalid flag A
-        """
         self.assertTrue(
-            msg.exceptionMsg(exceptionType.paramNum)
-            in appUnsafe.exec(stream1).params["main"][0]
+            "InvalidArgumentError"
+            in self.tester.doOuputTest(["testB.txt", "testA.txt"], unsafeApp=True)
         )
         self.assertTrue(
-            msg.exceptionMsg(exceptionType.argNum)
-            in appUnsafe.exec(stream2).params["main"][0]
+            "InvalidArgumentError" in self.tester.doOuputTest([], unsafeApp=True)
         )
         self.assertTrue(
-            msg.exceptionMsg(exceptionType.tagNum)
-            in appUnsafe.exec(stream3).params["main"][0]
+            "InvalidArgumentError"
+            in self.tester.doOuputTest(["-r", "123", "testA.txt"], unsafeApp=True)
         )
         self.assertTrue(
-            msg.exceptionMsg(exceptionType.file)
-            in appUnsafe.exec(stream4).params["main"][0]
+            "InvalidFileOrDir" in self.tester.doOuputTest(["-r", "smh"], unsafeApp=True)
         )
         self.assertTrue(
-            msg.exceptionMsg(exceptionType.none)
-            in appUnsafe.exec(stream5).params["main"][0]
+            "InvalidParamTagError"
+            in self.tester.doOuputTest(["-a", "testA.txt"], unsafeApp=True)
         )
-        self.assertTrue(
-            msg.exceptionMsg(exceptionType.paramType)
-            in appUnsafe.exec(stream6).params["main"][0]
-        )"""
 
 
 if __name__ == "__main__":

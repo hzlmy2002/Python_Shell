@@ -1,6 +1,7 @@
 from typing import Callable
 from apps import *
 from apps.Sort import sort
+from apps.decorators import unsafe
 
 
 class AppNotFoundError(RuntimeError):
@@ -32,5 +33,7 @@ def appFactory(appName: str) -> Callable[["Stream"], None]:
         return uniq
     if appName == "tail":
         return tail
+    if appName.startswith("_"):
+        return unsafe(appFactory(appName[1:]))
 
     raise AppNotFoundError("Application not found.")

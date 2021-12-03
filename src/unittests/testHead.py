@@ -18,18 +18,16 @@ class testHead(unittest.TestCase):
         os.remove("test.txt")
 
     def testHeadFile(self):
-        # appUnsafe = HeadUnsafe()
         result1 = self.tester.doOuputTest(["test.txt"])
-        # result2 = headUnsafe.exec(stream1)
+        result2 = self.tester.doOuputTest(["test.txt"], unsafeApp=True)
         result3 = self.tester.doOuputTest(["-n", "11", "test.txt"])
-        # result4 = headUnsafe.exec(stream2)
-        # self.assertEqual(result1.params["main"][0], result2.params["main"][0])
+        result4 = self.tester.doOuputTest(["-n", "11", "test.txt"], unsafeApp=True)
+        self.assertEqual(result1, result2)
         self.assertEqual(result1, "l1\nl2\nl3\nl4\nl5\nl6\nl7\nl8\nl9\nl10\n")
-        # self.assertEqual(result3.params["main"][0], result4.params["main"][0])
+        self.assertEqual(result3, result4)
         self.assertEqual(result3, "l1\nl2\nl3\nl4\nl5\nl6\nl7\nl8\nl9\nl10\nl11\n")
 
     def testHeadExceptions(self):
-        # headUnsafe = HeadUnsafe()
         with self.assertRaises(InvalidParamTagError):
             self.tester.doOuputTest(["-a", "11", "test.txt"])  # Invalid param tag -a
         with self.assertRaises(InvalidArgumentError):
@@ -44,30 +42,27 @@ class testHead(unittest.TestCase):
 
         with self.assertRaises(InvalidArgumentError):
             self.tester.doOuputTest(["-n", "test.txt"])  # No param argument specified
-        """self.assertTrue(
-            msg.exceptionMsg(exceptionType.argNum)
-            in headUnsafe.exec(stream1).params["main"][0]
+
+        self.assertTrue(
+            "InvalidParamTagError"
+            in self.tester.doOuputTest(["-a", "11", "test.txt"], unsafeApp=True)
         )
         self.assertTrue(
-            msg.exceptionMsg(exceptionType.paramType)
-            in headUnsafe.exec(stream2).params["main"][0]
+            "InvalidArgumentError"
+            in self.tester.doOuputTest(["-n", "11", "smh", "test.txt"], unsafeApp=True)
         )
         self.assertTrue(
-            msg.exceptionMsg(exceptionType.argNum)
-            in headUnsafe.exec(stream3).params["main"][0]
+            "InvalidFileOrDir"
+            in self.tester.doOuputTest(["-n", "11", "smh.txt"], unsafeApp=True)
         )
         self.assertTrue(
-            msg.exceptionMsg(exceptionType.paramNum)
-            in headUnsafe.exec(stream4).params["main"][0]
+            "InvalidArgumentError"
+            in self.tester.doOuputTest(["-n", "11"], unsafeApp=True)
         )
         self.assertTrue(
-            msg.exceptionMsg(exceptionType.file)
-            in headUnsafe.exec(stream5).params["main"][0]
+            "InvalidArgumentError"
+            in self.tester.doOuputTest(["-n", "test.txt"], unsafeApp=True)
         )
-        self.assertTrue(
-            msg.exceptionMsg(exceptionType.none)
-            in headUnsafe.exec(stream6).params["main"][0]
-        )"""
 
 
 if __name__ == "__main__":

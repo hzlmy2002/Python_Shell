@@ -35,14 +35,17 @@ class testFind(unittest.TestCase):
         shutil.rmtree("root")
 
     def testFindListFile(self):
-        # appUnsafe = FindUnsafe()
         result1 = self.tester.doOuputTest(["root", "-name", "test*.txt"])
-        # result2 = appUnsafe.exec(stream1)
+        result2 = self.tester.doOuputTest(
+            ["root", "-name", "test*.txt"], unsafeApp=True
+        )
         result3 = self.tester.doOuputTest(["root", "-name", "Alt*.txt"])
-        # result4 = appUnsafe.exec(stream2)
+        result4 = self.tester.doOuputTest(["root", "-name", "Alt*.txt"], unsafeApp=True)
         result5 = self.tester.doOuputTest(["-name", "test*.txt"])
-        # self.assertEqual(result1, result2)
-        # self.assertEqual(result3.params["main"][0], result4.params["main"][0])
+        result6 = self.tester.doOuputTest(["-name", "test*.txt"], unsafeApp=True)
+        self.assertEqual(result1, result2)
+        self.assertEqual(result3, result4)
+        self.assertEqual(result5, result6)
         self.assertEqual(
             result1,
             "root/test1.txt\nroot/testDir/test2.txt\nroot/testDir/test1/test3.txt\nroot/testDir2/test4.txt\n",
@@ -54,7 +57,6 @@ class testFind(unittest.TestCase):
         )
 
     def testFindExceptions(self):
-        # appUnsafe = FindUnsafe()
         with self.assertRaises(InvalidArgumentError):
             self.tester.doOuputTest(
                 ["root", "testDir2", "-name", "somepattern"]
@@ -73,34 +75,35 @@ class testFind(unittest.TestCase):
             )  # Too many patterns (too many arguments)
         with self.assertRaises(InvalidParamError):
             self.tester.doOuputTest(["root", "-name", "?est.txt"])  # Invalid Pattern
-        """self.assertTrue(
-            msg.exceptionMsg(exceptionType.argNum)
-            in appUnsafe.exec(stream1).params["main"][0]
+        self.assertTrue(
+            "InvalidArgumentError"
+            in self.tester.doOuputTest(
+                ["root", "testDir2", "-name", "somepattern"], unsafeApp=True
+            )
         )
 
         self.assertTrue(
-            msg.exceptionMsg(exceptionType.paramType)
-            in appUnsafe.exec(stream2).params["main"][0]
+            "MissingParamError"
+            in self.tester.doOuputTest(
+                ["root", "testDir2", "something", "somepattern"], unsafeApp=True
+            )
         )
 
         self.assertTrue(
-            msg.exceptionMsg(exceptionType.dir)
-            in appUnsafe.exec(stream3).params["main"][0]
+            "InvalidFileOrDir"
+            in self.tester.doOuputTest(["smh", "-name", "somepattern"], unsafeApp=True)
         )
         self.assertTrue(
-            msg.exceptionMsg(exceptionType.none)
-            in appUnsafe.exec(stream4).params["main"][0]
-        )
-
-        self.assertTrue(
-            msg.exceptionMsg(exceptionType.tagNum)
-            in appUnsafe.exec(stream5).params["main"][0]
+            "InvalidArgumentError"
+            in self.tester.doOuputTest(
+                ["root", "-name", "somepattern", "somemorepattern"], unsafeApp=True
+            )
         )
 
         self.assertTrue(
-            msg.exceptionMsg(exceptionType.paramNum)
-            in appUnsafe.exec(stream6).params["main"][0]
-        )"""
+            "InvalidParamError"
+            in self.tester.doOuputTest(["root", "-name", "?est.txt"], unsafeApp=True)
+        )
 
 
 if __name__ == "__main__":

@@ -2,6 +2,7 @@ from typing import Callable
 from apps.Exceptions import MissingParamError
 from apps.Stream import Stream
 from apps.Exceptions import *
+import traceback
 
 
 def atMostOneArgument(call: Callable[["Stream"], None]):
@@ -80,3 +81,14 @@ def getFlag(key: str):
         return wrapper
 
     return decoratorGetFlag
+
+
+def unsafe(call: Callable[["Stream"], None]):
+    def wrapper(stream: "Stream"):
+        stdout = stream.getStdout()
+        try:
+            call(stream)
+        except Exception as e:
+            stdout.write(traceback.format_exc())
+
+    return wrapper

@@ -25,14 +25,13 @@ class testLs(unittest.TestCase):
         shutil.rmtree("testDir2")
 
     def testLsListDir(self):
-        # lsUnsafe = LsUnsafe()
-        result1 = self.tester.doOuputTest(["testDir"], {})
-        # result2 = lsUnsafe.exec(stream1)
+        result1 = self.tester.doOuputTest(["testDir"])
+        result2 = self.tester.doOuputTest(["testDir"], unsafeApp=True)
         os.chdir("testDir")
-        result3 = self.tester.doOuputTest([], {})
-        # result4 = lsUnsafe.exec(stream2)
-        # self.assertEqual(result1.params["main"][0], result2.params["main"][0])
-        # self.assertEqual(result3.params["main"][0], result4.params["main"][0])
+        result3 = self.tester.doOuputTest()
+        result4 = self.tester.doOuputTest(unsafeApp=True)
+        self.assertEqual(result1, result2)
+        self.assertEqual(result3, result4)
         self.assertEqual(result1, result3)
         self.assertEqual(result1, "test1\ntest2\n")
 
@@ -42,22 +41,13 @@ class testLs(unittest.TestCase):
             self.tester.doOuputTest(["testDir", "testDir2"])  # Too many arguments
         with self.assertRaises(InvalidFileOrDir):
             self.tester.doOuputTest(["smh"])  # Not existing directory
-        """self.assertTrue(
-            msg.exceptionMsg(exceptionType.argNum)
-            in lsUnsafe.exec(stream1).params["main"][0]
+        self.assertTrue(
+            "InvalidArgumentError"
+            in self.tester.doOuputTest(["testDir", "testDir2"], unsafeApp=True)
         )
         self.assertTrue(
-            msg.exceptionMsg(exceptionType.paramNum)
-            in lsUnsafe.exec(stream2).params["main"][0]
+            "InvalidFileOrDir" in self.tester.doOuputTest(["smh"], unsafeApp=True)
         )
-        self.assertTrue(
-            msg.exceptionMsg(exceptionType.dir)
-            in lsUnsafe.exec(stream3).params["main"][0]
-        )
-        self.assertTrue(
-            msg.exceptionMsg(exceptionType.none)
-            in lsUnsafe.exec(stream4).params["main"][0]
-        )"""
 
 
 if __name__ == "__main__":

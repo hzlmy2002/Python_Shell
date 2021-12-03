@@ -1,3 +1,4 @@
+from re import T
 import sys
 
 sys.path.insert(0, "..")
@@ -32,22 +33,25 @@ class testGrep(unittest.TestCase):
         self.assertEqual(result1, stringPattern)
 
     def testGrepFindPattern(self):
-        # appUnsafe = GrepUnsafe()
         result1 = self.tester.doOuputTest(["AAA", "testA.txt"])
-        # result2 = appUnsafe.exec(stream)
+        result2 = self.tester.doOuputTest(["AAA", "testA.txt"], unsafeApp=True)
         result3 = self.tester.doOuputTest(["AAA", "testA.txt", "testB.txt"])
-        # result4 = appUnsafe.exec(stream2)
+        result4 = self.tester.doOuputTest(
+            ["AAA", "testA.txt", "testB.txt"], unsafeApp=True
+        )
         result5 = self.tester.doOuputTest(["BBB", "testA.txt", "testB.txt"])
-        # result6 = appUnsafe.exec(stream3)
+        result6 = self.tester.doOuputTest(
+            ["BBB", "testA.txt", "testB.txt"], unsafeApp=True
+        )
         result7 = self.tester.doOuputTest(["...", "testA.txt"])
+        result8 = self.tester.doOuputTest(["...", "testA.txt"], unsafeApp=True)
         result9 = self.tester.doOuputTest(["B..", "testC.txt"])
-
-        # TODO add unsafe
-        self.findPatternHelper(result1, result1, "AAA\n")
-        self.findPatternHelper(result3, result3, "testA.txt:AAA\n")
-        self.findPatternHelper(result5, result5, "testA.txt:BBB\ntestB.txt:BBB\n")
-        self.findPatternHelper(result7, result7, "AAA\nBBB\nCCC\n")
-        self.findPatternHelper(result9, result9, "BBB\nBBB\n")
+        result10 = self.tester.doOuputTest(["B..", "testC.txt"], unsafeApp=True)
+        self.findPatternHelper(result1, result2, "AAA\n")
+        self.findPatternHelper(result3, result4, "testA.txt:AAA\n")
+        self.findPatternHelper(result5, result6, "testA.txt:BBB\ntestB.txt:BBB\n")
+        self.findPatternHelper(result7, result8, "AAA\nBBB\nCCC\n")
+        self.findPatternHelper(result9, result10, "BBB\nBBB\n")
 
     def testGrepExceptions(self):
         # appUnsafe = GrepUnsafe()
@@ -59,31 +63,21 @@ class testGrep(unittest.TestCase):
             self.tester.doOuputTest(["AAA", "smh", "testA.txt"])  # Not existing file
         with self.assertRaises(InvalidArgumentError):
             self.tester.doOuputTest([])  # Empty
-        """self.assertTrue(
-            msg.exceptionMsg(exceptionType.paramNum)
-            in appUnsafe.exec(stream1).params["main"][0]
+        self.assertTrue(
+            "InvalidArgumentError"
+            in self.tester.doOuputTest(["testA.txt"], unsafeApp=True)
         )
         self.assertTrue(
-            msg.exceptionMsg(exceptionType.argNum)
-            in appUnsafe.exec(stream2).params["main"][0]
+            "InvalidArgumentError"
+            in self.tester.doOuputTest(["pattern"], unsafeApp=True)
         )
         self.assertTrue(
-            msg.exceptionMsg(exceptionType.tagNum)
-            in appUnsafe.exec(stream3).params["main"][0]
+            "InvalidFileOrDir"
+            in self.tester.doOuputTest(["AAA", "smh", "testA.txt"], unsafeApp=True)
         )
         self.assertTrue(
-            msg.exceptionMsg(exceptionType.file)
-            in appUnsafe.exec(stream4).params["main"][0]
+            "InvalidArgumentError" in self.tester.doOuputTest([], unsafeApp=True)
         )
-        self.assertTrue(
-            msg.exceptionMsg(exceptionType.none)
-            in appUnsafe.exec(stream5).params["main"][0]
-        )
-
-        self.assertTrue(
-            msg.exceptionMsg(exceptionType.paramNum)
-            in appUnsafe.exec(stream6).params["main"][0]
-        )"""
 
 
 if __name__ == "__main__":

@@ -33,38 +33,36 @@ class testUniq(unittest.TestCase):
         self.assertEqual(result1, stringPattern)
 
     def testUniqFile(self):
-        # appUnsafe = UniqUnsafe()
         result1 = self.tester.doOuputTest(["testA.txt"])
-        # result2 = appUnsafe.exec(stream)
+        result2 = self.tester.doOuputTest(["testA.txt"], unsafeApp=True)
         result3 = self.tester.doOuputTest(["-i", "testA.txt"])
-        # result4 = appUnsafe.exec(stream2)
+        result4 = self.tester.doOuputTest(["-i", "testA.txt"], unsafeApp=True)
         result5 = self.tester.doOuputTest(["testB.txt"])
-        # result6 = appUnsafe.exec(stream3)
+        result6 = self.tester.doOuputTest(["testB.txt"], unsafeApp=True)
         result7 = self.tester.doOuputTest(["-i", "testB.txt"])
-        # result8 = appUnsafe.exec(stream4)
+        result8 = self.tester.doOuputTest(["-i", "testB.txt"], unsafeApp=True)
         self.matchHelper(
             result1,
-            result1,
+            result2,
             "Hello Hello\nHello World\nHelloHello\nWorld\nWorld",
         )
         self.matchHelper(
             result3,
-            result3,
+            result4,
             "Hello Hello\nHELLO HELLO\nHello World\nHelloHello\nWorld\nWorld",
         )
         self.matchHelper(
             result5,
-            result5,
+            result6,
             "Hello Hello\nHello World\nHelloHello\nWorld\n",
         )
         self.matchHelper(
             result7,
-            result7,
+            result8,
             "Hello Hello\nHELLO HELLO\nHello World\nHelloHello\nWorld\n",
         )
 
     def testUniqExceptions(self):
-        # appUnsafe = UniqUnsafe()
         with self.assertRaises(InvalidArgumentError):
             self.tester.doOuputTest(["testB.txt", "testA.txt"])  # Too many arguments
         with self.assertRaises(InvalidArgumentError):
@@ -75,30 +73,24 @@ class testUniq(unittest.TestCase):
             self.tester.doOuputTest(["-i", "smh"])  # Not existing file
         with self.assertRaises(InvalidParamTagError):
             self.tester.doOuputTest(["-a", "testA.txt"])  # Invalid flag A
-        """self.assertTrue(
-            msg.exceptionMsg(exceptionType.paramNum)
-            in appUnsafe.exec(stream1).params["main"][0]
+        self.assertTrue(
+            "InvalidArgumentError"
+            in self.tester.doOuputTest(["testB.txt", "testA.txt"], unsafeApp=True)
         )
         self.assertTrue(
-            msg.exceptionMsg(exceptionType.argNum)
-            in appUnsafe.exec(stream2).params["main"][0]
+            "InvalidArgumentError" in self.tester.doOuputTest([], unsafeApp=True)
         )
         self.assertTrue(
-            msg.exceptionMsg(exceptionType.tagNum)
-            in appUnsafe.exec(stream3).params["main"][0]
+            "InvalidArgumentError"
+            in self.tester.doOuputTest(["-i", "123", "testA.txt"], unsafeApp=True)
         )
         self.assertTrue(
-            msg.exceptionMsg(exceptionType.file)
-            in appUnsafe.exec(stream4).params["main"][0]
+            "InvalidFileOrDir" in self.tester.doOuputTest(["-i", "smh"], unsafeApp=True)
         )
         self.assertTrue(
-            msg.exceptionMsg(exceptionType.none)
-            in appUnsafe.exec(stream5).params["main"][0]
+            "InvalidParamTagError"
+            in self.tester.doOuputTest(["-a", "testA.txt"], unsafeApp=True)
         )
-        self.assertTrue(
-            msg.exceptionMsg(exceptionType.paramType)
-            in appUnsafe.exec(stream6).params["main"][0]
-        )"""
 
 
 if __name__ == "__main__":

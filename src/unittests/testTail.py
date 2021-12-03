@@ -33,7 +33,7 @@ class testTail(unittest.TestCase):
         # self.assertEqual(result3.params["main"][0], result3.params["main"][0])
         self.assertEqual(result3, "l2\nl3\nl4\nl5\nl6\nl7\nl8\nl9\nl10\nl11\nl12\n")
 
-    def testHeadExceptions(self):
+    def testTailExceptions(self):
         with self.assertRaises(InvalidParamTagError):
             self.tester.doOuputTest(["-a", "11", "test.txt"])  # Invalid param tag -a
         with self.assertRaises(InvalidArgumentError):
@@ -48,31 +48,27 @@ class testTail(unittest.TestCase):
 
         with self.assertRaises(InvalidArgumentError):
             self.tester.doOuputTest(["-n", "test.txt"])  # No param argument specified
-        """tailUnsafe = TailUnsafe()
+
         self.assertTrue(
-            msg.exceptionMsg(exceptionType.argNum)
-            in tailUnsafe.exec(stream1).params["main"][0]
+            "InvalidParamTagError"
+            in self.tester.doOuputTest(["-a", "11", "test.txt"], unsafeApp=True)
         )
         self.assertTrue(
-            msg.exceptionMsg(exceptionType.paramType)
-            in tailUnsafe.exec(stream2).params["main"][0]
+            "InvalidArgumentError"
+            in self.tester.doOuputTest(["-n", "11", "smh", "test.txt"], unsafeApp=True)
         )
         self.assertTrue(
-            msg.exceptionMsg(exceptionType.argNum)
-            in tailUnsafe.exec(stream3).params["main"][0]
+            "InvalidFileOrDir"
+            in self.tester.doOuputTest(["-n", "11", "smh.txt"], unsafeApp=True)
         )
         self.assertTrue(
-            msg.exceptionMsg(exceptionType.paramNum)
-            in tailUnsafe.exec(stream4).params["main"][0]
+            "InvalidArgumentError"
+            in self.tester.doOuputTest(["-n", "11"], unsafeApp=True)
         )
         self.assertTrue(
-            msg.exceptionMsg(exceptionType.file)
-            in tailUnsafe.exec(stream5).params["main"][0]
+            "InvalidArgumentError"
+            in self.tester.doOuputTest(["-n", "test.txt"], unsafeApp=True)
         )
-        self.assertTrue(
-            msg.exceptionMsg(exceptionType.none)
-            in tailUnsafe.exec(stream6).params["main"][0]
-        )"""
 
 
 if __name__ == "__main__":

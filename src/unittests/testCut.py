@@ -29,34 +29,35 @@ class testCut(unittest.TestCase):
         self.assertEqual(result1, stringPattern)
 
     def testCutFile(self):
-        # appUnsafe = CutUnsafe()
         result1 = self.tester.doOuputTest(["-b", "1,2", "testA.txt"])
-        # result2 = appUnsafe.exec(stream)
+        result2 = self.tester.doOuputTest(["-b", "1,2", "testA.txt"], unsafeApp=True)
         result3 = self.tester.doOuputTest(["-b", "-2,5-", "testA.txt"])
-        # result4 = appUnsafe.exec(stream2)
+        result4 = self.tester.doOuputTest(["-b", "-2,5-", "testA.txt"], unsafeApp=True)
         result5 = self.tester.doOuputTest(["-b", "3-5", "testA.txt"])
-        # result6 = appUnsafe.exec(stream3)
+        result6 = self.tester.doOuputTest(["-b", "3-5", "testA.txt"], unsafeApp=True)
         result7 = self.tester.doOuputTest(
             ["-b", "4,3-5,-6", "testA.txt"]
         )  # Testing combining ranges
-        # result8 = appUnsafe.exec(stream4)
+        result8 = self.tester.doOuputTest(
+            ["-b", "4,3-5,-6", "testA.txt"], unsafeApp=True
+        )
         result9 = self.tester.doOuputTest(
             ["-b", "6-,3-5", "testA.txt"]
         )  # Testing unordered ranges
-        # result10 = appUnsafe.exec(stream5)
-
-        # TODO replace second arg with unsafe
-        self.assertHelper(result1, result1, "He\nMy\nNi\nyo\n")
+        result10 = self.tester.doOuputTest(
+            ["-b", "6-,3-5", "testA.txt"], unsafeApp=True
+        )
+        self.assertHelper(result1, result2, "He\nMy\nNi\nyo\n")
         self.assertHelper(
             result3,
-            result3,
+            result4,
             "Heo World, this is Cut test\nMyame is something\nNi to meet\nyoall\n",
         )
-        self.assertHelper(result5, result5, "llo\n na\nce \nu a\n")
-        self.assertHelper(result7, result7, "Hello \nMy nam\nNice t\nyou al\n")
+        self.assertHelper(result5, result6, "llo\n na\nce \nu a\n")
+        self.assertHelper(result7, result8, "Hello \nMy nam\nNice t\nyou al\n")
         self.assertHelper(
             result9,
-            result9,
+            result10,
             "llo World, this is Cut test\n name is something\nce to meet\nu all\n",
         )
 
@@ -80,46 +81,38 @@ class testCut(unittest.TestCase):
             self.tester.doOuputTest(["-b", "n", "testA.txt"])  # Invalid param arg
         with self.assertRaises(InvalidArgumentError):
             self.tester.doOuputTest(["-b", "1-3"])  # No file specified
-        """self.assertTrue(
-            msg.exceptionMsg(exceptionType.paramNum)
-            in appUnsafe.exec(stream1).params["main"][0]
+        self.assertTrue(
+            "MissingParamError"
+            in self.tester.doOuputTest(["testA.txt"], unsafeApp=True)
         )
         self.assertTrue(
-            msg.exceptionMsg(exceptionType.argNum)
-            in appUnsafe.exec(stream2).params["main"][0]
+            "InvalidArgumentError"
+            in self.tester.doOuputTest(["-b", "testA.txt"], unsafeApp=True)
         )
         self.assertTrue(
-            msg.exceptionMsg(exceptionType.tagNum)
-            in appUnsafe.exec(stream3).params["main"][0]
+            "InvalidFileOrDir"
+            in self.tester.doOuputTest(["-b", "3-5", "smh.txt"], unsafeApp=True)
         )
         self.assertTrue(
-            msg.exceptionMsg(exceptionType.file)
-            in appUnsafe.exec(stream4).params["main"][0]
+            "InvalidArgumentError"
+            in self.tester.doOuputTest(
+                ["-b", "3-5", "testB.txt", "testA.txt"], unsafeApp=True
+            )
         )
         self.assertTrue(
-            msg.exceptionMsg(exceptionType.none)
-            in appUnsafe.exec(stream5).params["main"][0]
-        )
-
-        self.assertTrue(
-            msg.exceptionMsg(exceptionType.paramNum)
-            in appUnsafe.exec(stream6).params["main"][0]
+            "InvalidArgumentError"
+            in self.tester.doOuputTest(["-b", "5-3", "testA.txt"], unsafeApp=True)
         )
 
         self.assertTrue(
-            msg.exceptionMsg(exceptionType.decRange)
-            in appUnsafe.exec(stream7).params["main"][0]
+            "InvalidParamError"
+            in self.tester.doOuputTest(["-b", "n", "testA.txt"], unsafeApp=True)
         )
 
         self.assertTrue(
-            msg.exceptionMsg(exceptionType.tagType)
-            in appUnsafe.exec(stream8).params["main"][0]
+            "InvalidArgumentError"
+            in self.tester.doOuputTest(["-b", "1-3"], unsafeApp=True)
         )
-
-        self.assertTrue(
-            msg.exceptionMsg(exceptionType.argNum)
-            in appUnsafe.exec(stream9).params["main"][0]
-        )"""
 
 
 if __name__ == "__main__":
