@@ -8,7 +8,7 @@ from apps.Exceptions import (
     InvalidArgumentError,
     InvalidParamError,
     InvalidFileOrDir,
-    MissingParamError,
+    InvalidParamTagError,
 )
 from appTests import appTests
 
@@ -17,81 +17,38 @@ class testTail(unittest.TestCase):
     def setUp(self) -> None:
         with open("test.txt", "w") as file:
             file.write("l1\nl2\nl3\nl4\nl5\nl6\nl7\nl8\nl9\nl10\nl11\nl12\n")
+        self.tester = appTests(tail)
 
     def tearDown(self) -> None:
         os.remove("test.txt")
 
     def testTailFile(self):
-        stream1 = Stream(streamType.input, "tail", {"main": ["test.txt"]}, {})
-        stream2 = Stream(
-            streamType.input, "tail", {"n": [11], "main": ["test.txt"]}, {}
-        )
-        tail = Tail()
-        tailUnsafe = TailUnsafe()
-        result1 = tail.exec(stream1)
-        result2 = tailUnsafe.exec(stream1)
-        result3 = tail.exec(stream2)
-        result4 = tailUnsafe.exec(stream2)
-        self.assertEqual(result1.params["main"][0], result2.params["main"][0])
-        self.assertEqual(
-            result1.params["main"][0], "l3\nl4\nl5\nl6\nl7\nl8\nl9\nl10\nl11\nl12\n"
-        )
-        self.assertEqual(result3.params["main"][0], result4.params["main"][0])
-        self.assertEqual(
-            result3.params["main"][0], "l2\nl3\nl4\nl5\nl6\nl7\nl8\nl9\nl10\nl11\nl12\n"
-        )
+        # tailUnsafe = TailUnsafe()
+        result1 = self.tester.doOuputTest(["test.txt"])
+        # result2 = tailUnsafe.exec(stream1)
+        result3 = self.tester.doOuputTest(["-n", "11", "test.txt"])
+        # result4 = tailUnsafe.exec(stream2)
+        # self.assertEqual(result1, result2.params["main"][0])
+        self.assertEqual(result1, "l3\nl4\nl5\nl6\nl7\nl8\nl9\nl10\nl11\nl12\n")
+        # self.assertEqual(result3.params["main"][0], result3.params["main"][0])
+        self.assertEqual(result3, "l2\nl3\nl4\nl5\nl6\nl7\nl8\nl9\nl10\nl11\nl12\n")
 
-    def testTailStdin(self):
-        stream = Stream(
-            streamType.input,
-            "tail",
-            {"n": [], "main": [tools.str2stdin("Hello World!\n")]},
-            {},
-        )
-        app = Tail()
-        appUnsafe = TailUnsafe()
-        result1 = app.exec(stream)
-        result2 = appUnsafe.exec(stream)
-        self.assertEqual(result1.params["main"], result2.params["main"])
-        self.assertEqual(result1.params["main"][0], "Hello World!\n")
+    def testHeadExceptions(self):
+        with self.assertRaises(InvalidParamTagError):
+            self.tester.doOuputTest(["-a", "11", "test.txt"])  # Invalid param tag -a
+        with self.assertRaises(InvalidArgumentError):
+            self.tester.doOuputTest(
+                ["-n", "11", "smh", "test.txt"]
+            )  # Way to many arguments
+        with self.assertRaises(InvalidFileOrDir):
+            self.tester.doOuputTest(["-n", "11", "smh.txt"])  # Not existing file
 
-    def testTailExceptions(self):
-        msg = stdExceptionMessage()
-        stream1 = Stream(
-            streamType.input, "head", {"n": [11], "main": []}, {}
-        )  # Empty main arg
-        stream2 = Stream(
-            streamType.input, "head", {"a": [11], "main": ["test.txt"]}, {}
-        )  # Invalid option a, only accepts n
-        stream3 = Stream(
-            streamType.input, "head", {"n": [11], "main": ["test.txt", "smh"]}, {}
-        )  # Too many main arguments
-        stream4 = Stream(
-            streamType.input, "head", {"n": [11], "main": ["test.txt"], "a": [12]}, {}
-        )  # Too many options provided
-        stream5 = Stream(
-            streamType.input, "head", {"n": [], "main": ["smh"]}, {}
-        )  # Not existing file
-        stream6 = None
+        with self.assertRaises(InvalidArgumentError):
+            self.tester.doOuputTest(["-n", "11"])  # No file specified
 
-        stream7 = Stream(
-            streamType.input, "head", {"n": [], "main": ["test.txt"]}, {}
-        )  # Empty n tag
-
-        tail = Tail()
-        tailUnsafe = TailUnsafe()
-        with self.assertRaises(Exception):
-            tail.exec(stream1)
-        with self.assertRaises(Exception):
-            tail.exec(stream2)
-        with self.assertRaises(Exception):
-            tail.exec(stream3)
-        with self.assertRaises(Exception):
-            tail.exec(stream4)
-        with self.assertRaises(Exception):
-            tail.exec(stream5)
-        with self.assertRaises(Exception):
-            tail.exec(stream6)
+        with self.assertRaises(InvalidArgumentError):
+            self.tester.doOuputTest(["-n", "test.txt"])  # No param argument specified
+        """tailUnsafe = TailUnsafe()
         self.assertTrue(
             msg.exceptionMsg(exceptionType.argNum)
             in tailUnsafe.exec(stream1).params["main"][0]
@@ -115,7 +72,7 @@ class testTail(unittest.TestCase):
         self.assertTrue(
             msg.exceptionMsg(exceptionType.none)
             in tailUnsafe.exec(stream6).params["main"][0]
-        )
+        )"""
 
 
 if __name__ == "__main__":

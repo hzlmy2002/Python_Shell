@@ -1,7 +1,6 @@
 from apps.Stream import Stream
 from apps.decorators import *
 from apps.Exceptions import InvalidArgumentError, InvalidParamError
-from apps.Tools import getLines
 import os
 import fnmatch
 

@@ -1,5 +1,6 @@
 from typing import Callable
 from apps import *
+from apps.Sort import sort
 
 
 class AppNotFoundError(RuntimeError):
@@ -25,5 +26,11 @@ def appFactory(appName: str) -> Callable[["Stream"], None]:
         return find
     if appName == "grep":
         return grep
+    if appName == "sort":
+        return sort
+    if appName == "uniq":
+        return uniq
+    if appName == "tail":
+        return tail
 
     raise AppNotFoundError("Application not found.")

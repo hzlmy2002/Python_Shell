@@ -3,7 +3,7 @@ from apps.decorators import *
 from apps.Tools import getLines
 
 
-@onlyParamTag("n")
+
 @intParam("n", required=False, defaultVal=10)
 @atMostOneArgument
 def head(stream: "Stream"):

@@ -34,7 +34,7 @@ class testHead(unittest.TestCase):
             self.tester.doOuputTest(["-a", "11", "test.txt"])  # Invalid param tag -a
         with self.assertRaises(InvalidArgumentError):
             self.tester.doOuputTest(
-                ["-n", "11", "test.txt", "smh"]
+                ["-n", "11", "smh", "test.txt"]
             )  # Way to many arguments
         with self.assertRaises(InvalidFileOrDir):
             self.tester.doOuputTest(["-n", "11", "smh.txt"])  # Not existing file

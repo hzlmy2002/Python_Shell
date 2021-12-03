@@ -7,8 +7,7 @@ from .Grep import grep
 from .Head import head
 from .Ls import ls
 from .Pwd import pwd
-
-# from .Sort import Sort, SortUnsafe
-# from .Tail import Tail, TailUnsafe
-# from .Uniq import Uniq, UniqUnsafe
+from .Sort import sort
+from .Tail import tail
+from .Uniq import uniq
 from .Stream import Stream

@@ -24,7 +24,6 @@ def noArgument(call: Callable[["Stream"], None]):
 
 def onlyParamTag(intendKey):
     # If it has a key then it must be of value intendKey
-    # Used by apps of optional parameter
     def decoratorParamTag(call: Callable[["Stream"], None]):
         def wrapper(stream: "Stream"):
             args = stream.getArgs()
@@ -41,6 +40,7 @@ def onlyParamTag(intendKey):
 
 def intParam(key: str, required: bool, defaultVal=0):
     def decoratorIntParam(call: Callable[["Stream"], None]):
+        @onlyParamTag(key)
         def wrapperIntParam(stream: "Stream"):
             args = stream.getArgs()
             try:
@@ -61,3 +61,22 @@ def intParam(key: str, required: bool, defaultVal=0):
         return wrapperIntParam
 
     return decoratorIntParam
+
+
+def getFlag(key: str):
+    def decoratorGetFlag(call: Callable[["Stream"], None]):
+        @onlyParamTag(key)
+        def wrapper(stream: "Stream"):
+            args = stream.getArgs()
+            try:
+                i = args.index("-" + key)
+                stream.addFlag(args[i][1])
+                stream.removeArg(i)
+            except (ValueError, IndexError) as e:
+                if isinstance(e, IndexError):
+                    raise MissingParamError(f"Missing argument for parameter {key}")
+            call(stream)
+
+        return wrapper
+
+    return decoratorGetFlag
