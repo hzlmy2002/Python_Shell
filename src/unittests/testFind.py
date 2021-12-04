@@ -73,8 +73,6 @@ class testFind(unittest.TestCase):
             self.tester.doOuputTest(
                 ["root", "-name", "somepattern", "somemorepattern"]
             )  # Too many patterns (too many arguments)
-        with self.assertRaises(InvalidParamError):
-            self.tester.doOuputTest(["root", "-name", "?est.txt"])  # Invalid Pattern
         self.assertTrue(
             "InvalidArgumentError"
             in self.tester.doOuputTest(
@@ -98,11 +96,6 @@ class testFind(unittest.TestCase):
             in self.tester.doOuputTest(
                 ["root", "-name", "somepattern", "somemorepattern"], unsafeApp=True
             )
-        )
-
-        self.assertTrue(
-            "InvalidParamError"
-            in self.tester.doOuputTest(["root", "-name", "?est.txt"], unsafeApp=True)
         )
 
 

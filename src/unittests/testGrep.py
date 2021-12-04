@@ -27,6 +27,7 @@ class testGrep(unittest.TestCase):
     def tearDown(self) -> None:
         os.remove("testA.txt")
         os.remove("testB.txt")
+        os.remove("testC.txt")
 
     def findPatternHelper(self, result1, result2, stringPattern):
         self.assertEqual(result1, result2)

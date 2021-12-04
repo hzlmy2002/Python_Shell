@@ -5,10 +5,6 @@ import os
 import fnmatch
 
 
-def isInvalidPattern(pattern):
-    return any(char in ["\\", "/", "?", '"', "<", ">", "|"] for char in pattern)
-
-
 def findFiles(rootPath: str, pattern: str) -> str:
     result = ""
     for root, _, files in os.walk(rootPath):
@@ -29,8 +25,6 @@ def find(stream: "Stream"):
     elif len(arg) != 0:
         raise InvalidArgumentError("Invalid Argument")
     pattern = stream.getParam("name")
-    if isInvalidPattern(pattern):
-        raise InvalidParamError("Invalid pattern entered")
     stdout = stream.getStdout()
     relativePaths = findFiles(rootPath, pattern)
     stdout.write(relativePaths)
