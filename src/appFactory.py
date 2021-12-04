@@ -33,7 +33,7 @@ def appFactory(appName: str) -> Callable[["Stream"], None]:
         return uniq
     if appName == "tail":
         return tail
-    if appName.startswith("_"):
+    if appName.startswith("_") and not appName[1:].startswith("_"):
         return unsafe(appFactory(appName[1:]))
 
     raise AppNotFoundError("Application not found.")
