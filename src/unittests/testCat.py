@@ -5,7 +5,7 @@ sys.path.insert(0, "..")
 from apps import *
 import unittest, os
 from appTests import appTests
-from apps.Exceptions import InvalidFileOrDir
+from apps.Exceptions import InvalidArgumentError, InvalidFileOrDir
 
 
 class testCat(unittest.TestCase):
@@ -32,8 +32,18 @@ class testCat(unittest.TestCase):
         # cat2 = CatUnsafe()
         with self.assertRaises(InvalidFileOrDir):
             self.tester.doOuputTest(["^^^"])  # Not existing file
+        with self.assertRaises(InvalidArgumentError):
+            self.tester.doOuputTest([])  # No argument
+        with self.assertRaises(InvalidArgumentError):
+            self.tester.doOuputTest([""])  # No argument
         self.assertTrue(
             "InvalidFileOrDir" in self.tester.doOuputTest(["^^^"], unsafeApp=True)
+        )
+        self.assertTrue(
+            "InvalidArgumentError" in self.tester.doOuputTest([""], unsafeApp=True)
+        )
+        self.assertTrue(
+            "InvalidArgumentError" in self.tester.doOuputTest([], unsafeApp=True)
         )
 
 

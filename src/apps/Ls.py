@@ -1,7 +1,7 @@
 from apps.Stream import Stream
 import os
 from apps.Exceptions import InvalidFileOrDir, InvalidArgumentError
-
+from apps.decorators import atMostOneArgument
 
 
 def listDirectory(ls_dir):
@@ -16,6 +16,7 @@ def listDirectory(ls_dir):
     return "".join(dirs)
 
 
+@atMostOneArgument
 def ls(stream: "Stream"):
     args = stream.getArgs()
     stdout = stream.getStdout()

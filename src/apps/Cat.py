@@ -1,12 +1,12 @@
 from typing import List, Dict
 from apps.Exceptions import InvalidFileOrDir
+from apps.decorators import hasArgument
 from .Stream import *
 
 
+@hasArgument
 def cat(stream: "Stream"):
     fileNames = stream.getArgs()
-    if len(fileNames) == 0:  # no file specified
-        fileNames = stream.getStdin()
     stdout = stream.getStdout()
     for file in fileNames:
         try:

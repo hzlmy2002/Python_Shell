@@ -81,6 +81,12 @@ class testCut(unittest.TestCase):
             self.tester.doOuputTest(["-b", "n", "testA.txt"])  # Invalid param arg
         with self.assertRaises(InvalidArgumentError):
             self.tester.doOuputTest(["-b", "1-3"])  # No file specified
+        with self.assertRaises(InvalidArgumentError):
+            self.tester.doOuputTest(["-b", "1-3", ""])  # No file specified
+        with self.assertRaises(InvalidArgumentError):
+            self.tester.doOuputTest([""])  # Empty
+        with self.assertRaises(InvalidArgumentError):
+            self.tester.doOuputTest([])  # Empty
         self.assertTrue(
             "MissingParamError"
             in self.tester.doOuputTest(["testA.txt"], unsafeApp=True)
@@ -112,6 +118,16 @@ class testCut(unittest.TestCase):
         self.assertTrue(
             "InvalidArgumentError"
             in self.tester.doOuputTest(["-b", "1-3"], unsafeApp=True)
+        )
+        self.assertTrue(
+            "InvalidArgumentError"
+            in self.tester.doOuputTest(["-b", "1-3", ""], unsafeApp=True)
+        )
+        self.assertTrue(
+            "InvalidArgumentError" in self.tester.doOuputTest([""], unsafeApp=True)
+        )
+        self.assertTrue(
+            "InvalidArgumentError" in self.tester.doOuputTest([], unsafeApp=True)
         )
 
 

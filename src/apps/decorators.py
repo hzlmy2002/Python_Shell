@@ -8,7 +8,25 @@ import traceback
 def atMostOneArgument(call: Callable[["Stream"], None]):
     def wrapper(stream: "Stream"):
         if len(stream.getArgs()) != 0 and len(stream.getArgs()) != 1:
-            raise InvalidArgumentError("Should one or no argument")
+            raise InvalidArgumentError("Exceeded maximum amount of argument required")
+        call(stream)
+
+    return wrapper
+
+
+def hasOneArgument(call: Callable[["Stream"], None]):
+    def wrapper(stream: "Stream"):
+        if len(stream.getArgs()) != 1 or stream.getArgs()[0] == "":
+            raise InvalidArgumentError("Should take a single argument")
+        call(stream)
+
+    return wrapper
+
+
+def hasArgument(call: Callable[["Stream"], None]):
+    def wrapper(stream: "Stream"):
+        if not stream.getArgs() or stream.getArgs()[0] == "":
+            raise InvalidArgumentError("Argument required but not supplied")
         call(stream)
 
     return wrapper
@@ -30,7 +48,7 @@ def onlyParamTag(intendKey):
             args = stream.getArgs()
             if args:
                 key = args[0]
-                if key[0] == "-" and key[1:] != intendKey:
+                if len(key) < 2 or (key[0] == "-" and key[1:] != intendKey):
                     raise InvalidParamTagError(f"Invalid tag {key}")
             call(stream)
 
@@ -41,6 +59,7 @@ def onlyParamTag(intendKey):
 
 def intParam(key: str, required: bool, defaultVal=0):
     def decoratorIntParam(call: Callable[["Stream"], None]):
+        @hasArgument
         @onlyParamTag(key)
         def wrapperIntParam(stream: "Stream"):
             args = stream.getArgs()
@@ -66,6 +85,7 @@ def intParam(key: str, required: bool, defaultVal=0):
 
 def getFlag(key: str):
     def decoratorGetFlag(call: Callable[["Stream"], None]):
+        @hasArgument
         @onlyParamTag(key)
         def wrapper(stream: "Stream"):
             args = stream.getArgs()

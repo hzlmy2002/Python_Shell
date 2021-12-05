@@ -79,7 +79,7 @@ def parseParamArguments(paramArgs: str) -> "List[str]":
 
 
 @intParam("b", required=True)
-@atMostOneArgument
+@hasOneArgument
 def cut(stream: "Stream"):
     stdout = stream.getStdout()
     paramArgs = parseParamArguments(stream.getParam("b"))

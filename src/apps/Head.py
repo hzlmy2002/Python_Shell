@@ -3,9 +3,8 @@ from apps.decorators import *
 from apps.Tools import getLines
 
 
-
 @intParam("n", required=False, defaultVal=10)
-@atMostOneArgument
+@hasOneArgument
 def head(stream: "Stream"):
     linesNum = stream.getParam("n")
     lines = getLines(stream)

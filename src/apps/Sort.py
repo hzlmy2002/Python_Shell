@@ -10,7 +10,7 @@ def fixNewLine(li):
 
 
 @getFlag("r")
-@atMostOneArgument
+@hasOneArgument
 def sort(stream: "Stream"):
     doReverse = stream.getFlag("r")
     lines = getLines(stream)
