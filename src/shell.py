@@ -3,7 +3,7 @@ import os
 from parser import parseCommand
 from typing import TextIO
 from apps.Stream import Stream
-from commandtreevisitor import CommandTreeVisitor
+from commandTreeVisitor import CommandTreeVisitor
 
 
 class ShellStdout:
