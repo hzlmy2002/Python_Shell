@@ -33,8 +33,6 @@ def processFiles(fileNames, pattern):
 
 def getFileNameAndPattern(stream: "Stream"):
     args = stream.getArgs()
-    if len(args) == 0:
-        raise InvalidArgumentError("Arguments required but not supplied")
     pattern = args[0]
     if len(args) == 1:  # no file names specified
         fileNames = stream.getStdin()
@@ -46,6 +44,7 @@ def getFileNameAndPattern(stream: "Stream"):
     return fileNames, pattern
 
 
+@hasArgument
 def grep(stream: "Stream"):
     fileNames, pattern = getFileNameAndPattern(stream)
     res = processFiles(fileNames, pattern)

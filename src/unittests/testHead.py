@@ -41,8 +41,14 @@ class testHead(unittest.TestCase):
             self.tester.doOuputTest(["-n", "11"])  # No file specified
 
         with self.assertRaises(InvalidArgumentError):
-            self.tester.doOuputTest(["-n", "test.txt"])  # No param argument specified
+            self.tester.doOuputTest(["-n", "11", ""])  # No file specified
 
+        with self.assertRaises(InvalidArgumentError):
+            self.tester.doOuputTest(["-n", "test.txt"])  # No param argument specified
+        with self.assertRaises(InvalidArgumentError):
+            self.tester.doOuputTest([""])  # Empty
+        with self.assertRaises(InvalidArgumentError):
+            self.tester.doOuputTest([])  # Empty
         self.assertTrue(
             "InvalidParamTagError"
             in self.tester.doOuputTest(["-a", "11", "test.txt"], unsafeApp=True)
@@ -61,7 +67,17 @@ class testHead(unittest.TestCase):
         )
         self.assertTrue(
             "InvalidArgumentError"
+            in self.tester.doOuputTest(["-n", "11", ""], unsafeApp=True)
+        )
+        self.assertTrue(
+            "InvalidArgumentError"
             in self.tester.doOuputTest(["-n", "test.txt"], unsafeApp=True)
+        )
+        self.assertTrue(
+            "InvalidArgumentError" in self.tester.doOuputTest([""], unsafeApp=True)
+        )
+        self.assertTrue(
+            "InvalidArgumentError" in self.tester.doOuputTest([], unsafeApp=True)
         )
 
 

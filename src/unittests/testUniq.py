@@ -73,6 +73,10 @@ class testUniq(unittest.TestCase):
             self.tester.doOuputTest(["-i", "smh"])  # Not existing file
         with self.assertRaises(InvalidParamTagError):
             self.tester.doOuputTest(["-a", "testA.txt"])  # Invalid flag A
+        with self.assertRaises(InvalidArgumentError):
+            self.tester.doOuputTest([""])  # Empty
+        with self.assertRaises(InvalidArgumentError):
+            self.tester.doOuputTest([])  # Empty
         self.assertTrue(
             "InvalidArgumentError"
             in self.tester.doOuputTest(["testB.txt", "testA.txt"], unsafeApp=True)
@@ -90,6 +94,12 @@ class testUniq(unittest.TestCase):
         self.assertTrue(
             "InvalidParamTagError"
             in self.tester.doOuputTest(["-a", "testA.txt"], unsafeApp=True)
+        )
+        self.assertTrue(
+            "InvalidArgumentError" in self.tester.doOuputTest([""], unsafeApp=True)
+        )
+        self.assertTrue(
+            "InvalidArgumentError" in self.tester.doOuputTest([], unsafeApp=True)
         )
 
 

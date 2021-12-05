@@ -43,7 +43,9 @@ class testCd(unittest.TestCase):
                 ["testDir", "smh"], {"workingDir": self.cwd}
             )  # Too many arguments
         with self.assertRaises(InvalidArgumentError):
-            self.tester.changeEnvTest([], {"workingDir": self.cwd})  # No directory
+            self.tester.changeEnvTest([], {"workingDir": self.cwd})  # No argument
+        with self.assertRaises(InvalidArgumentError):
+            self.tester.changeEnvTest([""], {"workingDir": self.cwd})  # No argument
         with self.assertRaises(InvalidFileOrDir):
             self.tester.changeEnvTest(
                 ["smh"], {"workingDir": self.cwd}
@@ -57,6 +59,10 @@ class testCd(unittest.TestCase):
         self.assertTrue(
             "InvalidArgumentError"
             in self.tester.doOuputTest([], {"workingDir": self.cwd}, unsafeApp=True)
+        )
+        self.assertTrue(
+            "InvalidArgumentError"
+            in self.tester.doOuputTest([""], {"workingDir": self.cwd}, unsafeApp=True)
         )
         self.assertTrue(
             "InvalidFileOrDir"
