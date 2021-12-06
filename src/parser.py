@@ -1,21 +1,29 @@
 from parsita import *
-from commandTree import Argument, InRedirection, OutRedirection, Call, Pipe, Seq
+from commandTree import (
+    Argument,
+    InRedirection,
+    OutRedirection,
+    Call,
+    Pipe,
+    Seq,
+    Substitution,
+)
 from appFactory import appFactory, AppNotFoundError
 from typing import Callable
 from apps.Stream import Stream
 
 
 class CommandParsers(TextParsers, whitespace=None):
-    singleQuoted = "'" >> reg(r"[^\n\r']*") << "'"
-    backQuoted = "`" >> reg(r"[^\n\r`]*") << "`"
+    singleQuoted = "'" >> reg(r"[^\n\r']*") << "'" > Argument
+    backQuoted = "`" >> reg(r"[^\n\r`]*") << "`" > Substitution
     doubleQuoted = (
         '"' >> rep("`" & reg(r"[^\n\r`]*") & "`" | reg(r"[^\n\r\"`]+")) << '"' > "".join
-    )  # concatenate list returned by rep() into single quote string
+    ) > Argument  # concatenate list returned by rep() into single quote string
     quoted = singleQuoted | backQuoted | doubleQuoted
 
-    unquoted = reg(r"[^\s'\"`;|<>]+")
+    unquoted = reg(r"[^\s'\"`;|<>]+") > Argument
 
-    argument = (quoted | unquoted) > Argument
+    argument = quoted | unquoted
 
     whitespace = reg(r"[ \t]+")
     inRedirection = (">" >> whitespace >> argument) > InRedirection
@@ -53,3 +61,10 @@ class CommandParsers(TextParsers, whitespace=None):
 
 def parseCommand(cmdline: str):
     return CommandParsers.command.parse(cmdline).or_die()
+
+
+if __name__ == "__main__":
+    seq = parseCommand("echo `head -n 1 test.txt`")
+    call = seq.getCommands()[0]
+    sub = call.getArgs()[0]
+    print(sub.getCmdline())

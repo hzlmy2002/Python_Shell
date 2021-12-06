@@ -56,5 +56,13 @@ class Pipe(CommandTreeNode):
     def __init__(self, calls: List[Call]):
         self.calls = calls
 
-    def getCalls(self):
+    def getCalls(self) -> List[Call]:
         return self.calls
+
+
+class Substitution(CommandTreeNode):
+    def __init__(self, cmdline: str):
+        self.cmdline = cmdline
+
+    def getCmdline(self) -> str:
+        return self.cmdline
