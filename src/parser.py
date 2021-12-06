@@ -13,11 +13,10 @@ class CommandParsers(TextParsers, whitespace=None):
     )  # concatenate list returned by rep() into single quote string
     quoted = singleQuoted | backQuoted | doubleQuoted
 
-    unquoted = reg(r"[^\s'\"`;|<>]*")
+    unquoted = reg(r"[^\s'\"`;|<>]+")
 
     argument = (quoted | unquoted) > Argument
 
-    # TODO: relative, absolute and system-independent paths, globbing
     whitespace = reg(r"[ \t]+")
     inRedirection = (">" >> whitespace >> argument) > InRedirection
     outRedirection = ("<" >> whitespace >> argument) > OutRedirection
