@@ -26,8 +26,8 @@ class CommandParsers(TextParsers, whitespace=None):
     argument = quoted | unquoted
 
     whitespace = reg(r"[ \t]+")
-    inRedirection = (">" >> whitespace >> argument) > InRedirection
-    outRedirection = ("<" >> whitespace >> argument) > OutRedirection
+    inRedirection = ("<" >> whitespace >> argument) > InRedirection
+    outRedirection = (">" >> whitespace >> argument) > OutRedirection
     redirection = inRedirection | outRedirection
 
     atom = redirection | argument
@@ -64,7 +64,7 @@ def parseCommand(cmdline: str):
 
 
 if __name__ == "__main__":
-    seq = parseCommand("echo `head -n 1 test.txt`")
+    seq = parseCommand("echo a > aaa")
     call = seq.getCommands()[0]
     sub = call.getArgs()[0]
     print(sub.getCmdline())
