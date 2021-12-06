@@ -69,6 +69,7 @@ class shellOutput:
             raise Exception(f"Inadequate output mode {self.mode}")
 
     def setMode(self,mode):
+        self.reset()
         self.mode=mode
 
     def setRedirFileName(self,filename):
@@ -76,16 +77,3 @@ class shellOutput:
 
     def getMode(self):
         return self.mode
-
-
-def test():
-    stream=Stream({})
-    ouput=shellOutput(stream)
-    stream.setStdout(ouput)
-    stream.addArg("-n")
-    stream.addArg("10")
-    pass
-    
-
-test()
-    

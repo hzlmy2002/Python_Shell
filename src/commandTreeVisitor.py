@@ -48,15 +48,11 @@ class CommandTreeVisitor:
 
     @visit.register
     def _(self, node: "Seq"):
-        shellStdout = self.stream.getStdout()
         commands = node.getCommands()
         for c in commands:
             c.accept(self)
-            self.stream.clearArgs()
-            self.stream.clearParams()
-            self.stream.clearFlags()
-            self.stream.clearStdin()
-            self.stream.setStdout(shellStdout)
+            self.stream.reset()
+            self.stream.getStdout().reset()
 
     @visit.register
     def _(self, node: "Pipe"):
@@ -76,3 +72,7 @@ class CommandTreeVisitor:
 
         self.stream.setStdout(shellStdout)
         calls[-1].accept(self)
+
+    @visit.register
+    def _(self,node:"Substitution"):
+        pass
