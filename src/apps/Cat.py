@@ -13,7 +13,6 @@ def cat(stream: "Stream"):
             if type(file) == StringIO:
                 with file as f:
                     stdout.write(f.read())
-                    return
             else:
                 with open(file, "r") as f:
                     stdout.write(f.read())

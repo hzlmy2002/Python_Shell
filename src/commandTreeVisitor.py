@@ -26,17 +26,18 @@ class CommandTreeVisitor:
         # TODO: relative, absolute and system-independent paths, globbing
         path = node.getPath()
         try:
-            stdin = open(path, "r")
+            with open(path, "r") as f:
+                content=StringIO(f.read())
+                self.stream.addArg(content)
         except FileNotFoundError:
             raise StdinNotFoundError
-        self.stream.setStdin(stdin)
 
     @visit.register
     def _(self, node: "OutRedirection") -> None:
-        # TODO: relative, absolute and system-independent paths, globbing
         path = node.getPath()
-        stdout = open(path, "a", newline="\n")
-        self.stream.setStdout(stdout)
+        self.stream.getStdout().setMode(stdout.redir)
+        self.stream.getStdout().setRedirFileName(path)
+
 
     @visit.register
     def _(self, node: "Call") -> None:
@@ -72,7 +73,6 @@ class CommandTreeVisitor:
 
             currentCall.accept(self)
             self.stream.reset()
-            prev.close()
 
         lastCall=calls[-1]
         prev= StringIO(self.stream.getStdout().getBuffer())

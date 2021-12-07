@@ -24,10 +24,17 @@ class Shell:
 
     def repl(self):
         while True:
-            workingDir = self.stream.getEnv("workingDir")
-            self.output(workingDir + "> ")
-            cmdline = input()
-            self.evaluate(cmdline)
+            try:
+                workingDir = self.stream.getEnv("workingDir")
+                self.output(workingDir + "> ")
+                cmdline = input()
+                self.evaluate(cmdline)
+            except KeyboardInterrupt:
+                print("\nbye")
+                exit(0)
+            except EOFError:
+                print("\nbye")
+                exit(0)
 
 
 if __name__ == "__main__":
