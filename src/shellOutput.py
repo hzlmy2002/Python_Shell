@@ -1,4 +1,5 @@
 from enum import Enum
+from io import StringIO
 from apps import Stream
 
 class stdout(Enum):
@@ -13,12 +14,13 @@ class stdout(Enum):
     def __str__(self):
         return self.value
 
-class shellOutput:
+class ShellOutput:
     def __init__(self,globalStream) -> None:
         self.stream=globalStream
         self.mode=stdout.std
 
         self.sandbox=[]
+        self.buffer=StringIO()
         self.redirFileName=""
 
     def reset(self):

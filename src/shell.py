@@ -4,14 +4,14 @@ from parser import parseCommand
 from typing import TextIO
 from apps.Stream import Stream
 from commandTreeVisitor import CommandTreeVisitor
-from shellOutput import shellOutput
+from shellOutput import ShellOutput
 
 class Shell:
     def __init__(self, workingDir):
         env = {"workingDir": workingDir}
 
         self.stream = Stream(env)
-        self.stdout=shellOutput(self.stream)
+        self.stdout=ShellOutput(self.stream)
         self.stream.alterStdout(self.stdout)
         self.commandTreeVisitor = CommandTreeVisitor(self.stream)
 

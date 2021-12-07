@@ -1,5 +1,5 @@
 from typing import Dict, List, TextIO
-from shellOutput import shellOutput
+from shellOutput import ShellOutput
 
 class Stream:
     def __init__(self, env: Dict[str, str]={}, stdout=None):
@@ -7,7 +7,7 @@ class Stream:
         self.params = {}
         self.flags = []
         self.env = env.copy()
-        self.stdout: "shellOutput" = stdout
+        self.stdout: "ShellOutput" = stdout
 
     def addArg(self, arg: str) -> None:
         self.args.append(arg)
@@ -36,10 +36,10 @@ class Stream:
     def getEnv(self, key: str) -> str:
         return self.env[key]
 
-    def getStdout(self) -> "shellOutput":
+    def getStdout(self) -> "ShellOutput":
         return self.stdout
 
-    def alterStdout(self, stdout: "shellOutput") -> None:
+    def alterStdout(self, stdout: "ShellOutput") -> None:
         self.stdout = stdout
 
     def clearArgs(self) -> None:

@@ -2,7 +2,7 @@ from typing import List, Dict
 from apps.Exceptions import InvalidFileOrDir
 from apps.decorators import hasArgument
 from .Stream import *
-
+from io import StringIO
 
 @hasArgument
 def cat(stream: "Stream"):
@@ -10,7 +10,12 @@ def cat(stream: "Stream"):
     stdout = stream.getStdout()
     for file in fileNames:
         try:
-            with open(file, "r") as f:
-                stdout.write(f.read())
+            if type(file) == StringIO:
+                with file as f:
+                    stdout.write(f.read())
+                    return
+            else:
+                with open(file, "r") as f:
+                    stdout.write(f.read())
         except FileNotFoundError:
             raise InvalidFileOrDir(f"File {file} does not exist")

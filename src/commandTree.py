@@ -43,6 +43,9 @@ class Call(CommandTreeNode):
     def getArgs(self) -> List[CommandTreeNode]:
         return self.args
 
+    def addArg(self, arg: CommandTreeNode) -> None:
+        self.args.append(arg)
+
 
 class Seq(CommandTreeNode):
     def __init__(self, commands: List[CommandTreeNode]):

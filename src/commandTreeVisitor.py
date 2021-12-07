@@ -2,7 +2,7 @@ from io import StringIO
 from commandTree import *
 from apps.Stream import Stream
 from functools import singledispatchmethod
-
+from shellOutput import *
 
 class StdinNotFoundError(RuntimeError):
     pass
@@ -56,22 +56,32 @@ class CommandTreeVisitor:
 
     @visit.register
     def _(self, node: "Pipe"):
-        shellStdout = self.stream.getStdout()
+        self.stream.getStdout().setMode(stdout.pipe)
         calls = node.getCalls()
-        for i in range(len(calls) - 1):
-            stdout = StringIO()
-            self.stream.setStdout(stdout)
+        
+        firstCall=calls[0]
+        firstCall.accept(self)
+        self.stream.reset()
 
-            c = calls[i]
-            c.accept(self)
-            self.stream.setStdin(stdout)
+        for i in range(1, len(calls)-1):
+            currentCall=calls[i]
 
-            self.stream.clearArgs()
-            self.stream.clearParams()
-            self.stream.clearFlags()
+            prev= StringIO(self.stream.getStdout().getBuffer())
+            currentCall.addArg(Argument(prev))
+            self.stream.getStdout().cleanBuffer()
 
-        self.stream.setStdout(shellStdout)
-        calls[-1].accept(self)
+            currentCall.accept(self)
+            self.stream.reset()
+            prev.close()
+
+        lastCall=calls[-1]
+        prev= StringIO(self.stream.getStdout().getBuffer())
+        lastCall.addArg(Argument(prev))
+        self.stream.getStdout().setMode(stdout.std)
+        lastCall.accept(self)
+        self.stream.reset()
+        prev.close()
+
 
     @visit.register
     def _(self,node:"Substitution"):
