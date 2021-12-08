@@ -10,10 +10,12 @@ def head(stream: "Stream"):
     lines = getLines(stream)
     stdout = stream.getStdout()
     i = 0
+    content = ""
     for l in lines:
-        stdout.write(l)
+        content += l
         i += 1
         if i == int(linesNum):
             break
     if stream.getArgs() == 1:
         lines.close()
+    stdout.write(content)

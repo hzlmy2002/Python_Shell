@@ -4,6 +4,7 @@ from apps.decorators import hasArgument
 from .Stream import *
 from io import StringIO
 
+
 @hasArgument
 def cat(stream: "Stream"):
     fileNames = stream.getArgs()

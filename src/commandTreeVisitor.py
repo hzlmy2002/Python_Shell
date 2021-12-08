@@ -4,6 +4,7 @@ from apps.Stream import Stream
 from functools import singledispatchmethod
 from shellOutput import *
 
+
 class StdinNotFoundError(RuntimeError):
     pass
 
@@ -27,7 +28,7 @@ class CommandTreeVisitor:
         path = node.getPath()
         try:
             with open(path, "r") as f:
-                content=StringIO(f.read())
+                content = StringIO(f.read())
                 self.stream.addArg(content)
         except FileNotFoundError:
             raise StdinNotFoundError
@@ -37,7 +38,6 @@ class CommandTreeVisitor:
         path = node.getPath()
         self.stream.getStdout().setMode(stdout.redir)
         self.stream.getStdout().setRedirFileName(path)
-
 
     @visit.register
     def _(self, node: "Call") -> None:
@@ -59,30 +59,29 @@ class CommandTreeVisitor:
     def _(self, node: "Pipe"):
         self.stream.getStdout().setMode(stdout.pipe)
         calls = node.getCalls()
-        
-        firstCall=calls[0]
+
+        firstCall = calls[0]
         firstCall.accept(self)
         self.stream.reset()
 
-        for i in range(1, len(calls)-1):
-            currentCall=calls[i]
-
-            prev= StringIO(self.stream.getStdout().getBuffer())
+        for i in range(1, len(calls) - 1):
+            currentCall = calls[i]
+            prev = StringIO(self.stream.getStdout().getBuffer())
             currentCall.addArg(Argument(prev))
             self.stream.getStdout().cleanBuffer()
 
             currentCall.accept(self)
             self.stream.reset()
 
-        lastCall=calls[-1]
-        prev= StringIO(self.stream.getStdout().getBuffer())
+        lastCall = calls[-1]
+        print(repr("Piped: " + self.stream.getStdout().getBuffer()))
+        prev = StringIO(self.stream.getStdout().getBuffer())
         lastCall.addArg(Argument(prev))
         self.stream.getStdout().setMode(stdout.std)
         lastCall.accept(self)
         self.stream.reset()
         prev.close()
 
-
     @visit.register
-    def _(self,node:"Substitution"):
+    def _(self, node: "Substitution"):
         pass

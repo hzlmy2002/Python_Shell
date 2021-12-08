@@ -10,7 +10,9 @@ def tail(stream: "Stream"):
     lines = getLines(stream)
     stdout = stream.getStdout()
     display_length = min(len(lines), int(linesNum))
+    content = ""
     for i in range(0, display_length):
-        stdout.write(lines[len(lines) - display_length + i])
+        content += lines[len(lines) - display_length + i]
+    stdout.write(content)
     if stream.getArgs() == 1:
         lines.close()

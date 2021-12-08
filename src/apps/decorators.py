@@ -48,8 +48,9 @@ def onlyParamTag(intendKey):
             args = stream.getArgs()
             if args:
                 key = args[0]
-                if len(key) < 2 or (key[0] == "-" and key[1:] != intendKey):
-                    raise InvalidParamTagError(f"Invalid tag {key}")
+                if type(key) == str:
+                    if len(key) < 2 or (key[0] == "-" and key[1:] != intendKey):
+                        raise InvalidParamTagError(f"Invalid tag {key}")
             call(stream)
 
         return wrapper
