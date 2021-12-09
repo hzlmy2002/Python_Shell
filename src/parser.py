@@ -64,7 +64,7 @@ def parseCommand(cmdline: str):
 
 
 if __name__ == "__main__":
-    seq = parseCommand("echo a > aaa")
+    seq = parseCommand('echo `cat tmp.py` asd `cat tmp.py`')
     call = seq.getCommands()[0]
     sub = call.getArgs()[0]
     print(sub.getCmdline())

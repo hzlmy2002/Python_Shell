@@ -1,5 +1,4 @@
 from enum import Enum
-from io import StringIO
 from apps import Stream
 
 class stdout(Enum):
@@ -19,8 +18,10 @@ class ShellOutput:
         self.stream=globalStream
         self.mode=stdout.std
 
+        self.isSubstitution=False
+        self.record=""
+
         self.sandbox=[]
-        self.buffer=StringIO()
         self.redirFileName=""
 
     def reset(self):
@@ -34,7 +35,10 @@ class ShellOutput:
     def write(self,content):
         # Write redirection will be automatically reset afterwards
         if self.mode==stdout.std:
-            print(content,end="")
+            if self.isSubstitution:
+                self.record+=content
+            else:
+                print(content,end="")
 
         elif self.mode==stdout.pipe:
             if len(self.sandbox)==0:
@@ -42,8 +46,6 @@ class ShellOutput:
             else:
                 self.cleanBuffer()
                 self.sandbox.append(content)
-        elif self.mode==stdout.subs:
-            self.sandbox.append(content)
         elif self.mode==stdout.redir:
             with open(self.redirFileName,"w") as f:
                 f.write(content)
@@ -61,18 +63,18 @@ class ShellOutput:
             if reset:
                 self.reset()
             return output
-                
-        elif self.mode==stdout.subs:
-            output=self.sandbox.copy()
-            if reset:
-                self.reset()
-            return output
         else:
             raise Exception(f"Inadequate output mode {self.mode}")
 
+    def getSubstitutedRecord(self):
+        return self.record
+
     def setMode(self,mode):
         self.reset()
-        self.mode=mode
+        if mode==stdout.subs:
+            self.isSubstitution=True
+        else:
+            self.mode=mode
 
     def setRedirFileName(self,filename):
         self.redirFileName=filename

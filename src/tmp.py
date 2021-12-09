@@ -1,6 +1,3 @@
-"""
-for dignose only, ignore this file
-"""
 
 
 from apps import Cat

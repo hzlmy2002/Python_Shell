@@ -1,9 +1,13 @@
+#coding:utf-8
 from io import StringIO
+from parsita.state import Output, Result
 from commandTree import *
 from apps.Stream import Stream
 from functools import singledispatchmethod
 from shellOutput import *
-
+from typing import List
+from parser import parseCommand
+import re
 
 class StdinNotFoundError(RuntimeError):
     pass
@@ -12,6 +16,18 @@ class StdinNotFoundError(RuntimeError):
 class CommandTreeVisitor:
     def __init__(self, stream: "Stream"):
         self.stream = stream
+
+    @staticmethod
+    def str2args(input: str) -> List[Argument]:
+        if "\n" in input:
+            input=re.sub(r'\n', ' ', input)
+        if "'" not in input and '"' not in input:
+            return [Argument(i) for i in input.split()]
+        else:
+            tmpCMD=f"echo {input}"
+            tree=parseCommand(tmpCMD)
+            result=tree.getCommands()[0].getArgs()
+            return result
 
     @singledispatchmethod
     def visit(self, node) -> None:
@@ -74,7 +90,6 @@ class CommandTreeVisitor:
             self.stream.reset()
 
         lastCall = calls[-1]
-        print(repr("Piped: " + self.stream.getStdout().getBuffer()))
         prev = StringIO(self.stream.getStdout().getBuffer())
         lastCall.addArg(Argument(prev))
         self.stream.getStdout().setMode(stdout.std)
@@ -84,4 +99,19 @@ class CommandTreeVisitor:
 
     @visit.register
     def _(self, node: "Substitution"):
-        pass
+        command=node.getCmdline()
+        tree=parseCommand(command)
+
+        sandboxStream=Stream.Stream(self.stream.env.copy())
+        sandboxStdout=ShellOutput(sandboxStream)
+        sandboxStream.alterStdout(sandboxStdout)
+        sandboxStream.getStdout().setMode(stdout.subs)
+        fakeVisitor=CommandTreeVisitor(sandboxStream)
+        fakeVisitor.visit(tree)
+
+        result=sandboxStream.getStdout().getSubstitutedRecord()
+        args=CommandTreeVisitor.str2args(result)
+        for i in args:
+            i.accept(self)
+
+
