@@ -8,7 +8,7 @@ from shellOutput import *
 from typing import List
 from parser import parseCommand
 from pathlib import Path
-import re
+import re,os
 
 class StdinNotFoundError(RuntimeError):
     pass
@@ -48,9 +48,11 @@ class CommandTreeVisitor:
     def _(self, node: "Argument") -> None:
         arg = node.getArg()
         if "*" in arg:
-            files=CommandTreeVisitor.expandGlobbling(arg)
-            for file in files:
-                self.stream.addArg(file)
+            parts=list(filter(lambda x: len(x.strip())!=0 ,arg.split("*")))
+            if len(parts)<=1 or (len(parts)>=2 and os.path.exists(parts[0])):
+                files=CommandTreeVisitor.expandGlobbling(arg)
+                for file in files:
+                    self.stream.addArg(file)
         else:
             self.stream.addArg(arg)
 
