@@ -7,6 +7,7 @@ from functools import singledispatchmethod
 from shellOutput import *
 from typing import List
 from parser import parseCommand
+from pathlib import Path
 import re
 
 class StdinNotFoundError(RuntimeError):
@@ -29,6 +30,16 @@ class CommandTreeVisitor:
             result=tree.getCommands()[0].getArgs()
             return result
 
+    @staticmethod
+    def expandGlobbling(path):
+        parts=path.split("*")
+        rootDir=Path(parts[0])
+        globbling="*"+"*".join(parts[1:])
+        files=rootDir.glob(globbling)
+        result=[str(i) for i in files]
+        return result
+
+
     @singledispatchmethod
     def visit(self, node) -> None:
         pass
@@ -36,7 +47,12 @@ class CommandTreeVisitor:
     @visit.register
     def _(self, node: "Argument") -> None:
         arg = node.getArg()
-        self.stream.addArg(arg)
+        if "*" in arg:
+            files=CommandTreeVisitor.expandGlobbling(arg)
+            for file in files:
+                self.stream.addArg(file)
+        else:
+            self.stream.addArg(arg)
 
     @visit.register
     def _(self, node: "InRedirection") -> None:
@@ -113,5 +129,3 @@ class CommandTreeVisitor:
         args=CommandTreeVisitor.str2args(result)
         for i in args:
             i.accept(self)
-
-
