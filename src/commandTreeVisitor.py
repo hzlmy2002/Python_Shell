@@ -8,7 +8,7 @@ from shellOutput import *
 from typing import List
 from parser import parseCommand
 from pathlib import Path
-import re,os
+import re
 
 class StdinNotFoundError(RuntimeError):
     pass
@@ -47,12 +47,11 @@ class CommandTreeVisitor:
     @visit.register
     def _(self, node: "Argument") -> None:
         arg = node.getArg()
-        if "*" in arg:
-            parts=list(filter(lambda x: len(x.strip())!=0 ,arg.split("*")))
-            if len(parts)<=1 or (len(parts)>=2 and os.path.exists(parts[0])):
-                files=CommandTreeVisitor.expandGlobbling(arg)
-                for file in files:
-                    self.stream.addArg(file)
+        isGlobblingDisabled=True if self.stream.getEnv("_disableGlobbling")=="True" else False
+        if "*" in arg and not isGlobblingDisabled:
+            files=CommandTreeVisitor.expandGlobbling(arg)
+            for file in files:
+                self.stream.addArg(file)
         else:
             self.stream.addArg(arg)
 
@@ -75,6 +74,10 @@ class CommandTreeVisitor:
 
     @visit.register
     def _(self, node: "Call") -> None:
+        disableGlobbling=["find","grep"]
+        appName=node.getAppName()
+        if appName in disableGlobbling or appName[1:] in disableGlobbling:
+            self.stream.addToEnv("_disableGlobbling", "True")
         app = node.getApp()
         args = node.getArgs()
         for a in args:
