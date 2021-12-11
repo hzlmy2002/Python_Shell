@@ -1,6 +1,6 @@
 import sys
 
-sys.path.insert(0, "..")
+sys.path.insert(0, "../src")
 
 from apps import *
 import unittest, os
@@ -44,22 +44,22 @@ class testUniq(unittest.TestCase):
         self.matchHelper(
             result1,
             result2,
-            "Hello Hello\nHello World\nHelloHello\nWorld\nWorld",
+            "Hello Hello\nHELLO HELLO\nHello World\nHelloHello\nWorld\nWorld",
         )
         self.matchHelper(
             result3,
             result4,
-            "Hello Hello\nHELLO HELLO\nHello World\nHelloHello\nWorld\nWorld",
+            "Hello Hello\nHello World\nHelloHello\nWorld\nWorld",
         )
         self.matchHelper(
             result5,
             result6,
-            "Hello Hello\nHello World\nHelloHello\nWorld\n",
+            "Hello Hello\nHELLO HELLO\nHello World\nHelloHello\nWorld\n",
         )
         self.matchHelper(
             result7,
             result8,
-            "Hello Hello\nHELLO HELLO\nHello World\nHelloHello\nWorld\n",
+            "Hello Hello\nHello World\nHelloHello\nWorld\n",
         )
 
     def testUniqExceptions(self):

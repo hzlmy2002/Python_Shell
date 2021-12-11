@@ -1,13 +1,11 @@
 import sys
 
-sys.path.insert(0, "..")
+sys.path.insert(0, "../src")
 
 from apps import *
 from apps.Stream import *
 import unittest, os
-from StreamForTest import StreamForTest
 from apps.Exceptions import InvalidArgumentError, InvalidFileOrDir
-from apps.decorators import unsafe
 from appTests import appTests
 
 

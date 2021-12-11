@@ -1,7 +1,6 @@
 import sys
-from unittest.main import main
 
-sys.path.insert(0, "..")
+sys.path.insert(0, "../src")
 from apps import *
 import unittest, os
 from appTests import appTests
@@ -26,7 +25,7 @@ class testCat(unittest.TestCase):
             [".testCatA.txt", ".testCatB.txt"], unsafeApp=True
         )
         self.assertEqual(result1, result2)
-        self.assertEqual(result1, "TestLineA\nTestLineAA\ntestCatB")
+        self.assertEqual(result1, "TestLineA\nTestLineAA\ntestCatB\n")
 
     def testCatExceptions(self):
         # cat2 = CatUnsafe()

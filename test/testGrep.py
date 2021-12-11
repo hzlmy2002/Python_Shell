@@ -1,7 +1,7 @@
 from re import T
 import sys
 
-sys.path.insert(0, "..")
+sys.path.insert(0, "../src")
 
 from apps import *
 import unittest, os
