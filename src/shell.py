@@ -6,12 +6,13 @@ from apps.Stream import Stream
 from commandTreeVisitor import CommandTreeVisitor
 from shellOutput import ShellOutput
 
+
 class Shell:
     def __init__(self, workingDir):
         env = {"workingDir": workingDir}
 
         self.stream = Stream(env)
-        self.stdout=ShellOutput(self.stream)
+        self.stdout = ShellOutput(self.stream)
         self.stream.alterStdout(self.stdout)
         self.commandTreeVisitor = CommandTreeVisitor(self.stream)
 
@@ -36,9 +37,11 @@ class Shell:
                 print("\nbye")
                 exit(0)
 
-def eval(cmdline)-> None: # adjust original syntax
+
+def eval(cmdline) -> None:  # adjust original syntax
     shell = Shell(os.getcwd())
     shell.evaluate(cmdline)
+    return shell.stdout
 
 
 if __name__ == "__main__":
@@ -64,4 +67,3 @@ if __name__ == "__main__":
         except EOFError:
             print("\nbye")
             exit(0)
-        
