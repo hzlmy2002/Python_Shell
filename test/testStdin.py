@@ -2,30 +2,20 @@ import sys
 
 sys.path.insert(0, "../src")
 from apps import *
-import unittest, os, sys, io
-from appTests import appTests
-from shell import eval
+import unittest, os
+from Tools import getStdOut
 
 
 class testStdin(unittest.TestCase):
     def setUp(self) -> None:
         with open("test1.txt", "w") as f:
-            f.write("AAA\nBBB\nAAA")
+            f.write("AAA\nBBB\nAAA\n")
 
     def tearDown(self) -> None:
         os.remove("test1.txt")
 
-    def getStdOut(self, cmdLine):
-        old = sys.stdout
-        new = io.StringIO()
-        sys.stdout = new
-        eval(cmdLine)
-        output = new.getvalue()
-        sys.stdout = old
-        return output
-
     def assertOutput(self, cmd, result):
-        output = self.getStdOut(cmd).strip()
+        output = getStdOut(cmd).strip()
         self.assertEqual(result, output)
 
     def testCatStdin(self):
@@ -41,16 +31,20 @@ class testStdin(unittest.TestCase):
         self.assertOutput(cmd, "AAA\nBBB\nAAA")
 
     def testHeadStdin(self):
-        pass
+        cmd = "cat test1.txt | head -n 2"
+        self.assertOutput(cmd, "AAA\nBBB")
 
     def testSortStdin(self):
-        pass
+        cmd = "cat test1.txt | sort"
+        self.assertOutput(cmd, "AAA\nAAA\nBBB")
 
     def testTailStdin(self):
-        pass
+        cmd = "cat test1.txt | tail -n 2"
+        self.assertOutput(cmd, "BBB\nAAA")
 
     def testUniqStdin(self):
-        pass
+        cmd = "cat test1.txt | uniq"
+        self.assertOutput(cmd, "AAA\nBBB\nAAA")
 
 
 if __name__ == "__main__":

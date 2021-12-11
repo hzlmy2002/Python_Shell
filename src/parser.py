@@ -62,7 +62,7 @@ def parseCommand(cmdline: str):
     return CommandParsers.command.parse(cmdline).or_die()
 
 
-if __name__ == "__main__":
+if __name__ == "__main__": # pragma: no cover
     seq = parseCommand('echo `cat tmp.py` asd `cat tmp.py`')
     call = seq.getCommands()[0]
     sub = call.getArgs()[0]

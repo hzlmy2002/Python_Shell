@@ -20,31 +20,13 @@ class Shell:
         commandTree = parseCommand(cmdline)
         self.commandTreeVisitor.visit(commandTree)
 
-    def output(self, line):
-        print(line, end="")
-
-    def repl(self):
-        while True:
-            try:
-                workingDir = self.stream.getEnv("workingDir")
-                self.output(workingDir + "> ")
-                cmdline = input()
-                self.evaluate(cmdline)
-            except KeyboardInterrupt:
-                print("\nbye")
-                exit(0)
-            except EOFError:
-                print("\nbye")
-                exit(0)
-
-
 def eval(cmdline) -> None:  # adjust original syntax
     shell = Shell(os.getcwd())
     shell.evaluate(cmdline)
     return shell.stdout
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     workingDir = os.getcwd()
     sh = Shell(workingDir)
 

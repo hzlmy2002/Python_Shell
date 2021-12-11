@@ -30,15 +30,14 @@ def parseByteRange(param: str) -> "List[int]":
             # No end (e.g. 5-)
             return [int(res[0]) - 1, -1]
 
-        if checkDigit(res[1]) and res[0] == "":
-            # No start (e.g. -5)
-            return [0, int(res[1])]
+        # No start (e.g. -5)
+        return [0, int(res[1])]
 
     raise InvalidParamError(f"Invalid parameter {param}")
 
 
 def readBytesOfLine(byterange: "List[int]", line: str) -> str:
-    if len(byterange) == 1:
+    if byterange == [0, 1]:
         return line[byterange[0]]
     start = byterange[0]
     end = byterange[1]

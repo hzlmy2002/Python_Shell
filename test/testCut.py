@@ -47,6 +47,11 @@ class testCut(unittest.TestCase):
         result10 = self.tester.doOuputTest(
             ["-b", "6-,3-5", "testA.txt"], unsafeApp=True
         )
+        result11 = self.tester.doOuputTest(["-b", "1", "testA.txt"])
+        result12 = self.tester.doOuputTest(["-b", "1", "testA.txt"], unsafeApp=True)
+        result13 = self.tester.doOuputTest(
+            ["-b", "2-,3-5", "testA.txt"]
+        )  # Testing unordered ranges
         self.assertHelper(result1, result2, "He\nMy\nNi\nyo\n")
         self.assertHelper(
             result3,
@@ -59,6 +64,11 @@ class testCut(unittest.TestCase):
             result9,
             result10,
             "llo World, this is Cut test\n name is something\nce to meet\nu all\n",
+        )
+        self.assertHelper(result11, result12, "H\nM\nN\ny\n")
+        self.assertEqual(
+            result13,
+            "ello World, this is Cut test\ny name is something\nice to meet\nou all\n",
         )
 
     def testCutExceptions(self):
@@ -79,6 +89,12 @@ class testCut(unittest.TestCase):
             self.tester.doOuputTest(["-b", "5-3", "testA.txt"])  # Decreasing range
         with self.assertRaises(InvalidParamError):
             self.tester.doOuputTest(["-b", "n", "testA.txt"])  # Invalid param arg
+        with self.assertRaises(InvalidParamError):
+            self.tester.doOuputTest(
+                ["-b", "1,3,", "testA.txt"]
+            )  # Invalid param arg (ends with comma)
+        with self.assertRaises(InvalidParamError):
+            self.tester.doOuputTest(["-b", "1-2-3", "testA.txt"])  # Invalid param arg
         with self.assertRaises(InvalidArgumentError):
             self.tester.doOuputTest(["-b", "1-3"])  # No file specified
         with self.assertRaises(InvalidArgumentError):
@@ -113,6 +129,11 @@ class testCut(unittest.TestCase):
         self.assertTrue(
             "InvalidParamError"
             in self.tester.doOuputTest(["-b", "n", "testA.txt"], unsafeApp=True)
+        )
+
+        self.assertTrue(
+            "InvalidParamError"
+            in self.tester.doOuputTest(["-b", "1,3,", "testA.txt"], unsafeApp=True)
         )
 
         self.assertTrue(
