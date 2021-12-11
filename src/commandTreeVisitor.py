@@ -8,7 +8,7 @@ from shellOutput import *
 from typing import List
 from parser import parseCommand
 from pathlib import Path
-import re
+import re,os
 
 class StdinNotFoundError(RuntimeError):
     pass
@@ -39,6 +39,18 @@ class CommandTreeVisitor:
         result=[str(i) for i in files]
         return result
 
+    @staticmethod
+    def sandBoxedExecution(cmd,env={"workingDir":os.getcwd()})->str:
+        tree=parseCommand(cmd)
+
+        sandboxStream=Stream.Stream(env.copy())
+        sandboxStdout=ShellOutput(sandboxStream)
+        sandboxStream.alterStdout(sandboxStdout)
+        sandboxStream.getStdout().setMode(stdout.subs)
+        fakeVisitor=CommandTreeVisitor(sandboxStream)
+
+        fakeVisitor.visit(tree)
+        return sandboxStream.getStdout().getSubstitutedRecord()
 
     @singledispatchmethod
     def visit(self, node) -> None:
@@ -121,16 +133,7 @@ class CommandTreeVisitor:
     @visit.register
     def _(self, node: "Substitution"):
         command=node.getCmdline()
-        tree=parseCommand(command)
-
-        sandboxStream=Stream.Stream(self.stream.env.copy())
-        sandboxStdout=ShellOutput(sandboxStream)
-        sandboxStream.alterStdout(sandboxStdout)
-        sandboxStream.getStdout().setMode(stdout.subs)
-        fakeVisitor=CommandTreeVisitor(sandboxStream)
-        fakeVisitor.visit(tree)
-
-        result=sandboxStream.getStdout().getSubstitutedRecord()
+        result=CommandTreeVisitor.sandBoxedExecution(command,self.stream.env.copy())
         args=CommandTreeVisitor.str2args(result)
         for i in args:
             i.accept(self)

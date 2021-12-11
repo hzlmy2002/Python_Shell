@@ -36,6 +36,10 @@ class Shell:
                 print("\nbye")
                 exit(0)
 
+def eval(cmdline)-> None: # adjust original syntax
+    shell = Shell(os.getcwd())
+    shell.evaluate(cmdline)
+
 
 if __name__ == "__main__":
     workingDir = os.getcwd()
@@ -51,4 +55,13 @@ if __name__ == "__main__":
             raise ValueError(f"Unexpected command line argument {args[0]}.")
         sh.evaluate(args[1])
     else:
-        sh.repl()
+        try:
+            while True:
+                eval(input("{}> ".format(os.getcwd())))
+        except KeyboardInterrupt:
+            print("\nbye")
+            exit(0)
+        except EOFError:
+            print("\nbye")
+            exit(0)
+        
