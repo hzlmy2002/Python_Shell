@@ -132,7 +132,3 @@ dmypy.json
 test.txt
 test2.txt
 
-#Tools
-tools/analysis
-tools/coverage
-tools/test
