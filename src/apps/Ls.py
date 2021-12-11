@@ -20,7 +20,6 @@ def listDirectory(ls_dir):
 def ls(stream: "Stream"):
     args = stream.getArgs()
     stdout = stream.getStdout()
-    print(args, len(args))
     if len(args) == 0:
         stdout.write(listDirectory(os.getcwd()))
     else:

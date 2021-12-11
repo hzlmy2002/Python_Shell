@@ -1,14 +1,16 @@
-#coding:utf-8
+# coding:utf-8
 from io import StringIO
-from parsita.state import Output, Result
-from commandTree import *
+from commandTree import Argument, InRedirection, \
+    OutRedirection, Call, Seq, Pipe, Substitution
 from apps.Stream import Stream
 from functools import singledispatchmethod
-from shellOutput import *
+from shellOutput import ShellOutput, stdout
 from typing import List
 from parser import parseCommand
 from pathlib import Path
-import re,os
+import re
+import os
+
 
 class StdinNotFoundError(RuntimeError):
     pass
@@ -21,33 +23,33 @@ class CommandTreeVisitor:
     @staticmethod
     def str2args(input: str) -> List[Argument]:
         if "\n" in input:
-            input=re.sub(r'\n', ' ', input)
+            input = re.sub(r'\n', ' ', input)
         if "'" not in input and '"' not in input:
             return [Argument(i) for i in input.split()]
         else:
-            tmpCMD=f"echo {input}"
-            tree=parseCommand(tmpCMD)
-            result=tree.getCommands()[0].getArgs()
+            tmpCMD = f"echo {input}"
+            tree = parseCommand(tmpCMD)
+            result = tree.getCommands()[0].getArgs()
             return result
 
     @staticmethod
     def expandGlobbling(path):
-        parts=path.split("*")
-        rootDir=Path(parts[0])
-        globbling="*"+"*".join(parts[1:])
-        files=rootDir.glob(globbling)
-        result=[str(i) for i in files]
+        parts = path.split("*")
+        rootDir = Path(parts[0])
+        globbling = "*"+"*".join(parts[1:])
+        files = rootDir.glob(globbling)
+        result = [str(i) for i in files]
         return result
 
     @staticmethod
-    def sandBoxedExecution(cmd,env={"workingDir":os.getcwd()})->str:
-        tree=parseCommand(cmd)
+    def sandBoxedExecution(cmd, env={"workingDir": os.getcwd()}) -> str:
+        tree = parseCommand(cmd)
 
-        sandboxStream=Stream.Stream(env.copy())
-        sandboxStdout=ShellOutput(sandboxStream)
+        sandboxStream = Stream.Stream(env.copy())
+        sandboxStdout = ShellOutput(sandboxStream)
         sandboxStream.alterStdout(sandboxStdout)
         sandboxStream.getStdout().setMode(stdout.subs)
-        fakeVisitor=CommandTreeVisitor(sandboxStream)
+        fakeVisitor = CommandTreeVisitor(sandboxStream)
 
         fakeVisitor.visit(tree)
         return sandboxStream.getStdout().getSubstitutedRecord()
@@ -59,9 +61,10 @@ class CommandTreeVisitor:
     @visit.register
     def _(self, node: "Argument") -> None:
         arg = node.getArg()
-        isGlobblingDisabled=True if self.stream.getEnv("_disableGlobbling")=="True" else False
+        isGlobblingDisabled = True if self.stream.getEnv(
+            "_disableGlobbling") == "True" else False
         if "*" in arg and not isGlobblingDisabled:
-            files=CommandTreeVisitor.expandGlobbling(arg)
+            files = CommandTreeVisitor.expandGlobbling(arg)
             for file in files:
                 self.stream.addArg(file)
         else:
@@ -86,8 +89,8 @@ class CommandTreeVisitor:
 
     @visit.register
     def _(self, node: "Call") -> None:
-        disableGlobbling=["find","grep"]
-        appName=node.getAppName()
+        disableGlobbling = ["find", "grep"]
+        appName = node.getAppName()
         if appName in disableGlobbling or appName[1:] in disableGlobbling:
             self.stream.addToEnv("_disableGlobbling", "True")
         app = node.getApp()
@@ -132,8 +135,9 @@ class CommandTreeVisitor:
 
     @visit.register
     def _(self, node: "Substitution"):
-        command=node.getCmdline()
-        result=CommandTreeVisitor.sandBoxedExecution(command,self.stream.env.copy())
-        args=CommandTreeVisitor.str2args(result)
+        command = node.getCmdline()
+        result = CommandTreeVisitor.sandBoxedExecution(
+            command, self.stream.env.copy())
+        args = CommandTreeVisitor.str2args(result)
         for i in args:
             i.accept(self)
