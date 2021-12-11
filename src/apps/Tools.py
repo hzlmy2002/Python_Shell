@@ -21,7 +21,7 @@ def getLines(stream: "Stream") -> List[str]:
     try:
         if type(fileName) == StringIO:
             with fileName as f:
-                lines = f.read()
+                lines = f.getvalue()
                 lines = toList(lines)
         else:
             with open(fileName, "r") as f:

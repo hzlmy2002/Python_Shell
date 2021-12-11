@@ -9,13 +9,17 @@ from io import StringIO
 def cat(stream: "Stream"):
     fileNames = stream.getArgs()
     stdout = stream.getStdout()
+    content = ""
     for file in fileNames:
         try:
             if type(file) == StringIO:
-                with file as f:
-                    stdout.write(f.read())
+                content += file.getvalue()
+
             else:
                 with open(file, "r") as f:
-                    stdout.write(f.read())
+                    content += f.read()
+            if not content.endswith("\n"):
+                content += "\n"
         except FileNotFoundError:
             raise InvalidFileOrDir(f"File {file} does not exist")
+    stdout.write(content)

@@ -8,7 +8,7 @@ import os
 @getFlag("i")
 @atMostOneArgument
 def uniq(stream: "Stream"):
-    caseSensitive = not stream.getFlag("i")
+    caseSensitive = stream.getFlag("i")
     lines = getLines(stream)
     res = ""
     last = ""

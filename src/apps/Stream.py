@@ -1,13 +1,12 @@
 from typing import Dict, List, TextIO
 from shellOutput import ShellOutput
-import os
 
 class Stream:
     def __init__(self, env: Dict[str, str]={}, stdout=None):
         self.args: List[str] = []
         self.params = {}
         self.flags = []
-        self.env = env.copy() # variable starts with _ is for internal use only, hide from the user
+        self.env = env.copy()
         self.stdout: "ShellOutput" = stdout
 
     def addArg(self, arg: str) -> None:
@@ -35,7 +34,7 @@ class Stream:
         self.env[key] = val
 
     def getEnv(self, key: str) -> str:
-        return self.env[key] if key in self.env else ""
+        return self.env[key]
 
     def getStdout(self) -> "ShellOutput":
         return self.stdout
@@ -60,6 +59,3 @@ class Stream:
         self.clearParams()
         self.clearStdin()
         self.clearFlags()
-        for key in self.env.keys():
-            if key.startswith("_"): # remove hidden variables
-                del self.env[key]

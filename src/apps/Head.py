@@ -9,13 +9,8 @@ def head(stream: "Stream"):
     linesNum = stream.getParam("n")
     lines = getLines(stream)
     stdout = stream.getStdout()
-    i = 0
     content = ""
-    for l in lines:
-        content += l
-        i += 1
-        if i == int(linesNum):
-            break
-    if stream.getArgs() == 1:
-        lines.close()
+    linesNum = min(len(lines), int(linesNum))
+    for i in range(0, int(linesNum)):
+        content += lines[i]
     stdout.write(content)

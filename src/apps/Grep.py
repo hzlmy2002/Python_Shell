@@ -12,10 +12,14 @@ def match_line(lines: "List[str]", pattern: str, multFiles=False, fileName=""):
     res = ""
     for line in lines:
         if re.match(pattern, line):
+            toAdd = ""
             if multFiles:
-                res += f"{fileName}:{line}"
+                toAdd = f"{fileName}:{line}"
             else:
-                res += line
+                toAdd = line
+            if not toAdd.endswith("\n"):
+                toAdd += "\n"
+            res += toAdd
     return res
 
 
@@ -35,7 +39,7 @@ def processFiles(fileNames: "List[str]", pattern: str) -> str:
 def processStdin(string: StringIO, pattern: str) -> str:
     res = ""
     with string as f:
-        res = f.read()
+        res = f.getvalue()
     lines = toList(res)
     matched = match_line(lines, pattern)
     return matched
@@ -53,7 +57,5 @@ def grep(stream: "Stream"):
     else:
         fileNames = args[1:]
         res = processFiles(fileNames, pattern)
-    if not res.endswith("\n"):
-        res += "\n"
     stdout = stream.getStdout()
     stdout.write(res)
