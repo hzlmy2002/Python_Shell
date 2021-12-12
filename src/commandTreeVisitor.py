@@ -45,7 +45,7 @@ class CommandTreeVisitor:
     def sandBoxedExecution(cmd, env={"workingDir": os.getcwd()}) -> str:
         tree = parseCommand(cmd)
 
-        sandboxStream = Stream.Stream(env.copy())
+        sandboxStream = Stream(env.copy())
         sandboxStdout = ShellOutput(sandboxStream)
         sandboxStream.alterStdout(sandboxStdout)
         sandboxStream.getStdout().setMode(stdout.subs)
