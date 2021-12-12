@@ -1,59 +1,61 @@
-from apps.App import App
+from io import StringIO
+from apps.Stream import Stream
+from apps.Tools import toList
+from apps.decorators import hasArgument
+from apps.Exceptions import InvalidArgumentError, InvalidFileOrDir
 import re
-from .Stream import *
-from apps.CanStdIn import CanStdIn
-from apps.standardStreamExceptions import *
-from types import MethodType
-import apps.tools
+from typing import List
 
 
-class Grep(CanStdIn):
-    """
-    STREAM:
-    app = grep
-    param = [REGEX]
-    args = [FILENAME, FILNAME2....]  stores the file names specified"""
+def match_line(lines: "List[str]", pattern: str, multFiles=False, fileName=""):
+    """Finds matching pattern given by args returns matched lines"""
+    res = ""
+    for line in lines:
+        if re.match(pattern, line):
+            toAdd = ""
+            if multFiles:
+                toAdd = f"{fileName}:{line}"
+            else:
+                toAdd = line
+            if not toAdd.endswith("\n"):
+                toAdd += "\n"
+            res += toAdd
+    return res
 
-    def __init__(self) -> None:
-        self.exceptions = stdStreamExceptions(appName.grep)
 
-    def getStream(self) -> "Stream":
-        return self.stream
-
-    def match_line(self, filename, pattern):
-        """Finds matching pattern given by args returns matched lines"""
+def processFiles(fileNames: "List[str]", pattern: str) -> str:
+    matched = ""
+    multFiles = len(fileNames) > 1
+    for filename in fileNames:
         try:
             with open(filename) as f:
                 lines = f.readlines()
-                for line in lines:
-                    if re.match(pattern, line):
-                        if len(self.params["main"]) > 1:
-                            self.matched += f"{filename}:{line}"
-                        else:
-                            self.matched += line
+                matched += match_line(lines, pattern, multFiles, filename)
         except FileNotFoundError:
-            self.exceptions.raiseException(exceptionType.file)
-
-    def processFiles(self):
-        pattern = self.params["pattern"][0]
-        for filename in self.params["main"]:
-            self.match_line(filename, pattern)
-        if not self.matched.endswith("\n"):
-            self.matched += "\n"
-        return Stream(
-            sType=streamType.output,
-            app="",
-            params={"main": [self.matched]},
-            env={},
-        )
-
-    def appOperations(self) -> "Stream":
-        self.matched = ""
-        return self.fileStdinExec()
+            raise InvalidFileOrDir("File does not exist")
+    return matched
 
 
-class GrepUnsafe(Grep):
-    def exec(self, stream: "Stream") -> "Stream":
-        c = Grep()
-        c.exec = MethodType(apps.tools.unsafeDecorator(c.exec), c)
-        return c.exec(stream)
+def processStdin(string: StringIO, pattern: str) -> str:
+    res = ""
+    with string as f:
+        res = f.getvalue()
+    lines = toList(res)
+    matched = match_line(lines, pattern)
+    return matched
+
+
+@hasArgument
+def grep(stream: "Stream"):
+    args = stream.getArgs()
+    length = len(args)
+    if length < 2:
+        raise InvalidArgumentError("Invalid argument")
+    pattern = args[0]
+    if length == 2 and type(args[1]) == StringIO:
+        res = processStdin(args[1], pattern)
+    else:
+        fileNames = args[1:]
+        res = processFiles(fileNames, pattern)
+    stdout = stream.getStdout()
+    stdout.write(res)

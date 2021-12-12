@@ -1,36 +1,14 @@
-from .App import App
-from .Stream import *
-
-from types import MethodType
-from . import tools
+from apps.Stream import Stream
 import os
-from .standardStreamExceptions import *
+from apps.Exceptions import InvalidFileOrDir
+from apps.decorators import hasOneArgument
 
 
-class Cd(App):
-    def __init__(self) -> None:
-        self.exceptions = stdStreamExceptions(appName.cd)
-
-    def getStream(self) -> "Stream":
-        return self.stream
-
-    def appOperations(self) -> "Stream":
-        try:
-            os.chdir(self.params["main"][0])
-        except:
-            self.exceptions.raiseException(exceptionType.dir)
-        new_env = self.stream.getEnv()
-        new_env["working_dir"] = os.getcwd()
-        return Stream(
-            sType=streamType.output,
-            app="",
-            params={"main": []},
-            env=new_env,
-        )
-
-
-class CdUnsafe(Cd):
-    def exec(self, stream: "Stream") -> "Stream":
-        c = Cd()
-        c.exec = MethodType(tools.unsafeDecorator(c.exec), c)
-        return c.exec(stream)
+@hasOneArgument
+def cd(stream: "Stream"):
+    args = stream.getArgs()
+    try:
+        os.chdir(args[0])
+        stream.addToEnv("workingDir", os.getcwd())
+    except FileNotFoundError:
+        raise InvalidFileOrDir("Directory does not exist")

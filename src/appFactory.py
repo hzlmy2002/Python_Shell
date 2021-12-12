@@ -1,29 +1,33 @@
-from apps import *
+from typing import Callable
+from apps import Cat, Cd, Cut, Echo, Find, Grep,\
+     Head, Ls, Pwd, Sort, Tail, Uniq, Stream
+from apps.decorators import unsafe
 
 
 class AppNotFoundError(RuntimeError):
     pass
 
 
-appMap = {}
-appMap["pwd"] = Pwd()
-appMap["echo"] = Echo()
-appMap["cd"] = Cd()
-appMap["cat"] = Cat()
-appMap["_cat"] = CatUnsafe()
-appMap["ls"] = Ls()
-appMap["head"] = Head()
-appMap["tail"] = Tail()
-appMap["grep"] = Grep()
-appMap["cut"] = Cut()
-appMap["find"] = Find()
-appMap["uniq"] = Uniq()
-appMap["sort"] = Sort()
+def appFactory(appName: str) -> Callable[["Stream.Stream"], None]:
 
+    appTable = {
+        "cat": Cat.cat,
+        "cd": Cd.cd,
+        "cut": Cut.cut,
+        "echo": Echo.echo,
+        "find": Find.find,
+        "grep": Grep.grep,
+        "head": Head.head,
+        "ls": Ls.ls,
+        "pwd": Pwd.pwd,
+        "sort": Sort.sort,
+        "tail": Tail.tail,
+        "uniq": Uniq.uniq,
+    }
 
-def getApp(app_name):
-    try:
-        app = appMap[app_name]
-    except KeyError:
+    if appName in appTable:
+        return appTable[appName]
+    elif appName.startswith("_") and not appName[1:].startswith("_"):
+        return unsafe(appFactory(appName[1:]))
+    else:
         raise AppNotFoundError("Application not found.")
-    return app

@@ -1,6 +1,6 @@
 from abc import ABC
-from typing import List
-from apps import App
+from typing import Callable, List
+from apps.Stream import Stream
 
 
 class CommandTreeNode(ABC):
@@ -16,17 +16,9 @@ class Argument(CommandTreeNode):
         return self.arg
 
 
-class Parameter(CommandTreeNode):
-    def __init__(self, param: str):
-        self.param = param
-
-    def getParam(self) -> str:
-        return self.param
-
-
 class Redirection(CommandTreeNode):
-    def __init__(self, path: str):
-        self.path = path
+    def __init__(self, path: "Argument"):
+        self.path = path.getArg()
 
     def getPath(self) -> str:
         return self.path
@@ -41,15 +33,23 @@ class OutRedirection(Redirection):
 
 
 class Call(CommandTreeNode):
-    def __init__(self, app: str, args: List[CommandTreeNode]):
+    def __init__(self, appName: str, app: Callable[["Stream"], None],
+                 args: List[CommandTreeNode]):
+        self.appName = appName
         self.app = app
         self.args = args
 
-    def getApp(self) -> str:
+    def getApp(self) -> Callable[["Stream"], None]:
         return self.app
 
+    def getAppName(self) -> str:
+        return self.appName
+
     def getArgs(self) -> List[CommandTreeNode]:
-        return self.args[:]
+        return self.args
+
+    def addArg(self, arg: CommandTreeNode) -> None:
+        self.args.append(arg)
 
 
 class Seq(CommandTreeNode):
@@ -57,12 +57,20 @@ class Seq(CommandTreeNode):
         self.commands = commands
 
     def getCommands(self) -> List[CommandTreeNode]:
-        return self.commands[:]
+        return self.commands
 
 
 class Pipe(CommandTreeNode):
     def __init__(self, calls: List[Call]):
         self.calls = calls
 
-    def getCalls(self):
-        return self.calls[:]
+    def getCalls(self) -> List[Call]:
+        return self.calls
+
+
+class Substitution(CommandTreeNode):
+    def __init__(self, cmdline: str):
+        self.cmdline = cmdline
+
+    def getCmdline(self) -> str:
+        return self.cmdline
