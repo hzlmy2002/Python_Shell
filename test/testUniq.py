@@ -11,17 +11,18 @@ from apps.Exceptions import (
 )
 from apps.Uniq import uniq
 
+
 class testUniq(unittest.TestCase):
     def setUp(self) -> None:
         with open("testA.txt", "w") as file:
             file.write(
-                "Hello Hello\nHELLO HELLO\nHello World\n" +
-                "HelloHello\nHelloHello\nHelloHello\nWorld\nWorld\nWorld"
+                "Hello Hello\nHELLO HELLO\nHello World\n"
+                + "HelloHello\nHelloHello\nHelloHello\nWorld\nWorld\nWorld"
             )
         with open("testB.txt", "w") as file:
             file.write(
-                "Hello Hello\nHELLO HELLO\nHello World\nHelloHello\n" +
-                "HelloHello\nHelloHello\nWorld\nWorld\nWorld\n"
+                "Hello Hello\nHELLO HELLO\nHello World\nHelloHello\n"
+                + "HelloHello\nHelloHello\nWorld\nWorld\nWorld\n"
             )
         self.tester = appTests(uniq)
 
@@ -65,13 +66,11 @@ class testUniq(unittest.TestCase):
 
     def testUniqExceptions(self):
         with self.assertRaises(InvalidArgumentError):
-            self.tester.doOuputTest(
-                ["testB.txt", "testA.txt"])  # Too many arguments
+            self.tester.doOuputTest(["testB.txt", "testA.txt"])  # Too many arguments
         with self.assertRaises(InvalidArgumentError):
             self.tester.doOuputTest([])  # Empty argument
         with self.assertRaises(InvalidArgumentError):
-            self.tester.doOuputTest(
-                ["-i", "123", "testA.txt"])  # Too many arguments
+            self.tester.doOuputTest(["-i", "123", "testA.txt"])  # Too many arguments
         with self.assertRaises(InvalidFileOrDir):
             self.tester.doOuputTest(["-i", "smh"])  # Not existing file
         with self.assertRaises(InvalidParamTagError):
@@ -82,33 +81,27 @@ class testUniq(unittest.TestCase):
             self.tester.doOuputTest([])  # Empty
         self.assertTrue(
             "InvalidArgumentError"
-            in self.tester.doOuputTest(["testB.txt", "testA.txt"],
-                                       unsafeApp=True)
+            in self.tester.doOuputTest(["testB.txt", "testA.txt"], unsafeApp=True)
         )
         self.assertTrue(
-            "InvalidArgumentError" in self.tester.doOuputTest(
-                [], unsafeApp=True)
+            "InvalidArgumentError" in self.tester.doOuputTest([], unsafeApp=True)
         )
         self.assertTrue(
             "InvalidArgumentError"
-            in self.tester.doOuputTest(["-i", "123", "testA.txt"],
-                                       unsafeApp=True)
+            in self.tester.doOuputTest(["-i", "123", "testA.txt"], unsafeApp=True)
         )
         self.assertTrue(
-            "InvalidFileOrDir" in self.tester.doOuputTest(
-                ["-i", "smh"], unsafeApp=True)
+            "InvalidFileOrDir" in self.tester.doOuputTest(["-i", "smh"], unsafeApp=True)
         )
         self.assertTrue(
             "InvalidParamTagError"
             in self.tester.doOuputTest(["-a", "testA.txt"], unsafeApp=True)
         )
         self.assertTrue(
-            "InvalidArgumentError" in self.tester.doOuputTest(
-                [""], unsafeApp=True)
+            "InvalidArgumentError" in self.tester.doOuputTest([""], unsafeApp=True)
         )
         self.assertTrue(
-            "InvalidArgumentError" in self.tester.doOuputTest(
-                [], unsafeApp=True)
+            "InvalidArgumentError" in self.tester.doOuputTest([], unsafeApp=True)
         )
 
 

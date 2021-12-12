@@ -11,6 +11,7 @@ from apps.Exceptions import (
 )
 from apps.Sort import sort
 
+
 class testSort(unittest.TestCase):
     def setUp(self) -> None:
         with open("testA.txt", "w") as file:

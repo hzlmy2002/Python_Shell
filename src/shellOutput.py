@@ -5,12 +5,13 @@ class stdout(Enum):
     """
     Enum for the stdout of the shell
     """
+
     std = "standard"
     pipe = "pipe"
     subs = "substitution"
     redir = "redirection"  # one off type, reset after write
 
-    def __str__(self):
+    def __str__(self):  # pragma: no cover
         return self.value
 
 

@@ -7,6 +7,7 @@ from appTests import appTests
 from apps.Exceptions import InvalidArgumentError, InvalidFileOrDir
 from apps.Cd import cd
 
+
 class testCd(unittest.TestCase):
     def setUp(self) -> None:
         os.mkdir("testDir")
@@ -18,8 +19,7 @@ class testCd(unittest.TestCase):
         os.rmdir("testDir")
 
     def testCdChangeDir(self):
-        result1 = self.tester.changeEnvTest(
-            ["testDir"], {"workingDir": self.cwd})
+        result1 = self.tester.changeEnvTest(["testDir"], {"workingDir": self.cwd})
         result2 = self.tester.changeEnvTest(
             [".."], {"workingDir": os.path.join(self.cwd, "testDir")}
         )
@@ -27,8 +27,7 @@ class testCd(unittest.TestCase):
             ["testDir"], {"workingDir": self.cwd}, unsafeApp=True
         )
         result4 = self.tester.changeEnvTest(
-            [".."], {"workingDir": os.path.join(self.cwd, "testDir")},
-            unsafeApp=True
+            [".."], {"workingDir": os.path.join(self.cwd, "testDir")}, unsafeApp=True
         )
         self.assertEqual(result1, result3)
         self.assertEqual(result1, os.path.join(self.cwd, "testDir"))
@@ -41,11 +40,9 @@ class testCd(unittest.TestCase):
                 ["testDir", "smh"], {"workingDir": self.cwd}
             )  # Too many arguments
         with self.assertRaises(InvalidArgumentError):
-            self.tester.changeEnvTest(
-                [], {"workingDir": self.cwd})  # No argument
+            self.tester.changeEnvTest([], {"workingDir": self.cwd})  # No argument
         with self.assertRaises(InvalidArgumentError):
-            self.tester.changeEnvTest(
-                [""], {"workingDir": self.cwd})  # No argument
+            self.tester.changeEnvTest([""], {"workingDir": self.cwd})  # No argument
         with self.assertRaises(InvalidFileOrDir):
             self.tester.changeEnvTest(
                 ["smh"], {"workingDir": self.cwd}
@@ -58,13 +55,11 @@ class testCd(unittest.TestCase):
         )
         self.assertTrue(
             "InvalidArgumentError"
-            in self.tester.doOuputTest([], {"workingDir": self.cwd},
-                                       unsafeApp=True)
+            in self.tester.doOuputTest([], {"workingDir": self.cwd}, unsafeApp=True)
         )
         self.assertTrue(
             "InvalidArgumentError"
-            in self.tester.doOuputTest([""], {"workingDir": self.cwd},
-                                       unsafeApp=True)
+            in self.tester.doOuputTest([""], {"workingDir": self.cwd}, unsafeApp=True)
         )
         self.assertTrue(
             "InvalidFileOrDir"

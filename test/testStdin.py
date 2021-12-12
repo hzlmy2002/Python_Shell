@@ -4,7 +4,7 @@ sys.path.insert(0, "../src")
 import os
 import unittest
 from Tools import getStdOut
-# from apps import *
+
 
 class testStdin(unittest.TestCase):
     def setUp(self) -> None:
@@ -45,6 +45,10 @@ class testStdin(unittest.TestCase):
     def testUniqStdin(self):
         cmd = "cat test1.txt | uniq"
         self.assertOutput(cmd, "AAA\nBBB\nAAA")
+
+    def testLongPipe(self):
+        cmd = "cat test1.txt | uniq | head -n 2"
+        self.assertOutput(cmd, "AAA\nBBB")
 
 
 if __name__ == "__main__":

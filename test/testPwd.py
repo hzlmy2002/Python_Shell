@@ -7,6 +7,7 @@ from apps.Exceptions import InvalidArgumentError
 from appTests import appTests
 from apps.Pwd import pwd
 
+
 class testPwd(unittest.TestCase):
     def setUp(self) -> None:
         os.mkdir("testDir")
@@ -19,8 +20,7 @@ class testPwd(unittest.TestCase):
 
     def testPwdChangeDir(self):
         result1 = self.tester.doOuputTest(env={"workingDir": self.cwd})
-        result2 = self.tester.doOuputTest(
-            env={"workingDir": self.cwd}, unsafeApp=True)
+        result2 = self.tester.doOuputTest(env={"workingDir": self.cwd}, unsafeApp=True)
         self.assertEqual(result1, result2)
         self.assertEqual(result1, self.cwd + "\n")
 

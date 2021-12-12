@@ -4,9 +4,9 @@ sys.path.insert(0, "../src")
 import os
 import unittest
 from appTests import appTests
-from apps.Exceptions import InvalidArgumentError,\
-    InvalidParamTagError, InvalidFileOrDir
+from apps.Exceptions import InvalidArgumentError, InvalidParamTagError, InvalidFileOrDir
 from apps.Head import head
+
 
 class testHead(unittest.TestCase):
     def setUp(self) -> None:
@@ -21,13 +21,11 @@ class testHead(unittest.TestCase):
         result1 = self.tester.doOuputTest(["test.txt"])
         result2 = self.tester.doOuputTest(["test.txt"], unsafeApp=True)
         result3 = self.tester.doOuputTest(["-n", "11", "test.txt"])
-        result4 = self.tester.doOuputTest(
-            ["-n", "11", "test.txt"], unsafeApp=True)
+        result4 = self.tester.doOuputTest(["-n", "11", "test.txt"], unsafeApp=True)
         self.assertEqual(result1, result2)
         self.assertEqual(result1, "l1\nl2\nl3\nl4\nl5\nl6\nl7\nl8\nl9\nl10\n")
         self.assertEqual(result3, result4)
-        self.assertEqual(
-            result3, "l1\nl2\nl3\nl4\nl5\nl6\nl7\nl8\nl9\nl10\nl11\n")
+        self.assertEqual(result3, "l1\nl2\nl3\nl4\nl5\nl6\nl7\nl8\nl9\nl10\nl11\n")
 
     def testHeadExceptions(self):
         with self.assertRaises(InvalidParamTagError):
@@ -38,8 +36,7 @@ class testHead(unittest.TestCase):
                 ["-n", "11", "smh", "test.txt"]
             )  # Way to many arguments
         with self.assertRaises(InvalidFileOrDir):
-            self.tester.doOuputTest(
-                ["-n", "11", "smh.txt"])  # Not existing file
+            self.tester.doOuputTest(["-n", "11", "smh.txt"])  # Not existing file
 
         with self.assertRaises(InvalidArgumentError):
             self.tester.doOuputTest(["-n", "11"])  # No file specified
@@ -56,13 +53,11 @@ class testHead(unittest.TestCase):
             self.tester.doOuputTest([])  # Empty
         self.assertTrue(
             "InvalidParamTagError"
-            in self.tester.doOuputTest(["-a", "11", "test.txt"],
-                                       unsafeApp=True)
+            in self.tester.doOuputTest(["-a", "11", "test.txt"], unsafeApp=True)
         )
         self.assertTrue(
             "InvalidArgumentError"
-            in self.tester.doOuputTest(["-n", "11", "smh", "test.txt"],
-                                       unsafeApp=True)
+            in self.tester.doOuputTest(["-n", "11", "smh", "test.txt"], unsafeApp=True)
         )
         self.assertTrue(
             "InvalidFileOrDir"
@@ -81,12 +76,10 @@ class testHead(unittest.TestCase):
             in self.tester.doOuputTest(["-n", "test.txt"], unsafeApp=True)
         )
         self.assertTrue(
-            "InvalidArgumentError" in self.tester.doOuputTest(
-                [""], unsafeApp=True)
+            "InvalidArgumentError" in self.tester.doOuputTest([""], unsafeApp=True)
         )
         self.assertTrue(
-            "InvalidArgumentError" in self.tester.doOuputTest(
-                [], unsafeApp=True)
+            "InvalidArgumentError" in self.tester.doOuputTest([], unsafeApp=True)
         )
 
 

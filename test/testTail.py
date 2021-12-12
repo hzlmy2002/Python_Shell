@@ -11,6 +11,7 @@ from apps.Exceptions import (
 )
 from apps.Tail import tail
 
+
 class testTail(unittest.TestCase):
     def setUp(self) -> None:
         with open("test.txt", "w") as file:

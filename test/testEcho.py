@@ -5,6 +5,7 @@ from appTests import appTests
 import unittest
 from apps.Echo import echo
 
+
 class testEcho(unittest.TestCase):
     def setUp(self) -> None:
         self.tester = appTests(echo)

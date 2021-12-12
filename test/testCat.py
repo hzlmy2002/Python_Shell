@@ -1,10 +1,12 @@
 import sys
+
 sys.path.insert(0, "../src")
 import os
 import unittest
 from apps.Exceptions import InvalidArgumentError, InvalidFileOrDir
 from appTests import appTests
 from apps.Cat import cat
+
 
 class testCat(unittest.TestCase):
     def setUp(self) -> None:

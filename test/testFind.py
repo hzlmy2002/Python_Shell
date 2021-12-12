@@ -12,6 +12,7 @@ from apps.Exceptions import (
 )
 from apps.Find import find
 
+
 class testFind(unittest.TestCase):
     def setUp(self) -> None:
         os.makedirs("root/testDir/test1")
@@ -37,24 +38,22 @@ class testFind(unittest.TestCase):
             ["root", "-name", "test*.txt"], unsafeApp=True
         )
         result3 = self.tester.doOuputTest(["root", "-name", "Alt*.txt"])
-        result4 = self.tester.doOuputTest(
-            ["root", "-name", "Alt*.txt"], unsafeApp=True)
+        result4 = self.tester.doOuputTest(["root", "-name", "Alt*.txt"], unsafeApp=True)
         result5 = self.tester.doOuputTest(["-name", "test*.txt"])
-        result6 = self.tester.doOuputTest(
-            ["-name", "test*.txt"], unsafeApp=True)
+        result6 = self.tester.doOuputTest(["-name", "test*.txt"], unsafeApp=True)
         self.assertEqual(result1, result2)
         self.assertEqual(result3, result4)
         self.assertEqual(result5, result6)
         self.assertEqual(
             result1,
-            "root/test1.txt\nroot/testDir/test2.txt\n" +
-            "root/testDir/test1/test3.txt\nroot/testDir2/test4.txt\n",
+            "root/test1.txt\nroot/testDir/test2.txt\n"
+            + "root/testDir/test1/test3.txt\nroot/testDir2/test4.txt\n",
         )
         self.assertEqual(result3, "root/testDir/Alttest1.txt\n")
         self.assertEqual(
             result5,
-            "./root/test1.txt\n./root/testDir/test2.txt\n" +
-            "./root/testDir/test1/test3.txt\n./root/testDir2/test4.txt\n",
+            "./root/test1.txt\n./root/testDir/test2.txt\n"
+            + "./root/testDir/test1/test3.txt\n./root/testDir2/test4.txt\n",
         )
 
     def testFindExceptions(self):
@@ -81,38 +80,32 @@ class testFind(unittest.TestCase):
         self.assertTrue(
             "InvalidArgumentError"
             in self.tester.doOuputTest(
-                ["root", "testDir2", "-name", "somepattern"],
-                unsafeApp=True
+                ["root", "testDir2", "-name", "somepattern"], unsafeApp=True
             )
         )
 
         self.assertTrue(
             "MissingParamError"
             in self.tester.doOuputTest(
-                ["root", "testDir2", "something", "somepattern"],
-                unsafeApp=True
+                ["root", "testDir2", "something", "somepattern"], unsafeApp=True
             )
         )
 
         self.assertTrue(
             "InvalidFileOrDir"
-            in self.tester.doOuputTest(["smh", "-name", "somepattern"],
-                                       unsafeApp=True)
+            in self.tester.doOuputTest(["smh", "-name", "somepattern"], unsafeApp=True)
         )
         self.assertTrue(
             "InvalidArgumentError"
             in self.tester.doOuputTest(
-                ["root", "-name", "somepattern", "somemorepattern"],
-                unsafeApp=True
+                ["root", "-name", "somepattern", "somemorepattern"], unsafeApp=True
             )
         )
         self.assertTrue(
-            "InvalidArgumentError" in self.tester.doOuputTest(
-                [""], unsafeApp=True)
+            "InvalidArgumentError" in self.tester.doOuputTest([""], unsafeApp=True)
         )
         self.assertTrue(
-            "InvalidArgumentError" in self.tester.doOuputTest(
-                [], unsafeApp=True)
+            "InvalidArgumentError" in self.tester.doOuputTest([], unsafeApp=True)
         )
 
 
