@@ -1,8 +1,7 @@
-import unittest
-# from apps import *
 import sys
 
 sys.path.insert(0, "../src")
+import unittest
 
 
 class TestShell(unittest.TestCase):

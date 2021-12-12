@@ -1,3 +1,6 @@
+import sys
+
+sys.path.insert(0, "../src")
 import os
 import unittest
 from appTests import appTests
@@ -7,10 +10,6 @@ from apps.Exceptions import (
     InvalidParamTagError,
 )
 from apps.Tail import tail
-import sys
-
-sys.path.insert(0, "../src")
-
 
 class testTail(unittest.TestCase):
     def setUp(self) -> None:
@@ -28,11 +27,9 @@ class testTail(unittest.TestCase):
         result3 = self.tester.doOuputTest(["-n", "11", "test.txt"])
         # result4 = tailUnsafe.exec(stream2)
         # self.assertEqual(result1, result2.params["main"][0])
-        self.assertEqual(
-            result1, "l3\nl4\nl5\nl6\nl7\nl8\nl9\nl10\nl11\nl12\n")
+        self.assertEqual(result1, "l3\nl4\nl5\nl6\nl7\nl8\nl9\nl10\nl11\nl12\n")
         # self.assertEqual(result3.params["main"][0],result3.params["main"][0])
-        self.assertEqual(
-            result3, "l2\nl3\nl4\nl5\nl6\nl7\nl8\nl9\nl10\nl11\nl12\n")
+        self.assertEqual(result3, "l2\nl3\nl4\nl5\nl6\nl7\nl8\nl9\nl10\nl11\nl12\n")
 
     def testTailExceptions(self):
         with self.assertRaises(InvalidParamTagError):
@@ -43,8 +40,7 @@ class testTail(unittest.TestCase):
                 ["-n", "11", "smh", "test.txt"]
             )  # Way to many arguments
         with self.assertRaises(InvalidFileOrDir):
-            self.tester.doOuputTest(
-                ["-n", "11", "smh.txt"])  # Not existing file
+            self.tester.doOuputTest(["-n", "11", "smh.txt"])  # Not existing file
 
         with self.assertRaises(InvalidArgumentError):
             self.tester.doOuputTest(["-n", "11"])  # No file specified
@@ -62,13 +58,11 @@ class testTail(unittest.TestCase):
 
         self.assertTrue(
             "InvalidParamTagError"
-            in self.tester.doOuputTest(["-a", "11", "test.txt"],
-                                       unsafeApp=True)
+            in self.tester.doOuputTest(["-a", "11", "test.txt"], unsafeApp=True)
         )
         self.assertTrue(
             "InvalidArgumentError"
-            in self.tester.doOuputTest(["-n", "11", "smh", "test.txt"],
-                                       unsafeApp=True)
+            in self.tester.doOuputTest(["-n", "11", "smh", "test.txt"], unsafeApp=True)
         )
         self.assertTrue(
             "InvalidFileOrDir"
@@ -87,12 +81,10 @@ class testTail(unittest.TestCase):
             in self.tester.doOuputTest(["-n", "test.txt"], unsafeApp=True)
         )
         self.assertTrue(
-            "InvalidArgumentError" in self.tester.doOuputTest(
-                [""], unsafeApp=True)
+            "InvalidArgumentError" in self.tester.doOuputTest([""], unsafeApp=True)
         )
         self.assertTrue(
-            "InvalidArgumentError" in self.tester.doOuputTest(
-                [], unsafeApp=True)
+            "InvalidArgumentError" in self.tester.doOuputTest([], unsafeApp=True)
         )
 
 

@@ -1,3 +1,6 @@
+import sys
+
+sys.path.insert(0, "../src")
 import os
 import unittest
 from appTests import appTests
@@ -6,10 +9,6 @@ from apps.Exceptions import (
     InvalidFileOrDir,
 )
 from apps.Grep import grep
-import sys
-
-sys.path.insert(0, "../src")
-
 
 class testGrep(unittest.TestCase):
     def setUp(self) -> None:

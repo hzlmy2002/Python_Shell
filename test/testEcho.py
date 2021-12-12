@@ -1,10 +1,9 @@
-from appTests import appTests
-import unittest
-from apps.Echo import echo
 import sys
 
 sys.path.insert(0, "../src")
-
+from appTests import appTests
+import unittest
+from apps.Echo import echo
 
 class testEcho(unittest.TestCase):
     def setUp(self) -> None:

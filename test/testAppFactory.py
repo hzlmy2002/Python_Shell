@@ -1,11 +1,9 @@
-from appFactory import AppNotFoundError, appFactory
-import unittest
-from apps import Cat, Cd, Cut, Echo, Find, Grep,\
-    Head, Ls, Pwd, Sort, Tail, Uniq
 import sys
 
-
 sys.path.insert(0, "../src")
+from appFactory import AppNotFoundError, appFactory
+import unittest
+from apps import Cat, Cd, Cut, Echo, Find, Grep, Head, Ls, Pwd, Sort, Tail, Uniq
 
 
 class TestFactory(unittest.TestCase):
@@ -24,9 +22,20 @@ class TestFactory(unittest.TestCase):
             "uniq",
             "tail",
         ]
-        appFunc = [Pwd.pwd, Head.head, Echo.echo, Cat.cat, Cd.cd, Ls.ls,
-                   Cut.cut, Find.find, Grep.grep, Sort.sort, Uniq.uniq,
-                   Tail.tail]
+        appFunc = [
+            Pwd.pwd,
+            Head.head,
+            Echo.echo,
+            Cat.cat,
+            Cd.cd,
+            Ls.ls,
+            Cut.cut,
+            Find.find,
+            Grep.grep,
+            Sort.sort,
+            Uniq.uniq,
+            Tail.tail,
+        ]
         for name, func in zip(appNames, appFunc):
             getApp = appFactory(name)
             self.assertEqual(getApp.__hash__(), func.__hash__())

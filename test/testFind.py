@@ -1,3 +1,6 @@
+import sys
+
+sys.path.insert(0, "../src")
 import os
 import unittest
 import shutil
@@ -8,10 +11,6 @@ from apps.Exceptions import (
     MissingParamError,
 )
 from apps.Find import find
-import sys
-
-sys.path.insert(0, "../src")
-
 
 class testFind(unittest.TestCase):
     def setUp(self) -> None:

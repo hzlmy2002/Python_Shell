@@ -1,11 +1,10 @@
+import sys
+
+sys.path.insert(0, "../src")
 import os
 import unittest
 from Tools import getStdOut
 # from apps import *
-import sys
-
-sys.path.insert(0, "../src")
-
 
 class testStdin(unittest.TestCase):
     def setUp(self) -> None:

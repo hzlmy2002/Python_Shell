@@ -2,7 +2,6 @@ import io
 import sys
 from shell import eval
 
-
 def getStdOut(cmdLine):
     old = sys.stdout
     new = io.StringIO()

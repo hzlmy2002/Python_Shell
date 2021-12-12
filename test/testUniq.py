@@ -1,3 +1,6 @@
+import sys
+
+sys.path.insert(0, "../src")
 import os
 import unittest
 from appTests import appTests
@@ -7,10 +10,6 @@ from apps.Exceptions import (
     InvalidFileOrDir,
 )
 from apps.Uniq import uniq
-import sys
-
-sys.path.insert(0, "../src")
-
 
 class testUniq(unittest.TestCase):
     def setUp(self) -> None:

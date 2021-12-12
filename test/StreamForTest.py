@@ -1,4 +1,4 @@
-from apps import Stream
+from apps.Stream import Stream
 from typing import Dict, List
 
 

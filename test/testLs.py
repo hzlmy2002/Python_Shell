@@ -1,13 +1,12 @@
+import sys
+
+sys.path.insert(0, "../src")
 import os
 import unittest
 import shutil
 from appTests import appTests
 from apps.Exceptions import InvalidArgumentError, InvalidFileOrDir
 from apps.Ls import ls
-import sys
-
-sys.path.insert(0, "../src")
-
 
 class testLs(unittest.TestCase):
     def setUp(self) -> None:

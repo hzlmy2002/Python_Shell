@@ -1,12 +1,11 @@
+import sys
+
+sys.path.insert(0, "../src")
 import os
 import unittest
 from apps.Exceptions import InvalidArgumentError
 from appTests import appTests
 from apps.Pwd import pwd
-import sys
-
-sys.path.insert(0, "../src")
-
 
 class testPwd(unittest.TestCase):
     def setUp(self) -> None:

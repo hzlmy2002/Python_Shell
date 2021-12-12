@@ -1,3 +1,6 @@
+import sys
+
+sys.path.insert(0, "../src")
 import os
 import unittest
 from appTests import appTests
@@ -8,10 +11,6 @@ from apps.Exceptions import (
     MissingParamError,
 )
 from apps.Cut import cut
-import sys
-
-sys.path.insert(0, "../src")
-
 
 class testCut(unittest.TestCase):
     def setUp(self) -> None:
