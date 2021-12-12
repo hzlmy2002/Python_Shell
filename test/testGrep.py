@@ -1,17 +1,14 @@
-from re import T
+import os
+import unittest
+from appTests import appTests
+from apps.Exceptions import (
+    InvalidArgumentError,
+    InvalidFileOrDir,
+)
+from apps.Grep import grep
 import sys
 
 sys.path.insert(0, "../src")
-
-from apps import *
-import unittest, os
-from apps.Exceptions import (
-    InvalidArgumentError,
-    InvalidParamError,
-    InvalidFileOrDir,
-    MissingParamError,
-)
-from appTests import appTests
 
 
 class testGrep(unittest.TestCase):
@@ -47,10 +44,12 @@ class testGrep(unittest.TestCase):
         result7 = self.tester.doOuputTest(["...", "testA.txt"])
         result8 = self.tester.doOuputTest(["...", "testA.txt"], unsafeApp=True)
         result9 = self.tester.doOuputTest(["B..", "testC.txt"])
-        result10 = self.tester.doOuputTest(["B..", "testC.txt"], unsafeApp=True)
+        result10 = self.tester.doOuputTest(
+            ["B..", "testC.txt"], unsafeApp=True)
         self.findPatternHelper(result1, result2, "AAA\n")
         self.findPatternHelper(result3, result4, "testA.txt:AAA\n")
-        self.findPatternHelper(result5, result6, "testA.txt:BBB\ntestB.txt:BBB\n")
+        self.findPatternHelper(
+            result5, result6, "testA.txt:BBB\ntestB.txt:BBB\n")
         self.findPatternHelper(result7, result8, "AAA\nBBB\nCCC\n")
         self.findPatternHelper(result9, result10, "BBB\nBBB\n")
 
@@ -61,7 +60,8 @@ class testGrep(unittest.TestCase):
         with self.assertRaises(InvalidArgumentError):
             self.tester.doOuputTest(["pattern"])  # No file specified
         with self.assertRaises(InvalidFileOrDir):
-            self.tester.doOuputTest(["AAA", "smh", "testA.txt"])  # Not existing file
+            self.tester.doOuputTest(
+                ["AAA", "smh", "testA.txt"])  # Not existing file
         with self.assertRaises(InvalidArgumentError):
             self.tester.doOuputTest([])  # Empty
         self.assertTrue(
@@ -74,10 +74,12 @@ class testGrep(unittest.TestCase):
         )
         self.assertTrue(
             "InvalidFileOrDir"
-            in self.tester.doOuputTest(["AAA", "smh", "testA.txt"], unsafeApp=True)
+            in self.tester.doOuputTest(["AAA", "smh", "testA.txt"],
+                                       unsafeApp=True)
         )
         self.assertTrue(
-            "InvalidArgumentError" in self.tester.doOuputTest([], unsafeApp=True)
+            "InvalidArgumentError" in self.tester.doOuputTest(
+                [], unsafeApp=True)
         )
 
 

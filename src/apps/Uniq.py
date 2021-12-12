@@ -1,8 +1,6 @@
 from apps.Stream import Stream
-from apps.decorators import *
-from apps.Exceptions import InvalidArgumentError
+from apps.decorators import getFlag, atMostOneArgument
 from apps.Tools import getLines
-import os
 
 
 @getFlag("i")

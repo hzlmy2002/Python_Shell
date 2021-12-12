@@ -1,9 +1,9 @@
+from appTests import appTests
+import unittest
+from apps.Echo import echo
 import sys
 
 sys.path.insert(0, "../src")
-from apps import *
-import unittest
-from appTests import appTests
 
 
 class testEcho(unittest.TestCase):

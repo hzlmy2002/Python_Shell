@@ -1,8 +1,8 @@
 from io import StringIO
 from apps.Stream import Stream
 from apps.Tools import toList
-from apps.decorators import *
-from apps.Exceptions import InvalidArgumentError
+from apps.decorators import hasArgument
+from apps.Exceptions import InvalidArgumentError, InvalidFileOrDir
 import re
 from typing import List
 

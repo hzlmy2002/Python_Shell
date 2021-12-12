@@ -1,11 +1,12 @@
 from apps.Stream import Stream
 import os
-from apps.Exceptions import InvalidFileOrDir, InvalidArgumentError
+from apps.Exceptions import InvalidFileOrDir
 from apps.decorators import atMostOneArgument
 
 
 def listDirectory(ls_dir):
-    # Returns a list containing a single string of directories that are followed by \n
+    # Returns a list containing a single string of directories
+    # that are followed by \n
     dirs = []
     try:
         for file in os.listdir(ls_dir):

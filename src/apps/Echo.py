@@ -1,5 +1,4 @@
 from apps.Stream import Stream
-from io import StringIO
 
 
 def echo(stream: "Stream"):

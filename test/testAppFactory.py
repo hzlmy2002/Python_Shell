@@ -1,11 +1,11 @@
+from appFactory import AppNotFoundError, appFactory
+import unittest
+from apps import Cat, Cd, Cut, Echo, Find, Grep,\
+    Head, Ls, Pwd, Sort, Tail, Uniq
 import sys
 
 
 sys.path.insert(0, "../src")
-from apps.decorators import unsafe
-from apps import *
-import unittest
-from appFactory import AppNotFoundError, appFactory
 
 
 class TestFactory(unittest.TestCase):
@@ -24,12 +24,13 @@ class TestFactory(unittest.TestCase):
             "uniq",
             "tail",
         ]
-        appFunc = [pwd, head, echo, cat, cd, ls, cut, find, grep, sort, uniq, tail]
+        appFunc = [Pwd.pwd, Head.head, Echo.echo, Cat.cat, Cd.cd, Ls.ls,
+                   Cut.cut, Find.find, Grep.grep, Sort.sort, Uniq.uniq,
+                   Tail.tail]
         for name, func in zip(appNames, appFunc):
             getApp = appFactory(name)
-            getUnsafeApp = appFactory("_" + name)
             self.assertEqual(getApp.__hash__(), func.__hash__())
-            # self.assertEqual(getUnsafeApp.__hash__(), unsafe(func).__hash__())
+            # self.assertEqual(getUnsafeApp.__hash__(),unsafe(func).__hash__())
 
     def test_no_app(self):
         with self.assertRaises(AppNotFoundError):

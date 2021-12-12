@@ -33,8 +33,9 @@ class OutRedirection(Redirection):
 
 
 class Call(CommandTreeNode):
-    def __init__(self,appName:str, app: Callable[["Stream"], None], args: List[CommandTreeNode]):
-        self.appName=appName
+    def __init__(self, appName: str, app: Callable[["Stream"], None],
+                 args: List[CommandTreeNode]):
+        self.appName = appName
         self.app = app
         self.args = args
 

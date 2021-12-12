@@ -1,12 +1,8 @@
+import unittest
+# from apps import *
 import sys
 
 sys.path.insert(0, "../src")
-from apps import *
-import unittest, os
-from Tools import getStdOut
-
-from shell import eval
-from collections import deque
 
 
 class TestShell(unittest.TestCase):

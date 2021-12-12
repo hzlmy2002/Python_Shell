@@ -1,24 +1,26 @@
+import os
+import unittest
+from appTests import appTests
+from apps.Exceptions import (
+    InvalidArgumentError,
+    InvalidFileOrDir,
+    InvalidParamTagError,
+)
+from apps.Sort import sort
 import sys
 
 sys.path.insert(0, "../src")
-
-from apps import *
-import unittest, os
-from apps.Exceptions import (
-    InvalidArgumentError,
-    InvalidParamError,
-    InvalidFileOrDir,
-    MissingParamError,
-    InvalidParamTagError,
-)
-from appTests import appTests
 
 
 class testSort(unittest.TestCase):
     def setUp(self) -> None:
         with open("testA.txt", "w") as file:
             file.write(
-                "Two roads diverged in a yello wood,\nAnd sorry I could not travel both\nAnd be one traveler,long I stood\nAnd looked down one as far as I could\nTo where it bent in the undergrowth"
+                "Two roads diverged in a yello wood,\n" +
+                "And sorry I could not travel both\n" +
+                "And be one traveler,long I stood\n" +
+                "And looked down one as far as I could\n" +
+                "To where it bent in the undergrowth"
             )
         self.tester = appTests(sort)
 
@@ -52,7 +54,8 @@ class testSort(unittest.TestCase):
 
     def testSortExceptions(self):
         with self.assertRaises(InvalidArgumentError):
-            self.tester.doOuputTest(["testB.txt", "testA.txt"])  # Too many arguments
+            self.tester.doOuputTest(
+                ["testB.txt", "testA.txt"])  # Too many arguments
         with self.assertRaises(InvalidArgumentError):
             self.tester.doOuputTest([])  # Empty argument
         with self.assertRaises(InvalidArgumentError):
@@ -62,7 +65,8 @@ class testSort(unittest.TestCase):
         with self.assertRaises(InvalidArgumentError):
             self.tester.doOuputTest(["-r"])  # Empty argument
         with self.assertRaises(InvalidArgumentError):
-            self.tester.doOuputTest(["-r", "123", "testA.txt"])  # Too many arguments
+            self.tester.doOuputTest(
+                ["-r", "123", "testA.txt"])  # Too many arguments
         with self.assertRaises(InvalidFileOrDir):
             self.tester.doOuputTest(["-r", "smh"])  # Not existing file
         with self.assertRaises(InvalidParamTagError):
@@ -73,37 +77,45 @@ class testSort(unittest.TestCase):
             self.tester.doOuputTest([])  # Empty
         self.assertTrue(
             "InvalidArgumentError"
-            in self.tester.doOuputTest(["testB.txt", "testA.txt"], unsafeApp=True)
+            in self.tester.doOuputTest(
+                ["testB.txt", "testA.txt"], unsafeApp=True)
         )
         self.assertTrue(
-            "InvalidArgumentError" in self.tester.doOuputTest([], unsafeApp=True)
+            "InvalidArgumentError" in self.tester.doOuputTest(
+                [], unsafeApp=True)
         )
         self.assertTrue(
-            "InvalidArgumentError" in self.tester.doOuputTest([""], unsafeApp=True)
+            "InvalidArgumentError" in self.tester.doOuputTest(
+                [""], unsafeApp=True)
         )
         self.assertTrue(
             "InvalidArgumentError"
             in self.tester.doOuputTest(["-r", ""], unsafeApp=True)
         )
         self.assertTrue(
-            "InvalidArgumentError" in self.tester.doOuputTest(["-r"], unsafeApp=True)
+            "InvalidArgumentError" in self.tester.doOuputTest(
+                ["-r"], unsafeApp=True)
         )
         self.assertTrue(
             "InvalidArgumentError"
-            in self.tester.doOuputTest(["-r", "123", "testA.txt"], unsafeApp=True)
+            in self.tester.doOuputTest(
+                ["-r", "123", "testA.txt"], unsafeApp=True)
         )
         self.assertTrue(
-            "InvalidFileOrDir" in self.tester.doOuputTest(["-r", "smh"], unsafeApp=True)
+            "InvalidFileOrDir" in self.tester.doOuputTest(
+                ["-r", "smh"], unsafeApp=True)
         )
         self.assertTrue(
             "InvalidParamTagError"
             in self.tester.doOuputTest(["-a", "testA.txt"], unsafeApp=True)
         )
         self.assertTrue(
-            "InvalidArgumentError" in self.tester.doOuputTest([""], unsafeApp=True)
+            "InvalidArgumentError" in self.tester.doOuputTest(
+                [""], unsafeApp=True)
         )
         self.assertTrue(
-            "InvalidArgumentError" in self.tester.doOuputTest([], unsafeApp=True)
+            "InvalidArgumentError" in self.tester.doOuputTest(
+                [], unsafeApp=True)
         )
 
 

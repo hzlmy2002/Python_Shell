@@ -1,14 +1,15 @@
 from typing import Callable
 from apps.Exceptions import MissingParamError
 from apps.Stream import Stream
-from apps.Exceptions import *
+from apps.Exceptions import InvalidArgumentError, InvalidParamTagError
 import traceback
 
 
 def atMostOneArgument(call: Callable[["Stream"], None]):
     def wrapper(stream: "Stream"):
         if len(stream.getArgs()) != 0 and len(stream.getArgs()) != 1:
-            raise InvalidArgumentError("Exceeded maximum amount of argument required")
+            raise InvalidArgumentError(
+                "Exceeded maximum amount of argument required")
         call(stream)
 
     return wrapper
@@ -49,7 +50,8 @@ def onlyParamTag(intendKey):
             if args:
                 key = args[0]
                 if type(key) == str:
-                    if len(key) < 2 or (key[0] == "-" and key[1:] != intendKey):
+                    if len(key) < 2 or \
+                            (key[0] == "-" and key[1:] != intendKey):
                         raise InvalidParamTagError(f"Invalid tag {key}")
             call(stream)
 
@@ -71,7 +73,8 @@ def intParam(key: str, required: bool, defaultVal=0):
                 stream.removeArg(i)
             except (ValueError, IndexError) as e:
                 if isinstance(e, IndexError):
-                    raise MissingParamError(f"Missing argument for parameter {key}")
+                    raise MissingParamError(
+                        f"Missing argument for parameter {key}")
                 elif required:  # and Value Error
                     raise MissingParamError(f"Missing parameter {key}")
                 else:
@@ -96,7 +99,8 @@ def getFlag(key: str):
                 stream.removeArg(i)
             except (ValueError, IndexError) as e:
                 if isinstance(e, IndexError):
-                    raise MissingParamError(f"Missing argument for parameter {key}")
+                    raise MissingParamError(
+                        f"Missing argument for parameter {key}")
             call(stream)
 
         return wrapper
@@ -109,7 +113,7 @@ def unsafe(call: Callable[["Stream"], None]):
         stdout = stream.getStdout()
         try:
             call(stream)
-        except Exception as e:
+        except Exception:
             stdout.write(traceback.format_exc())
 
     return wrapper

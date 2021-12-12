@@ -1,6 +1,5 @@
-from typing import Dict, List, TextIO
+from typing import Dict, List
 from shellOutput import ShellOutput
-import os
 
 
 class Stream:
@@ -10,7 +9,8 @@ class Stream:
         self.flags = []
         self.env = (
             env.copy()
-        )  # variable starts with _ is for internal use only, hide from the user
+        )  # variable starts with _ is for internal use only,
+        # hide from the user
         self.stdout: "ShellOutput" = stdout
 
     def addArg(self, arg: str) -> None:

@@ -1,5 +1,5 @@
 from apps.Stream import Stream
-from apps.decorators import *
+from apps.decorators import getFlag, hasOneArgument
 from apps.Tools import getLines
 
 

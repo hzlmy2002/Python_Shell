@@ -1,9 +1,10 @@
+import os
+import unittest
+from Tools import getStdOut
+# from apps import *
 import sys
 
 sys.path.insert(0, "../src")
-from apps import *
-import unittest, os
-from Tools import getStdOut
 
 
 class testStdin(unittest.TestCase):

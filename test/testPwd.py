@@ -1,11 +1,11 @@
+import os
+import unittest
+from apps.Exceptions import InvalidArgumentError
+from appTests import appTests
+from apps.Pwd import pwd
 import sys
 
 sys.path.insert(0, "../src")
-
-from apps import *
-import unittest, os
-from appTests import appTests
-from apps.Exceptions import InvalidArgumentError
 
 
 class testPwd(unittest.TestCase):
@@ -20,7 +20,8 @@ class testPwd(unittest.TestCase):
 
     def testPwdChangeDir(self):
         result1 = self.tester.doOuputTest(env={"workingDir": self.cwd})
-        result2 = self.tester.doOuputTest(env={"workingDir": self.cwd}, unsafeApp=True)
+        result2 = self.tester.doOuputTest(
+            env={"workingDir": self.cwd}, unsafeApp=True)
         self.assertEqual(result1, result2)
         self.assertEqual(result1, self.cwd + "\n")
 

@@ -1,7 +1,6 @@
 import sys
 import os
 from parser import parseCommand
-from typing import TextIO
 from apps.Stream import Stream
 from commandTreeVisitor import CommandTreeVisitor
 from shellOutput import ShellOutput
@@ -19,6 +18,7 @@ class Shell:
     def evaluate(self, cmdline):
         commandTree = parseCommand(cmdline)
         self.commandTreeVisitor.visit(commandTree)
+
 
 def eval(cmdline) -> None:  # adjust original syntax
     shell = Shell(os.getcwd())

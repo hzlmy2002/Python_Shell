@@ -1,12 +1,12 @@
+import os
+import unittest
+import shutil
+from appTests import appTests
+from apps.Exceptions import InvalidArgumentError, InvalidFileOrDir
+from apps.Ls import ls
 import sys
 
 sys.path.insert(0, "../src")
-
-from apps import *
-import unittest, os
-from apps.Exceptions import InvalidArgumentError, InvalidFileOrDir
-from appTests import appTests
-import shutil
 
 
 class testLs(unittest.TestCase):
@@ -38,7 +38,8 @@ class testLs(unittest.TestCase):
     def testLsExceptions(self):
         # lsUnsafe = LsUnsafe()
         with self.assertRaises(InvalidArgumentError):
-            self.tester.doOuputTest(["testDir", "testDir2"])  # Too many arguments
+            self.tester.doOuputTest(
+                ["testDir", "testDir2"])  # Too many arguments
         with self.assertRaises(InvalidFileOrDir):
             self.tester.doOuputTest(["smh"])  # Not existing directory
         self.assertTrue(
@@ -46,7 +47,8 @@ class testLs(unittest.TestCase):
             in self.tester.doOuputTest(["testDir", "testDir2"], unsafeApp=True)
         )
         self.assertTrue(
-            "InvalidFileOrDir" in self.tester.doOuputTest(["smh"], unsafeApp=True)
+            "InvalidFileOrDir" in self.tester.doOuputTest(
+                ["smh"], unsafeApp=True)
         )
 
 

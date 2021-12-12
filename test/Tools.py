@@ -1,4 +1,5 @@
-import io, sys
+import io
+import sys
 from shell import eval
 
 

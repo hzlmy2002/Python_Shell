@@ -1,6 +1,6 @@
 from apps.Stream import Stream
 import os
-from apps.Exceptions import InvalidFileOrDir, InvalidArgumentError
+from apps.Exceptions import InvalidFileOrDir
 from apps.decorators import hasOneArgument
 
 
@@ -10,5 +10,5 @@ def cd(stream: "Stream"):
     try:
         os.chdir(args[0])
         stream.addToEnv("workingDir", os.getcwd())
-    except:
+    except FileNotFoundError:
         raise InvalidFileOrDir("Directory does not exist")

@@ -1,10 +1,11 @@
+import os
+import unittest
+from apps.Exceptions import InvalidArgumentError, InvalidFileOrDir
+from appTests import appTests
+from apps.Cat import cat
 import sys
 
 sys.path.insert(0, "../src")
-from apps import *
-import unittest, os
-from appTests import appTests
-from apps.Exceptions import InvalidArgumentError, InvalidFileOrDir
 
 
 class testCat(unittest.TestCase):
@@ -36,13 +37,16 @@ class testCat(unittest.TestCase):
         with self.assertRaises(InvalidArgumentError):
             self.tester.doOuputTest([""])  # No argument
         self.assertTrue(
-            "InvalidFileOrDir" in self.tester.doOuputTest(["^^^"], unsafeApp=True)
+            "InvalidFileOrDir" in self.tester.doOuputTest(
+                ["^^^"], unsafeApp=True)
         )
         self.assertTrue(
-            "InvalidArgumentError" in self.tester.doOuputTest([""], unsafeApp=True)
+            "InvalidArgumentError" in self.tester.doOuputTest(
+                [""], unsafeApp=True)
         )
         self.assertTrue(
-            "InvalidArgumentError" in self.tester.doOuputTest([], unsafeApp=True)
+            "InvalidArgumentError" in self.tester.doOuputTest(
+                [], unsafeApp=True)
         )
 
 

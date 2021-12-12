@@ -1,5 +1,5 @@
 from apps.Stream import Stream
-from apps.decorators import *
+from apps.decorators import intParam, hasOneArgument
 from apps.Exceptions import InvalidArgumentError, InvalidParamError
 from apps.Tools import getLines
 from typing import List
@@ -54,7 +54,9 @@ def isBiggerEqual(x: int, y: int):
 
 
 def fixByteRanges(byteRanges: "List[List[int]]"):
-    # Fix duplicates and byte ranges that includes others (e.g. 1-5 and 3, where 1-5 includes byte 3)
+    # Fix duplicates and byte ranges that
+    # includes others
+    # (e.g. 1-5 and 3, where 1-5 includes byte 3)
     bR = byteRanges.copy()
     bR.sort()
     res = [bR[0]]
@@ -83,7 +85,8 @@ def cut(stream: "Stream"):
     stdout = stream.getStdout()
     paramArgs = parseParamArguments(stream.getParam("b"))
     lines = getLines(stream)
-    byteRanges = fixByteRanges([parseByteRange(element) for element in paramArgs])
+    byteRanges = fixByteRanges([parseByteRange(element)
+                               for element in paramArgs])
     res = ""
     for line in lines:
         for byterange in byteRanges:
