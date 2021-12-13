@@ -1,29 +1,32 @@
+from io import StringIO
 import sys
 import os
-from parser import parseCommand
+from _parser import parseCommand
+from typing import TextIO
 from apps.Stream import Stream
 from commandTreeVisitor import CommandTreeVisitor
-from shellOutput import ShellOutput
 
 
 class Shell:
-    def __init__(self, workingDir):
-        env = {"workingDir": workingDir}
+    def __init__(self, workingDir: str):
+        self.stream = Stream(workingDir)
 
-        self.stream = Stream(env)
-        self.stdout = ShellOutput(self.stream)
-        self.stream.alterStdout(self.stdout)
-        self.commandTreeVisitor = CommandTreeVisitor(self.stream)
+    def eval(self, cmdline: str, stdout: TextIO):
+        commandTree = parseCommand(cmdline, self)
+        self.stream.setStdout(stdout)
 
-    def evaluate(self, cmdline):
-        commandTree = parseCommand(cmdline)
-        self.commandTreeVisitor.visit(commandTree)
+        commandTreeVisitor = CommandTreeVisitor(self.stream)
+        commandTreeVisitor.visit(commandTree)
 
-
-def eval(cmdline) -> None:  # adjust original syntax
-    shell = Shell(os.getcwd())
-    shell.evaluate(cmdline)
-    return shell.stdout
+    def repl(self):
+        try:
+            while True:
+                workingDir = self.stream.getWorkingDir()
+                self.eval(input(f"{workingDir}> "), sys.stdout)
+        except KeyboardInterrupt:
+            exit(0)
+        except EOFError:
+            exit(0)
 
 
 if __name__ == "__main__":  # pragma: no cover
@@ -38,14 +41,6 @@ if __name__ == "__main__":  # pragma: no cover
             raise ValueError("Wrong number of command line arguments.")
         if args[0] != "-c":
             raise ValueError(f"Unexpected command line argument {args[0]}.")
-        sh.evaluate(args[1])
+        sh.eval(args[1], sys.stdout)
     else:
-        try:
-            while True:
-                eval(input("{}> ".format(os.getcwd())))
-        except KeyboardInterrupt:
-            print("\nbye")
-            exit(0)
-        except EOFError:
-            print("\nbye")
-            exit(0)
+        sh.repl()
