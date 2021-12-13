@@ -2,6 +2,7 @@ from apps.Stream import Stream
 from apps.Exceptions import InvalidFileOrDir
 from apps.decorators import hasOneArgument
 from pathlib import Path
+import os
 
 
 @hasOneArgument
@@ -10,6 +11,6 @@ def cd(stream: "Stream"):
     workingDir = stream.getWorkingDir()
     path = Path(workingDir, changeDir)
     if path.is_dir():
-        stream.setWorkingDir(path.__str__())
+        stream.setWorkingDir(os.path.normpath(path.__str__()))
     else:
         raise InvalidFileOrDir("Directory does not exist")
