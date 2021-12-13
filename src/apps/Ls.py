@@ -21,7 +21,8 @@ def listDirectory(ls_dir):
 def ls(stream: "Stream"):
     args = stream.getArgs()
     stdout = stream.getStdout()
+    workingDir = stream.getWorkingDir()
     if len(args) == 0:
-        stdout.write(listDirectory(os.getcwd()))
+        stdout.write(listDirectory(workingDir))
     else:
         stdout.write(listDirectory(args[0]))

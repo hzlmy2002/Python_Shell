@@ -1,5 +1,5 @@
 from io import StringIO
-from parsita import reg, success, TextParsers, rep, opt, rep1sep, longest, rep1
+from parsita import reg, TextParsers, rep, opt, rep1sep, longest, rep1
 from commandTree import Argument, InRedirection, OutRedirection, Call, Pipe, Seq
 from appFactory import appFactory
 
@@ -9,7 +9,9 @@ def parseCommand(cmdline: str, shell):
         def substitution(subcmd: str):
             stdout = StringIO()
             shell.eval(subcmd, stdout)
-            return stdout.getvalue()[:-1]
+            out = stdout.getvalue()
+            out = out.replace("\n", " ")
+            return out[:-1]
 
         singleQuoted = "'" >> reg(r"[^\n\r']*") << "'"
         backQuoted = "`" >> reg(r"[^\n\r`]*") << "`" > substitution

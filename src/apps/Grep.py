@@ -49,11 +49,11 @@ def processStdin(string: StringIO, pattern: str) -> str:
 def grep(stream: "Stream"):
     args = stream.getArgs()
     length = len(args)
-    if length < 2:
-        raise InvalidArgumentError("Invalid argument")
     pattern = args[0]
-    if length == 2 and type(args[1]) == StringIO:
-        res = processStdin(args[1], pattern)
+    if length == 1:
+        stdin = stream.getStdin()
+        if type(stdin) == StringIO:
+            res = processStdin(stdin, pattern)
     else:
         fileNames = args[1:]
         res = processFiles(fileNames, pattern)

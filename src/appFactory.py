@@ -1,14 +1,13 @@
 from typing import Callable
 from apps import Cat, Cd, Cut, Echo, Find, Grep, Head, Ls, Pwd, Sort, Tail, Uniq, Stream
 from apps.decorators import unsafe
-from apps.Stream import Stream
 
 
 class AppNotFoundError(RuntimeError):
     pass
 
 
-def appFactory(appName: str) -> Callable[["Stream"], None]:
+def appFactory(appName: str) -> Callable[["Stream.Stream"], None]:
     appTable = {
         "cat": Cat.cat,
         "cd": Cd.cd,

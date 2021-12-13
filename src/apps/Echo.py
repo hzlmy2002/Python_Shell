@@ -1,6 +1,8 @@
 from apps.Stream import Stream
+from apps.decorators import _glob
 
 
+@_glob
 def echo(stream: "Stream"):
     stdout = stream.getStdout()
     output = []

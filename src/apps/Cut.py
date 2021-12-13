@@ -1,8 +1,9 @@
 from apps.Stream import Stream
-from apps.decorators import intParam, hasOneArgument
+from apps.decorators import _glob, intParam
 from apps.Exceptions import InvalidArgumentError, InvalidParamError
-from apps.Tools import getLines
+from apps.Tools import getLines, toList
 from typing import List
+from io import StringIO
 
 
 def checkDigit(n: int):
@@ -79,14 +80,20 @@ def parseParamArguments(paramArgs: str) -> "List[str]":
     return res
 
 
+@_glob
 @intParam("b", required=True)
-@hasOneArgument
 def cut(stream: "Stream"):
     stdout = stream.getStdout()
     paramArgs = parseParamArguments(stream.getParam("b"))
-    lines = getLines(stream)
-    byteRanges = fixByteRanges([parseByteRange(element)
-                               for element in paramArgs])
+    if len(stream.getArgs()) == 0:
+        stdin = stream.getStdin()
+        if type(stdin) == StringIO:
+            lines = toList(stdin.getvalue())
+        else:
+            lines = stdin.readlines()
+    else:
+        lines = getLines(stream)
+    byteRanges = fixByteRanges([parseByteRange(element) for element in paramArgs])
     res = ""
     for line in lines:
         for byterange in byteRanges:

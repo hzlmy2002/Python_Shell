@@ -42,7 +42,7 @@ class CommandTreeVisitor:
     @visit.register
     def _(self, node: "OutRedirection") -> None:
         path = Path(self.stream.workingDir, node.getPath())
-        stdout = open(path, "a")
+        stdout = open(path, "w")
         self.stream.setStdout(stdout)
 
     @visit.register
@@ -76,6 +76,5 @@ class CommandTreeVisitor:
             self.stream.setStdin(stdout)
 
         self.stream.setStdout(initialStdout)
-        calls[i].accept(self)
+        calls[-1].accept(self)
         self.stream.reset()
-

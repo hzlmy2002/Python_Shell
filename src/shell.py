@@ -1,4 +1,3 @@
-from io import StringIO
 import sys
 import os
 from _parser import parseCommand
