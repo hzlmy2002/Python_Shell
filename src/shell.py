@@ -5,7 +5,7 @@ from typing import TextIO
 from apps.Stream import Stream
 from commandTreeVisitor import CommandTreeVisitor
 from keyboardDisplay import hideInput,display,keyboardMonitor
-from keyboardDisplay import Data
+from keyboardDisplay import Data,State
 from threading import Thread,Lock
 from pynput import keyboard
 
@@ -41,9 +41,10 @@ if __name__ == "__main__":  # pragma: no cover
         try:
             lock=Lock()
             data=Data()
-            t1=Thread(target=hideInput)
-            t2=Thread(target=display,args=(data,lock,))
-            t3=keyboard.Listener(on_press=keyboardMonitor(data,sh,lock))
+            state=State()
+            t1=Thread(target=hideInput,args=(state,))
+            t2=Thread(target=display,args=(data,lock,state,))
+            t3=keyboard.Listener(on_press=keyboardMonitor(data,sh,lock,state))
             t1.start()
             t2.start()
             t3.start()

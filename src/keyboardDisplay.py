@@ -4,6 +4,7 @@ from pynput import keyboard
 from getpass import getpass
 import time
 import sys
+import traceback
 
 class Data:
     def __init__(self):
@@ -23,14 +24,29 @@ class Data:
 
     def getWithPrefix(self):
         pref=os.getcwd()+"> "
-        return pref+self.data
+        if len(self.data)==0:
+            return pref
+        else:
+            return pref+self.data+" ◄"
 
-def hideInput():
+class State:
+    def __init__(self):
+        self.alive=True
+    def die(self):
+        self.alive=False
+    def isAlive(self):
+        return self.alive
+
+def hideInput(state:"State"):
     while True:
+        if not state.isAlive():
+            break
         getpass("")
 
-def display(data:"Data",lock:"Lock"):
+def display(data:"Data",lock:"Lock",state:"State"):
     while True:
+        if not state.isAlive():
+            break
         length=128
         output=""
         if len(data.getWithPrefix())<length:
@@ -43,7 +59,7 @@ def display(data:"Data",lock:"Lock"):
         lock.release()
         time.sleep(0.1)
 
-def keyboardMonitor(data:"Data",sh,lock:"Lock"):
+def keyboardMonitor(data:"Data",sh,lock:"Lock",state:"State"):
     def wrapper(key:"keyboard.Key"):
         if key == keyboard.Key.tab:
             pass
@@ -54,9 +70,12 @@ def keyboardMonitor(data:"Data",sh,lock:"Lock"):
         elif key == keyboard.Key.enter:
             lock.acquire()
             print(data.getWithPrefix())
-
-            sh.eval(data.get(),sys.stdout)
-
+            try:
+                sh.eval(data.get(),sys.stdout)
+            except Exception:
+                print(traceback.format_exc())
+                state.die()
+                return False
             data.clear()
             lock.release()
         else:
