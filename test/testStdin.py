@@ -18,9 +18,9 @@ class testStdin(unittest.TestCase):
         output = getStdOut(cmd).strip()
         self.assertEqual(result, output)
 
-    def testCatStdin(self):
-        cmd = "echo AAA | cat"
-        self.assertOutput(cmd, "AAA")
+    # def testCatStdin(self):
+    #     cmd = "echo AAA | cat"
+    #     self.assertOutput(cmd, "AAA")
 
     def testCutStdin(self):
         cmd = "cat test1.txt | cut -b 1"
