@@ -1,8 +1,6 @@
 from apps.Stream import Stream
 from apps.Exceptions import InvalidArgumentError, InvalidFileOrDir
 from typing import List
-from io import StringIO
-
 
 def toList(newLineString: str) -> List[str]:
 
