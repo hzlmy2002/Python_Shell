@@ -1,7 +1,6 @@
 from apps.Exceptions import InvalidFileOrDir, MissingStdin
 from apps.decorators import _glob
 from .Stream import Stream
-from io import StringIO
 
 
 @_glob

@@ -1,5 +1,5 @@
 from apps.Stream import Stream
-from apps.decorators import intParam, atMostOneArgument
+from apps.decorators import argumentLimit, hasParam, notEmpty
 from apps.Exceptions import InvalidFileOrDir
 import os
 import fnmatch
@@ -14,8 +14,9 @@ def findFiles(rootPath: str, pattern: str) -> str:
     return result
 
 
-@intParam("name", required=True)
-@atMostOneArgument
+@notEmpty
+@hasParam("name", required=True)
+@argumentLimit(1, strict=False)
 def find(stream: "Stream"):
     arg = stream.getArgs()
     rootPath = "."

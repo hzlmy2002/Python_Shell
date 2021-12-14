@@ -1,6 +1,6 @@
 from io import StringIO
 from apps.Stream import Stream
-from apps.decorators import getFlag, _glob, hasOneArgument
+from apps.decorators import getFlag, _glob
 from apps.Tools import getLines, toList
 from apps.Exceptions import MissingStdin
 

@@ -1,12 +1,12 @@
 from apps.Stream import Stream
-from apps.decorators import _glob, intParam
+from apps.decorators import _glob, hasParam
 from apps.Tools import getLines, toList
 from apps.Exceptions import MissingStdin
 from io import StringIO
 
 
 @_glob
-@intParam("n", required=False, defaultVal=10)
+@hasParam("n", required=False, defaultVal=10, numeric=True)
 def tail(stream: "Stream"):
     linesNum = stream.getParam("n")
     args = stream.getArgs()

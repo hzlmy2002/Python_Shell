@@ -1,47 +1,73 @@
 import os
 from typing import Callable
-from apps.Exceptions import MissingParamError
+from apps.Exceptions import InvalidParamError, MissingParamError
 from apps.Stream import Stream
 from apps.Exceptions import InvalidArgumentError, InvalidParamTagError
 import traceback
-from glob import glob
 from pathlib import Path
 
 
-def atMostOneArgument(call: Callable[["Stream"], None]):
+# def atMostOneArgument(call: Callable[["Stream"], None]):
+#     def wrapper(stream: "Stream"):
+#         if len(stream.getArgs()) != 0 and len(stream.getArgs()) != 1:
+#             raise InvalidArgumentError("Exceeded maximum amount of argument required")
+#         call(stream)
+
+#     return wrapper
+
+
+# def hasOneArgument(call: Callable[["Stream"], None]):
+#     def wrapper(stream: "Stream"):
+#         if len(stream.getArgs()) != 1 or stream.getArgs()[0] == "":
+#             raise InvalidArgumentError("Should take a single argument")
+#         call(stream)
+
+#     return wrapper
+
+
+# def hasArgument(call: Callable[["Stream"], None]):
+#     def wrapper(stream: "Stream"):
+#         if not stream.getArgs() or stream.getArgs()[0] == "":
+#             raise InvalidArgumentError("Argument required but not supplied")
+#         call(stream)
+
+#     return wrapper
+
+
+# def noArgument(call: Callable[["Stream"], None]):
+#     def wrapper(stream: "Stream"):
+#         if stream.getArgs():
+#             raise InvalidArgumentError("Should not take arguments")
+#         call(stream)
+
+#     return wrapper
+
+
+def notEmpty(call: Callable[["Stream"], None]):
     def wrapper(stream: "Stream"):
-        if len(stream.getArgs()) != 0 and len(stream.getArgs()) != 1:
-            raise InvalidArgumentError("Exceeded maximum amount of argument required")
+        if not stream.getArgs():
+            raise InvalidArgumentError("Should not take empty arguments")
         call(stream)
 
     return wrapper
 
 
-def hasOneArgument(call: Callable[["Stream"], None]):
-    def wrapper(stream: "Stream"):
-        if len(stream.getArgs()) != 1 or stream.getArgs()[0] == "":
-            raise InvalidArgumentError("Should take a single argument")
-        call(stream)
+def argumentLimit(limit=0, strict=True):
+    # Strict implies number of arguments must == limit
+    # When not strict, number of arguments can vary between 0-limit inclusive
+    # Default to strictly 0
+    def decorator(call: Callable[["Stream"], None]):
+        def wrapper(stream: "Stream"):
+            length = len(stream.getArgs())
+            if (strict and length != limit) or (
+                not strict and not (length >= 0 and length <= limit)
+            ):
+                raise InvalidArgumentError("Invalid Number of arguments")
+            call(stream)
 
-    return wrapper
+        return wrapper
 
-
-def hasArgument(call: Callable[["Stream"], None]):
-    def wrapper(stream: "Stream"):
-        if not stream.getArgs() or stream.getArgs()[0] == "":
-            raise InvalidArgumentError("Argument required but not supplied")
-        call(stream)
-
-    return wrapper
-
-
-def noArgument(call: Callable[["Stream"], None]):
-    def wrapper(stream: "Stream"):
-        if stream.getArgs():
-            raise InvalidArgumentError("Should not take arguments")
-        call(stream)
-
-    return wrapper
+    return decorator
 
 
 def onlyParamTag(intendKey):
@@ -61,14 +87,16 @@ def onlyParamTag(intendKey):
     return decoratorParamTag
 
 
-def intParam(key: str, required: bool, defaultVal=0):
-    def decoratorIntParam(call: Callable[["Stream"], None]):
+def hasParam(key: str, required: bool, defaultVal=0, numeric=False):
+    def decoratorHasParam(call: Callable[["Stream"], None]):
         @onlyParamTag(key)
         def wrapperIntParam(stream: "Stream"):
             args = stream.getArgs()
             try:
                 i = args.index("-" + key)
                 val = args[i + 1]
+                if not val.isnumeric() and numeric:
+                    raise InvalidParamError(f"Invalid parameter argument {val}")
                 stream.removeArg(i)
                 stream.removeArg(i)
             except (ValueError, IndexError) as e:
@@ -83,7 +111,7 @@ def intParam(key: str, required: bool, defaultVal=0):
 
         return wrapperIntParam
 
-    return decoratorIntParam
+    return decoratorHasParam
 
 
 def getFlag(key: str):

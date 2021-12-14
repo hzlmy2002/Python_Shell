@@ -1,8 +1,8 @@
 from apps.Stream import Stream
-from apps.decorators import noArgument
+from apps.decorators import argumentLimit
 
 
-@noArgument
+@argumentLimit()
 def pwd(stream: "Stream") -> None:
     workingDir = stream.getWorkingDir()
     stream.getStdout().write(workingDir + "\n")

@@ -1,7 +1,7 @@
 from io import StringIO
 from apps.Stream import Stream
 from apps.Tools import toList
-from apps.decorators import hasArgument
+from apps.decorators import notEmpty
 from apps.Exceptions import InvalidArgumentError, InvalidFileOrDir
 import re
 from typing import List
@@ -45,7 +45,7 @@ def processStdin(string: StringIO, pattern: str) -> str:
     return matched
 
 
-@hasArgument
+@notEmpty
 def grep(stream: "Stream"):
     args = stream.getArgs()
     length = len(args)
@@ -54,6 +54,8 @@ def grep(stream: "Stream"):
         stdin = stream.getStdin()
         if type(stdin) == StringIO:
             res = processStdin(stdin, pattern)
+        else:
+            raise InvalidArgumentError("Invalid argument given")
     else:
         fileNames = args[1:]
         res = processFiles(fileNames, pattern)

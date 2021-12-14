@@ -3,7 +3,7 @@ import sys
 sys.path.insert(0, "../src")
 import os
 import unittest
-from apps.Exceptions import InvalidArgumentError, InvalidFileOrDir
+from apps.Exceptions import InvalidFileOrDir, MissingStdin
 from appTests import appTests
 from apps.Cat import cat
 
@@ -32,19 +32,17 @@ class testCat(unittest.TestCase):
         # cat2 = CatUnsafe()
         with self.assertRaises(InvalidFileOrDir):
             self.tester.doOuputTest(["^^^"])  # Not existing file
-        with self.assertRaises(InvalidArgumentError):
+        with self.assertRaises(MissingStdin):
             self.tester.doOuputTest([])  # No argument
-        with self.assertRaises(InvalidArgumentError):
+        with self.assertRaises(InvalidFileOrDir):
             self.tester.doOuputTest([""])  # No argument
         self.assertTrue(
             "InvalidFileOrDir" in self.tester.doOuputTest(["^^^"], unsafeApp=True)
         )
         self.assertTrue(
-            "InvalidArgumentError" in self.tester.doOuputTest([""], unsafeApp=True)
+            "InvalidFileOrDir" in self.tester.doOuputTest([""], unsafeApp=True)
         )
-        self.assertTrue(
-            "InvalidArgumentError" in self.tester.doOuputTest([], unsafeApp=True)
-        )
+        self.assertTrue("MissingStdin" in self.tester.doOuputTest([], unsafeApp=True))
 
 
 if __name__ == "__main__":

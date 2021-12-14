@@ -1,11 +1,11 @@
 from apps.Stream import Stream
 from apps.Exceptions import InvalidFileOrDir
-from apps.decorators import hasOneArgument
+from apps.decorators import argumentLimit
 from pathlib import Path
 import os
 
 
-@hasOneArgument
+@argumentLimit(1)
 def cd(stream: "Stream"):
     changeDir = stream.getArgs()[0]
     workingDir = stream.getWorkingDir()

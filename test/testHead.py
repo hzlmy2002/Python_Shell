@@ -4,7 +4,13 @@ sys.path.insert(0, "../src")
 import os
 import unittest
 from appTests import appTests
-from apps.Exceptions import InvalidArgumentError, InvalidParamTagError, InvalidFileOrDir
+from apps.Exceptions import (
+    InvalidArgumentError,
+    InvalidParamTagError,
+    InvalidFileOrDir,
+    MissingStdin,
+    InvalidParamError,
+)
 from apps.Head import head
 
 
@@ -38,19 +44,14 @@ class testHead(unittest.TestCase):
         with self.assertRaises(InvalidFileOrDir):
             self.tester.doOuputTest(["-n", "11", "smh.txt"])  # Not existing file
 
-        with self.assertRaises(InvalidArgumentError):
-            self.tester.doOuputTest(["-n", "11"])  # No file specified
+        with self.assertRaises(MissingStdin):
+            self.tester.doOuputTest(["-n", "11"])  # No stdin specified
 
-        with self.assertRaises(InvalidArgumentError):
-            self.tester.doOuputTest(["-n", "11", ""])  # No file specified
-
-        with self.assertRaises(InvalidArgumentError):
+        with self.assertRaises(InvalidParamError):
             # No param argument specified
             self.tester.doOuputTest(["-n", "test.txt"])
-        with self.assertRaises(InvalidArgumentError):
-            self.tester.doOuputTest([""])  # Empty
-        with self.assertRaises(InvalidArgumentError):
-            self.tester.doOuputTest([])  # Empty
+        with self.assertRaises(MissingStdin):
+            self.tester.doOuputTest([])  # Stdin not provided
         self.assertTrue(
             "InvalidParamTagError"
             in self.tester.doOuputTest(["-a", "11", "test.txt"], unsafeApp=True)
@@ -64,23 +65,13 @@ class testHead(unittest.TestCase):
             in self.tester.doOuputTest(["-n", "11", "smh.txt"], unsafeApp=True)
         )
         self.assertTrue(
-            "InvalidArgumentError"
-            in self.tester.doOuputTest(["-n", "11"], unsafeApp=True)
+            "MissingStdin" in self.tester.doOuputTest(["-n", "11"], unsafeApp=True)
         )
         self.assertTrue(
-            "InvalidArgumentError"
-            in self.tester.doOuputTest(["-n", "11", ""], unsafeApp=True)
-        )
-        self.assertTrue(
-            "InvalidArgumentError"
+            "InvalidParamError"
             in self.tester.doOuputTest(["-n", "test.txt"], unsafeApp=True)
         )
-        self.assertTrue(
-            "InvalidArgumentError" in self.tester.doOuputTest([""], unsafeApp=True)
-        )
-        self.assertTrue(
-            "InvalidArgumentError" in self.tester.doOuputTest([], unsafeApp=True)
-        )
+        self.assertTrue("MissingStdin" in self.tester.doOuputTest([], unsafeApp=True))
 
 
 if __name__ == "__main__":

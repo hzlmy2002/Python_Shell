@@ -1,5 +1,5 @@
 from apps.Stream import Stream
-from apps.decorators import _glob, intParam
+from apps.decorators import hasParam, notEmpty
 from apps.Exceptions import InvalidArgumentError, InvalidParamError
 from apps.Tools import getLines, toList
 from typing import List
@@ -80,8 +80,8 @@ def parseParamArguments(paramArgs: str) -> "List[str]":
     return res
 
 
-@_glob
-@intParam("b", required=True)
+@notEmpty
+@hasParam("b", required=True)
 def cut(stream: "Stream"):
     stdout = stream.getStdout()
     paramArgs = parseParamArguments(stream.getParam("b"))
@@ -90,7 +90,10 @@ def cut(stream: "Stream"):
         if type(stdin) == StringIO:
             lines = toList(stdin.getvalue())
         else:
-            lines = stdin.readlines()
+            try:
+                lines = stdin.readlines()
+            except AttributeError:
+                raise InvalidArgumentError("Should not take empty argument")
     else:
         lines = getLines(stream)
     byteRanges = fixByteRanges([parseByteRange(element) for element in paramArgs])

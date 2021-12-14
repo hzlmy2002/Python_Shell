@@ -1,5 +1,5 @@
 from apps.Stream import Stream
-from apps.Exceptions import InvalidFileOrDir
+from apps.Exceptions import InvalidArgumentError, InvalidFileOrDir
 from typing import List
 from io import StringIO
 
@@ -15,7 +15,9 @@ def toList(newLineString: str) -> List[str]:
 def getLines(stream: "Stream") -> List[str]:
     # Return content within a single file of name fileName as list of string
     args = stream.getArgs()
-    fileName = args[-1]
+    if len(args) != 1 or args[0] == "":
+        raise InvalidArgumentError("Too many arguments given")
+    fileName = args[0]
     lines = ""
     try:
         if type(fileName) == StringIO:

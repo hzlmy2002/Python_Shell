@@ -19,8 +19,8 @@ class testPwd(unittest.TestCase):
         os.rmdir("testDir")
 
     def testPwdChangeDir(self):
-        result1 = self.tester.doOuputTest(env={"workingDir": self.cwd})
-        result2 = self.tester.doOuputTest(env={"workingDir": self.cwd}, unsafeApp=True)
+        result1 = self.tester.doOuputTest(env=self.cwd)
+        result2 = self.tester.doOuputTest(env=self.cwd, unsafeApp=True)
         self.assertEqual(result1, result2)
         self.assertEqual(result1, self.cwd + "\n")
 
