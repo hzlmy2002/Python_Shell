@@ -3,20 +3,16 @@ import sys
 sys.path.insert(0, "../src")
 import os
 import unittest
-from Tools import getStdOut
+from withStdOut import withStdOut
 
 
-class testStdin(unittest.TestCase):
+class testStdin(withStdOut):
     def setUp(self) -> None:
         with open("test1.txt", "w") as f:
             f.write("AAA\nBBB\nAAA\n")
 
     def tearDown(self) -> None:
         os.remove("test1.txt")
-
-    def assertOutput(self, cmd, result):
-        output = getStdOut(cmd).strip()
-        self.assertEqual(result, output)
 
     # def testCatStdin(self):
     #     cmd = "echo AAA | cat"

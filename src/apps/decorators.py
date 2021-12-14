@@ -77,9 +77,8 @@ def onlyParamTag(intendKey):
             args = stream.getArgs()
             if args:
                 key = args[0]
-                if type(key) == str:
-                    if len(key) < 2 or (key[0] == "-" and key[1:] != intendKey):
-                        raise InvalidParamTagError(f"Invalid tag {key}")
+                if len(key) < 2 or (key[0] == "-" and key[1:] != intendKey):
+                    raise InvalidParamTagError(f"Invalid tag {key}")
             call(stream)
 
         return wrapper
@@ -100,9 +99,7 @@ def hasParam(key: str, required: bool, defaultVal=0, numeric=False):
                 stream.removeArg(i)
                 stream.removeArg(i)
             except (ValueError, IndexError) as e:
-                if isinstance(e, IndexError):
-                    raise MissingParamError(f"Missing argument for parameter {key}")
-                elif required:  # and Value Error
+                if required:  # and Value Error
                     raise MissingParamError(f"Missing parameter {key}")
                 else:
                     val = defaultVal
@@ -124,8 +121,7 @@ def getFlag(key: str):
                 stream.addFlag(args[i][1])
                 stream.removeArg(i)
             except (ValueError, IndexError) as e:
-                if isinstance(e, IndexError):
-                    raise MissingParamError(f"Missing argument for parameter {key}")
+                pass
             call(stream)
 
         return wrapper
