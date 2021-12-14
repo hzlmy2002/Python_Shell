@@ -20,13 +20,8 @@ def getLines(stream: "Stream") -> List[str]:
     fileName = args[0]
     lines = ""
     try:
-        if type(fileName) == StringIO:
-            with fileName as f:
-                lines = f.getvalue()
-                lines = toList(lines)
-        else:
-            with open(fileName, "r") as f:
-                lines = f.readlines()
+        with open(fileName, "r") as f:
+            lines = f.readlines()
     except FileNotFoundError:
         raise InvalidFileOrDir(f"File {fileName} does not exist")
     return lines

@@ -36,7 +36,7 @@ class CommandTreeVisitor:
         try:
             stdin = open(path, "r")
         except FileNotFoundError:
-            raise StdinNotFoundError
+            raise StdinNotFoundError("stdin not found.")
         self.stream.setStdin(stdin)
 
     @visit.register

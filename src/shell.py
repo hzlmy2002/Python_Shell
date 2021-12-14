@@ -17,15 +17,8 @@ class Shell:
         commandTreeVisitor = CommandTreeVisitor(self.stream)
         commandTreeVisitor.visit(commandTree)
 
-    def repl(self):
-        try:
-            while True:
-                workingDir = self.stream.getWorkingDir()
-                self.eval(input(f"{workingDir}> "), sys.stdout)
-        except KeyboardInterrupt:
-            exit(0)
-        except EOFError:
-            exit(0)
+    def getWorkingDir(self) -> str:
+        return self.stream.getWorkingDir()
 
 
 if __name__ == "__main__":  # pragma: no cover
@@ -42,4 +35,11 @@ if __name__ == "__main__":  # pragma: no cover
             raise ValueError(f"Unexpected command line argument {args[0]}.")
         sh.eval(args[1], sys.stdout)
     else:
-        sh.repl()
+        try:
+            while True:
+                workingDir = sh.getWorkingDir()
+                sh.eval(input(f"{workingDir}> "), sys.stdout)
+        except KeyboardInterrupt:
+            exit(0)
+        except EOFError:
+            exit(0)
