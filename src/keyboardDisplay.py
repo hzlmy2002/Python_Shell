@@ -9,9 +9,13 @@ import traceback
 class Data:
     def __init__(self):
         self.data = ""
+        self.pref=""
 
     def add(self,char):
         self.data += char
+
+    def setPrefix(self,pref):
+        self.pref=pref
 
     def pop(self):
         self.data = self.data[:-1]
@@ -23,11 +27,10 @@ class Data:
         return self.data
 
     def getWithPrefix(self):
-        pref=os.getcwd()+"> "
         if len(self.data)==0:
-            return pref
+            return self.pref
         else:
-            return pref+self.data+" ◄"
+            return self.pref+self.data+" ◄"
 
 class State:
     def __init__(self):
@@ -74,8 +77,10 @@ def keyboardMonitor(data:"Data",sh,lock:"Lock",state:"State"):
                 sh.eval(data.get(),sys.stdout)
             except Exception:
                 print(traceback.format_exc())
+                print("Press Enter to Confirm and Exit.")
                 state.die()
                 return False
+            data.setPrefix(sh.getWorkingDir()+"> ")
             data.clear()
             lock.release()
         else:
