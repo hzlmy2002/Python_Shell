@@ -4,10 +4,7 @@ from _parser import parseCommand
 from typing import TextIO
 from apps.Stream import Stream
 from commandTreeVisitor import CommandTreeVisitor
-from keyboardDisplay import hideInput,display,keyboardMonitor
-from keyboardDisplay import Data,State
-from threading import Thread,Lock
-from pynput import keyboard
+
 
 class Shell:
     def __init__(self, workingDir: str):
@@ -41,6 +38,10 @@ if __name__ == "__main__":  # pragma: no cover
         sh.eval(args[1], sys.stdout)
     else:
         try:
+            from keyboardDisplay import hideInput,display,keyboardMonitor
+            from keyboardDisplay import Data,State
+            from threading import Thread,Lock
+            from pynput import keyboard
             lock=Lock()
             data=Data()
             state=State()

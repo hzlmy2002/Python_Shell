@@ -1,4 +1,3 @@
-import os
 from threading import Lock
 from pynput import keyboard
 from getpass import getpass
