@@ -12,11 +12,11 @@ class testGlob(withStdOut):
         os.mkdir("testFolder")
         os.chdir("testFolder")
         self.cwd = os.getcwd()
-        with open("test.txt", "w") as f:
+        with open("test.txt", "w"):
             pass
-        with open("test2.txt", "w") as f:
+        with open("test2.txt", "w"):
             pass
-        with open("pic.jpg", "w") as f:
+        with open("pic.jpg", "w"):
             pass
 
     def tearDown(self) -> None:

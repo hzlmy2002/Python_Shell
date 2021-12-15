@@ -98,7 +98,7 @@ def hasParam(key: str, required: bool, defaultVal=0, numeric=False):
                     raise InvalidParamError(f"Invalid parameter argument {val}")
                 stream.removeArg(i)
                 stream.removeArg(i)
-            except (ValueError, IndexError) as e:
+            except (ValueError, IndexError):
                 if required:  # and Value Error
                     raise MissingParamError(f"Missing parameter {key}")
                 else:
@@ -120,7 +120,7 @@ def getFlag(key: str):
                 i = args.index("-" + key)
                 stream.addFlag(args[i][1])
                 stream.removeArg(i)
-            except (ValueError, IndexError) as e:
+            except (ValueError, IndexError):
                 pass
             call(stream)
 

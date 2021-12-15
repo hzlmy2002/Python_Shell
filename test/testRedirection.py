@@ -5,7 +5,7 @@ from commandTreeVisitor import StdinNotFoundError
 import os
 from withStdOut import withStdOut
 from shell import Shell
-
+import unittest
 
 class testRedirection(withStdOut):
     def setUp(self) -> None:

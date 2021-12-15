@@ -2,7 +2,6 @@ import unittest
 import io
 import sys
 from shell import Shell
-import os
 
 
 class withStdOut(unittest.TestCase):
