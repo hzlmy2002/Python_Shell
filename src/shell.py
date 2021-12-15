@@ -11,6 +11,8 @@ class Shell:
         self.stream = Stream(workingDir)
 
     def eval(self, cmdline: str, stdout: TextIO):
+        if len(cmdline.strip()) == 0:
+            return
         commandTree = parseCommand(cmdline, self)
         self.stream.setStdout(stdout)
 
@@ -36,9 +38,20 @@ if __name__ == "__main__":  # pragma: no cover
         sh.eval(args[1], sys.stdout)
     else:
         try:
-            while True:
-                workingDir = sh.getWorkingDir()
-                sh.eval(input(f"{workingDir}> "), sys.stdout)
+            from keyboardDisplay import hideInput,display,keyboardMonitor
+            from keyboardDisplay import Data,State
+            from threading import Thread,Lock
+            from pynput import keyboard
+            lock=Lock()
+            data=Data()
+            state=State()
+            data.setPrefix(sh.getWorkingDir()+"> ")
+            t1=Thread(target=hideInput,args=(state,))
+            t2=Thread(target=display,args=(data,lock,state,))
+            t3=keyboard.Listener(on_press=keyboardMonitor(data,sh,lock,state))
+            t1.start()
+            t2.start()
+            t3.start()
         except KeyboardInterrupt:
             exit(0)
         except EOFError:
