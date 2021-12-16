@@ -4,7 +4,7 @@ from _parser import parseCommand
 from typing import TextIO
 from apps.Stream import Stream
 from commandTreeVisitor import CommandTreeVisitor
-
+import traceback
 
 class Shell:
     def __init__(self, workingDir: str):
@@ -37,22 +37,33 @@ if __name__ == "__main__":  # pragma: no cover
             raise ValueError(f"Unexpected command line argument {args[0]}.")
         sh.eval(args[1], sys.stdout)
     else:
+        mode="advanced"
         try:
             from keyboardDisplay import hideInput,display,keyboardMonitor
             from keyboardDisplay import Data,State
             from threading import Thread,Lock
             from pynput import keyboard
-            lock=Lock()
-            data=Data()
-            state=State()
-            data.setPrefix(sh.getWorkingDir()+"> ")
-            t1=Thread(target=hideInput,args=(state,))
-            t2=Thread(target=display,args=(data,lock,state,))
-            t3=keyboard.Listener(on_press=keyboardMonitor(data,sh,lock,state))
-            t1.start()
-            t2.start()
-            t3.start()
-        except KeyboardInterrupt:
-            exit(0)
-        except EOFError:
-            exit(0)
+        except ImportError:
+            mode="basic"
+            print(traceback.format_exc())
+            print("Entering basic mode. Extra features are not available.")
+        if mode == "advanced":
+            try:
+                print("Entering advanced mode.")
+                lock=Lock()
+                data=Data()
+                state=State()
+                data.setPrefix(sh.getWorkingDir()+"> ")
+                t1=Thread(target=hideInput,args=(state,))
+                t2=Thread(target=display,args=(data,lock,state,))
+                t3=keyboard.Listener(on_press=keyboardMonitor(data,sh,lock,state))
+                t1.start()
+                t2.start()
+                t3.start()
+            except Exception:
+                print(traceback.format_exc())
+                exit(-1)
+        else:
+            while True:
+                cmdline = input(sh.getWorkingDir()+"> ")
+                sh.eval(cmdline, sys.stdout)
