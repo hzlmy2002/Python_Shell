@@ -14,6 +14,10 @@ class testStdin(withStdOut):
     def tearDown(self) -> None:
         os.remove("test1.txt")
 
+    # def testCatStdin(self):
+    #     cmd = "echo AAA | cat"
+    #     self.assertOutput(cmd, "AAA")
+
     def testCutStdin(self):
         cmd = "cat test1.txt | cut -b 1"
         self.assertOutput(cmd, "A\nB\nA")

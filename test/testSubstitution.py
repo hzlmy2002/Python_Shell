@@ -2,9 +2,7 @@ import sys
 import unittest
 
 sys.path.insert(0, "../src")
-import os
 from withStdOut import withStdOut
-from shell import Shell
 
 
 class testSubstitution(withStdOut):
