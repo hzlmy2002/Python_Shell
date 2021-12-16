@@ -38,6 +38,10 @@ if __name__ == "__main__":  # pragma: no cover
         sh.eval(args[1], sys.stdout)
     else:
         mode="advanced"
+        if os.name != "posix":
+                print("Entering basic mode. Extra features are not available.")
+                print("Please use Linux or MacOS. (not in container)")
+                mode="basic"
         try:
             from keyboardDisplay import hideInput,display,keyboardMonitor
             from keyboardDisplay import Data,State
@@ -46,7 +50,8 @@ if __name__ == "__main__":  # pragma: no cover
         except ImportError:
             mode="basic"
             print(traceback.format_exc())
-            print("Entering basic mode. Extra features are not available.")
+            print("Entering basic mode. Extra features are not available in Docker containers.")
+            
         if mode == "advanced":
             try:
                 print("Entering advanced mode.")
