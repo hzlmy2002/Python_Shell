@@ -5,15 +5,16 @@ from appTests import appTests
 import unittest
 from apps.Echo import echo
 from appTests import appTests
-from hypothesis import given, strategies as st
+from hypothesis import given, assume, strategies as st
 
 
 class testEcho(appTests):
     def setUp(self) -> None:
         self.setApp(echo, "echo")
 
-    @given(s=st.text().filter(lambda x: "*" not in x))  # No glob
+    @given(s=st.text())
     def testEchoOutput(self, s):
+        assume("*" not in s)  # No glob
         result1 = self.doOutputTest([s])
         result2 = self.doOutputTest([s], unsafeApp=True)
         self.assertEqual(result1, f"{s}\n")

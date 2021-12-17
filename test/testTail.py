@@ -13,6 +13,7 @@ from apps.Exceptions import (
 )
 from apps.Tail import tail
 from appTests import appTests
+from hypothesis import given, strategies as st
 
 
 class testTail(appTests):
@@ -24,9 +25,12 @@ class testTail(appTests):
     def tearDown(self) -> None:
         os.remove("test.txt")
 
-    def testTailFile(self):
-        self.outputAssertHelper(["test.txt"])
-        self.outputAssertHelper(["-n", "11", "test.txt"])
+    def testTailFileDefault(self):
+        self.outputAssertHelper(["test.txt"])  # no -n specified
+
+    @given(st.integers(min_value=1, max_value=15))
+    def testTailFile(self, s):
+        self.outputAssertHelper(["-n", str(s), "test.txt"])
 
     def testTailExceptions(self):
         self.exceptionAssertHelper(

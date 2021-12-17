@@ -13,6 +13,7 @@ from apps.Exceptions import (
 )
 from apps.Head import head
 from appTests import appTests
+from hypothesis import given, strategies as st
 
 
 class testHead(appTests):
@@ -24,9 +25,12 @@ class testHead(appTests):
     def tearDown(self) -> None:
         os.remove("test.txt")
 
-    def testHeadFile(self):
-        self.outputAssertHelper(["test.txt"])
-        self.outputAssertHelper(["-n", "11", "test.txt"])
+    def testHeadFileDefault(self):
+        self.outputAssertHelper(["test.txt"])  # no -n specified
+
+    @given(st.integers(min_value=1, max_value=15))
+    def testHeadFile(self, s):
+        self.outputAssertHelper(["-n", str(s), "test.txt"])
 
     def testHeadExceptions(self):
         self.exceptionAssertHelper(
