@@ -2,33 +2,52 @@ from StdOutForTest import StdOutForTest
 from StreamForTest import StreamForTest
 from typing import List, Callable
 from apps.decorators import unsafe
+import unittest
+import subprocess
 
 
-class appTests:
-    def __init__(self, app: Callable[["StreamForTest"], None]) -> None:
+class appTests(unittest.TestCase):
+    def setApp(self, app: Callable[["StreamForTest"], None], name: str) -> None:
         self.app = app
+        self.name = name
 
-    def doOuputTest(
-        self, arg: List[str] = [], env: str = "", unsafeApp=False, stdin=None
+    def doOutputTest(
+        self,
+        arg: List[str],
+        env: str = "",
+        unsafeApp=False,
+        getEnv=False,
     ) -> str:
         stdOut = StdOutForTest()
-        stream = StreamForTest(env, stdOut, stdin, arg)
+        stream = StreamForTest(env, stdOut, None, arg.copy())
         if unsafeApp:
             unsafeApp = unsafe(self.app)
             unsafeApp(stream)
         else:
             self.app(stream)
-        result = stdOut.getOut()
+        if getEnv:
+            result = stream.getWorkingDir()
+        else:
+            result = stdOut.getOut()
         return result
 
-    def changeEnvTest(
-        self, arg: List[str] = [], env: str = "", unsafeApp=False, stdin=None
-    ):
-        stdOut = StdOutForTest()
-        stream = StreamForTest(env, stdOut, stdin, arg)
-        if unsafeApp:
-            unsafeApp = unsafe(self.app)
-            unsafeApp(stream)
+    def outputAssertHelper(self, arg: "List[str]" = [], env: str = "", ordered=True):
+        # Helps asserting app output with actual bash output and unsafe app output
+        result1 = self.doOutputTest(arg=arg, env=env)
+        result2 = self.doOutputTest(arg=arg, env=env, unsafeApp=True)
+        self.assertEqual(result1, result2)
+        osRunCommand = subprocess.run([self.name] + arg, capture_output=True, text=True)
+        returned = osRunCommand.stdout
+        if ordered:
+            self.assertEqual(result1.strip(), returned.strip())
         else:
-            self.app(stream)
-        return stream.getWorkingDir()
+            self.assertEqual(
+                set(result1.strip().split("\n")), set(result2.strip().split("\n"))
+            )
+
+    def exceptionAssertHelper(self, arg: "List[str]", exception, strException):
+        # Helps asserting exception is raised
+        # And unsafe correspondence prints out exception
+        with self.assertRaises(exception):
+            self.doOutputTest(arg, env="")
+        self.assertTrue(strException in self.doOutputTest(arg, env="", unsafeApp=True))

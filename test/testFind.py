@@ -11,9 +11,10 @@ from apps.Exceptions import (
     MissingParamError,
 )
 from apps.Find import find
+from appTests import appTests
 
 
-class testFind(unittest.TestCase):
+class testFind(appTests):
     def setUp(self) -> None:
         os.makedirs("root/testDir/test1")
         os.mkdir("root/testDir2/")
@@ -27,81 +28,38 @@ class testFind(unittest.TestCase):
         f4.close()
         f5 = open("root/testDir2/test4.txt", "a")
         f5.close()
-        self.tester = appTests(find)
+        self.setApp(find, "find")
 
     def tearDown(self) -> None:
         shutil.rmtree("root")
 
     def testFindListFile(self):
-        result1 = self.tester.doOuputTest(["root", "-name", "test*.txt"])
-        result2 = self.tester.doOuputTest(
-            ["root", "-name", "test*.txt"], unsafeApp=True
-        )
-        result3 = self.tester.doOuputTest(["root", "-name", "Alt*.txt"])
-        result4 = self.tester.doOuputTest(["root", "-name", "Alt*.txt"], unsafeApp=True)
-        result5 = self.tester.doOuputTest(["-name", "test*.txt"])
-        result6 = self.tester.doOuputTest(["-name", "test*.txt"], unsafeApp=True)
-        self.assertEqual(result1, result2)
-        self.assertEqual(result3, result4)
-        self.assertEqual(result5, result6)
-        self.assertEqual(
-            result1,
-            "root/test1.txt\nroot/testDir/test2.txt\n"
-            + "root/testDir/test1/test3.txt\nroot/testDir2/test4.txt\n",
-        )
-        self.assertEqual(result3, "root/testDir/Alttest1.txt\n")
-        self.assertEqual(
-            result5,
-            "./root/test1.txt\n./root/testDir/test2.txt\n"
-            + "./root/testDir/test1/test3.txt\n./root/testDir2/test4.txt\n",
-        )
+        self.outputAssertHelper(["root", "-name", "test*.txt"], ordered=False)
+        self.outputAssertHelper(["root", "-name", "Alt*.txt"], ordered=False)
+        self.outputAssertHelper(["-name", "test*.txt"], ordered=False)
 
     def testFindExceptions(self):
-        with self.assertRaises(InvalidArgumentError):
-            self.tester.doOuputTest(
-                ["root", "testDir2", "-name", "somepattern"]
-            )  # Too many arguments
-        with self.assertRaises(MissingParamError):
-            self.tester.doOuputTest(
-                ["root", "testDir2", "something", "somepattern"]
-            )  # No -name tag
-        with self.assertRaises(InvalidFileOrDir):
-            self.tester.doOuputTest(
-                ["smh", "-name", "somepattern"]
-            )  # Not existing path smh
-        with self.assertRaises(InvalidArgumentError):
-            self.tester.doOuputTest(
-                ["root", "-name", "somepattern", "somemorepattern"]
-            )  # Too many patterns (too many arguments)
-        with self.assertRaises(InvalidArgumentError):
-            self.tester.doOuputTest([])  # Empty
-        self.assertTrue(
-            "InvalidArgumentError"
-            in self.tester.doOuputTest(
-                ["root", "testDir2", "-name", "somepattern"], unsafeApp=True
-            )
-        )
-
-        self.assertTrue(
-            "MissingParamError"
-            in self.tester.doOuputTest(
-                ["root", "testDir2", "something", "somepattern"], unsafeApp=True
-            )
-        )
-
-        self.assertTrue(
-            "InvalidFileOrDir"
-            in self.tester.doOuputTest(["smh", "-name", "somepattern"], unsafeApp=True)
-        )
-        self.assertTrue(
-            "InvalidArgumentError"
-            in self.tester.doOuputTest(
-                ["root", "-name", "somepattern", "somemorepattern"], unsafeApp=True
-            )
-        )
-        self.assertTrue(
-            "InvalidArgumentError" in self.tester.doOuputTest([], unsafeApp=True)
-        )
+        self.exceptionAssertHelper(
+            ["root", "testDir2", "-name", "somepattern"],
+            InvalidArgumentError,
+            "InvalidArgumentError",
+        )  # Too many arguments
+        self.exceptionAssertHelper(
+            ["root", "testDir2", "something", "somepattern"],
+            MissingParamError,
+            "MissingParamError",
+        )  # No -name tag
+        self.exceptionAssertHelper(
+            ["smh", "-name", "somepattern"], InvalidFileOrDir, "InvalidFileOrDir"
+        )  # Not existing path smh
+        self.exceptionAssertHelper(
+            ["root", "-name", "somepattern", "somemorepattern"],
+            InvalidArgumentError,
+            "InvalidArgumentError",
+        )  # Too many patterns (too many arguments)
+        self.exceptionAssertHelper(
+            [], InvalidArgumentError, "InvalidArgumentError"
+        )  # Empty
 
 
 if __name__ == "__main__":

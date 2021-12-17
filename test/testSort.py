@@ -11,9 +11,10 @@ from apps.Exceptions import (
     MissingStdin,
 )
 from apps.Sort import sort
+from appTests import appTests
 
 
-class testSort(unittest.TestCase):
+class testSort(appTests):
     def setUp(self) -> None:
         with open("testA.txt", "w") as file:
             file.write(
@@ -23,68 +24,34 @@ class testSort(unittest.TestCase):
                 + "And looked down one as far as I could\n"
                 + "To where it bent in the undergrowth"
             )
-        self.tester = appTests(sort)
+        self.setApp(sort, "sort")
 
     def tearDown(self) -> None:
         os.remove("testA.txt")
 
-    def matchHelper(self, result1, result2, stringPattern):
-        self.assertEqual(result1, result2)
-        self.assertEqual(result1, stringPattern)
-
     def testSortFile(self):
-        result1 = self.tester.doOuputTest(["testA.txt"])
-        result2 = self.tester.doOuputTest(["testA.txt"], unsafeApp=True)
-        result3 = self.tester.doOuputTest(["-r", "testA.txt"])
-        result4 = self.tester.doOuputTest(["-r", "testA.txt"], unsafeApp=True)
-        answer = [
-            "And be one traveler,long I stood\n",
-            "And looked down one as far as I could\n",
-            "And sorry I could not travel both\n",
-            "To where it bent in the undergrowth\n",
-            "Two roads diverged in a yello wood,\n",
-        ]
-
-        # Add unsafe later
-        self.matchHelper(
-            result1,
-            result2,
-            "".join(answer),
-        )
-        self.matchHelper(result3, result4, "".join(answer[::-1]))
+        self.outputAssertHelper(["testA.txt"])
+        self.outputAssertHelper(["-r", "testA.txt"])
 
     def testSortExceptions(self):
-        with self.assertRaises(InvalidArgumentError):
-            self.tester.doOuputTest(["testB.txt", "testA.txt"])  # Too many arguments
-        with self.assertRaises(MissingStdin):
-            self.tester.doOuputTest([])  # Empty argument without stdin
-        with self.assertRaises(MissingStdin):
-            self.tester.doOuputTest(["-r"])  # Empty argument without stdin
-        with self.assertRaises(InvalidArgumentError):
-            self.tester.doOuputTest(["-r", "123", "testA.txt"])  # Too many arguments
-        with self.assertRaises(InvalidFileOrDir):
-            self.tester.doOuputTest(["-r", "smh"])  # Not existing file
-        with self.assertRaises(InvalidParamTagError):
-            self.tester.doOuputTest(["-a", "testA.txt"])  # Invalid flag A
-        self.assertTrue(
-            "InvalidArgumentError"
-            in self.tester.doOuputTest(["testB.txt", "testA.txt"], unsafeApp=True)
-        )
-        self.assertTrue("MissingStdin" in self.tester.doOuputTest([], unsafeApp=True))
-        self.assertTrue(
-            "MissingStdin" in self.tester.doOuputTest(["-r"], unsafeApp=True)
-        )
-        self.assertTrue(
-            "InvalidArgumentError"
-            in self.tester.doOuputTest(["-r", "123", "testA.txt"], unsafeApp=True)
-        )
-        self.assertTrue(
-            "InvalidFileOrDir" in self.tester.doOuputTest(["-r", "smh"], unsafeApp=True)
-        )
-        self.assertTrue(
-            "InvalidParamTagError"
-            in self.tester.doOuputTest(["-a", "testA.txt"], unsafeApp=True)
-        )
+        self.exceptionAssertHelper(
+            ["testB.txt", "testA.txt"], InvalidArgumentError, "InvalidArgumentError"
+        )  # Too many arguments
+        self.exceptionAssertHelper(
+            [], MissingStdin, "MissingStdin"
+        )  # Empty argument without stdin
+        self.exceptionAssertHelper(
+            ["-r"], MissingStdin, "MissingStdin"
+        )  # Empty argument without stdin
+        self.exceptionAssertHelper(
+            ["-r", "123", "testA.txt"], InvalidArgumentError, "InvalidArgumentError"
+        )  # Too many arguments
+        self.exceptionAssertHelper(
+            ["-r", "smh"], InvalidFileOrDir, "InvalidFileOrDir"
+        )  # Not existing file
+        self.exceptionAssertHelper(
+            ["-a", "testA.txt"], InvalidParamTagError, "InvalidParamTagError"
+        )  # Invalid flag A
 
 
 if __name__ == "__main__":

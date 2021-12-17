@@ -5,3 +5,5 @@ junit2html
 parsita
 pynput
 mutmut
+mutpy
+hypothesis

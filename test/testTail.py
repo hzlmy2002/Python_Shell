@@ -12,68 +12,43 @@ from apps.Exceptions import (
     InvalidParamError,
 )
 from apps.Tail import tail
+from appTests import appTests
 
 
-class testTail(unittest.TestCase):
+class testTail(appTests):
     def setUp(self) -> None:
         with open("test.txt", "w") as file:
             file.write("l1\nl2\nl3\nl4\nl5\nl6\nl7\nl8\nl9\nl10\nl11\nl12\n")
-        self.tester = appTests(tail)
+        self.setApp(tail, "tail")
 
     def tearDown(self) -> None:
         os.remove("test.txt")
 
     def testTailFile(self):
-        # tailUnsafe = TailUnsafe()
-        result1 = self.tester.doOuputTest(["test.txt"])
-        # result2 = tailUnsafe.exec(stream1)
-        result3 = self.tester.doOuputTest(["-n", "11", "test.txt"])
-        # result4 = tailUnsafe.exec(stream2)
-        # self.assertEqual(result1, result2.params["main"][0])
-        self.assertEqual(result1, "l3\nl4\nl5\nl6\nl7\nl8\nl9\nl10\nl11\nl12\n")
-        # self.assertEqual(result3.params["main"][0],result3.params["main"][0])
-        self.assertEqual(result3, "l2\nl3\nl4\nl5\nl6\nl7\nl8\nl9\nl10\nl11\nl12\n")
+        self.outputAssertHelper(["test.txt"])
+        self.outputAssertHelper(["-n", "11", "test.txt"])
 
     def testTailExceptions(self):
-        with self.assertRaises(InvalidParamTagError):
-            # Invalid param tag -a
-            self.tester.doOuputTest(["-a", "11", "test.txt"])
-        with self.assertRaises(InvalidArgumentError):
-            self.tester.doOuputTest(
-                ["-n", "11", "smh", "test.txt"]
-            )  # Way to many arguments
-        with self.assertRaises(InvalidFileOrDir):
-            self.tester.doOuputTest(["-n", "11", "smh.txt"])  # Not existing file
-
-        with self.assertRaises(MissingStdin):
-            self.tester.doOuputTest(["-n", "11"])  # No stdin specified
-
-        with self.assertRaises(InvalidParamError):
-            # No param argument specified or not valid parameter argument "test.txt"
-            self.tester.doOuputTest(["-n", "test.txt"])
-        with self.assertRaises(MissingStdin):
-            self.tester.doOuputTest([])  # No stdin specified
-
-        self.assertTrue(
-            "InvalidParamTagError"
-            in self.tester.doOuputTest(["-a", "11", "test.txt"], unsafeApp=True)
-        )
-        self.assertTrue(
-            "InvalidArgumentError"
-            in self.tester.doOuputTest(["-n", "11", "smh", "test.txt"], unsafeApp=True)
-        )
-        self.assertTrue(
-            "InvalidFileOrDir"
-            in self.tester.doOuputTest(["-n", "11", "smh.txt"], unsafeApp=True)
-        )
-        self.assertTrue(
-            "MissingStdin" in self.tester.doOuputTest(["-n", "11"], unsafeApp=True)
-        )
-        self.assertTrue(
-            "InvalidParamError"
-            in self.tester.doOuputTest(["-n", "test.txt"], unsafeApp=True)
-        )
-        self.assertTrue("MissingStdin" in self.tester.doOuputTest([], unsafeApp=True))
+        self.exceptionAssertHelper(
+            ["-a", "11", "test.txt"], InvalidParamTagError, "InvalidParamTagError"
+        )  # Invalid param tag -a
+        self.exceptionAssertHelper(
+            ["-n", "11", "smh", "test.txt"],
+            InvalidArgumentError,
+            "InvalidArgumentError",
+        )  # Way to many arguments
+        self.exceptionAssertHelper(
+            ["-n", "11", "smh.txt"], InvalidFileOrDir, "InvalidFileOrDir"
+        )  # Not existing file
+        self.exceptionAssertHelper(
+            ["-n", "11"], MissingStdin, "MissingStdin"
+        )  # No stdin specified
+        self.exceptionAssertHelper(
+            ["-n", "test.txt"], InvalidParamError, "InvalidParamError"
+        )  # No param argument specified or not valid parameter argument "test.txt"
+        self.exceptionAssertHelper(
+            [], MissingStdin, "MissingStdin"
+        )  # No stdin specified
 
 
 if __name__ == "__main__":
