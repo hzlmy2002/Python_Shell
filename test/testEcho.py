@@ -5,7 +5,6 @@ from appTests import appTests
 import unittest
 from apps.Echo import echo
 from appTests import appTests
-from hypothesis import given
 from hypothesis import given, strategies as st
 
 
