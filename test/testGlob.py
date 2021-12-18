@@ -27,7 +27,7 @@ class testGlob(withStdOut):
         self.assertOutput(
             "echo *.txt", "test2.txt test.txt", self.cwd, ignoreOrder=True
         )
-        self.assertOutput("echo *.png", "no glob", self.cwd)
+        self.assertOutput("echo *.png", "*.png", self.cwd)
 
 
 if __name__ == "__main__":

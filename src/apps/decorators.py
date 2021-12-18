@@ -7,45 +7,9 @@ import traceback
 from pathlib import Path
 
 
-# def atMostOneArgument(call: Callable[["Stream"], None]):
-#     def wrapper(stream: "Stream"):
-#         if len(stream.getArgs()) != 0 and len(stream.getArgs()) != 1:
-#             raise InvalidArgumentError("Exceeded maximum amount of argument required")
-#         call(stream)
-
-#     return wrapper
-
-
-# def hasOneArgument(call: Callable[["Stream"], None]):
-#     def wrapper(stream: "Stream"):
-#         if len(stream.getArgs()) != 1 or stream.getArgs()[0] == "":
-#             raise InvalidArgumentError("Should take a single argument")
-#         call(stream)
-
-#     return wrapper
-
-
-# def hasArgument(call: Callable[["Stream"], None]):
-#     def wrapper(stream: "Stream"):
-#         if not stream.getArgs() or stream.getArgs()[0] == "":
-#             raise InvalidArgumentError("Argument required but not supplied")
-#         call(stream)
-
-#     return wrapper
-
-
-# def noArgument(call: Callable[["Stream"], None]):
-#     def wrapper(stream: "Stream"):
-#         if stream.getArgs():
-#             raise InvalidArgumentError("Should not take arguments")
-#         call(stream)
-
-#     return wrapper
-
-
 def notEmpty(call: Callable[["Stream"], None]):
     def wrapper(stream: "Stream"):
-        if not stream.getArgs():
+        if len(stream.getArgs()) == 0:
             raise InvalidArgumentError("Should not take empty arguments")
         call(stream)
 
@@ -53,9 +17,9 @@ def notEmpty(call: Callable[["Stream"], None]):
 
 
 def argumentLimit(limit=0, strict=True):
-    # Strict implies number of arguments must == limit
-    # When not strict, number of arguments can vary between 0-limit inclusive
-    # Default to strictly 0
+    # strict implies number of arguments must == limit
+    # when not strict, number of arguments can vary between 0-limit inclusive
+    # default to strictly 0
     def decorator(call: Callable[["Stream"], None]):
         def wrapper(stream: "Stream"):
             length = len(stream.getArgs())
@@ -71,11 +35,11 @@ def argumentLimit(limit=0, strict=True):
 
 
 def onlyParamTag(intendKey):
-    # If it has a key then it must be of value intendKey
-    def decoratorParamTag(call: Callable[["Stream"], None]):
+    # if it has a key then it must be of value intendKey
+    def decorator(call: Callable[["Stream"], None]):
         def wrapper(stream: "Stream"):
             args = stream.getArgs()
-            if args:
+            if len(args) > 0:
                 key = args[0]
                 if len(key) < 2 or (key[0] == "-" and key[1:] != intendKey):
                     raise InvalidParamTagError(f"Invalid tag {key}")
@@ -83,13 +47,13 @@ def onlyParamTag(intendKey):
 
         return wrapper
 
-    return decoratorParamTag
+    return decorator
 
 
 def hasParam(key: str, required: bool, defaultVal=0, numeric=False):
-    def decoratorHasParam(call: Callable[["Stream"], None]):
+    def decorator(call: Callable[["Stream"], None]):
         @onlyParamTag(key)
-        def wrapperIntParam(stream: "Stream"):
+        def wrapper(stream: "Stream"):
             args = stream.getArgs()
             try:
                 i = args.index("-" + key)
@@ -106,27 +70,27 @@ def hasParam(key: str, required: bool, defaultVal=0, numeric=False):
             stream.addParam(key, val)
             call(stream)
 
-        return wrapperIntParam
+        return wrapper
 
-    return decoratorHasParam
+    return decorator
 
 
 def getFlag(key: str):
-    def decoratorGetFlag(call: Callable[["Stream"], None]):
+    def decorator(call: Callable[["Stream"], None]):
         @onlyParamTag(key)
         def wrapper(stream: "Stream"):
             args = stream.getArgs()
             try:
                 i = args.index("-" + key)
-                stream.addFlag(args[i][1])
+                stream.addFlag(args[i][1:])
                 stream.removeArg(i)
-            except (ValueError, IndexError):
+            except ValueError:
                 pass
             call(stream)
 
         return wrapper
 
-    return decoratorGetFlag
+    return decorator
 
 
 def unsafe(call: Callable[["Stream"], None]):
@@ -140,7 +104,7 @@ def unsafe(call: Callable[["Stream"], None]):
     return wrapper
 
 
-def _glob(call: Callable[["Stream"], None]):
+def glob(call: Callable[["Stream"], None]):
     def wrapper(stream: "Stream"):
         workingDir = stream.getWorkingDir()
         args = stream.getArgs()
@@ -150,8 +114,7 @@ def _glob(call: Callable[["Stream"], None]):
                 path = Path(workingDir)
                 globbed = list(path.glob(a))
                 if len(globbed) == 0:
-                    print("no glob")
-                    return
+                    continue
                 stream.removeArg(i)
                 for g in globbed:
                     stream.addArg(os.path.relpath(g, path))

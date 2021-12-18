@@ -1,11 +1,11 @@
 import sys
 
 sys.path.insert(0, "../src")
-from commandTreeVisitor import StdinNotFoundError
 import os
 from withStdOut import withStdOut
 from shell import Shell
 import unittest
+
 
 class testRedirection(withStdOut):
     def setUp(self) -> None:
@@ -17,7 +17,7 @@ class testRedirection(withStdOut):
 
     def testInRedirection(self):
         self.assertOutput("cat < test.txt", "AAA\nBBB\nCCC")
-        with self.assertRaises(StdinNotFoundError):
+        with self.assertRaises(FileNotFoundError):
             self.assertOutput("cat < noFile.txt", "")
 
     def testOutRedirection(self):

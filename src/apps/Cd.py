@@ -10,7 +10,8 @@ def cd(stream: "Stream"):
     changeDir = stream.getArgs()[0]
     workingDir = stream.getWorkingDir()
     path = Path(workingDir, changeDir)
+    pathStr = os.path.normpath(path.__str__())
     if path.is_dir():
-        stream.setWorkingDir(os.path.normpath(path.__str__()))
+        stream.setWorkingDir(pathStr)
     else:
-        raise InvalidFileOrDir("Directory does not exist")
+        raise InvalidFileOrDir(f"Directory {pathStr} does not exist")

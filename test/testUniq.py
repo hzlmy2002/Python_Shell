@@ -11,7 +11,6 @@ from apps.Exceptions import (
     MissingStdin,
 )
 from apps.Uniq import uniq
-from appTests import appTests
 
 
 class testUniq(appTests):

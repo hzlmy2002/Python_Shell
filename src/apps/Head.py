@@ -1,8 +1,7 @@
-from io import StringIO
 from apps.Exceptions import MissingStdin
 from apps.Stream import Stream
 from apps.decorators import hasParam
-from apps.Tools import getLines, toList
+from apps.Tools import getLines
 
 
 @hasParam("n", required=False, defaultVal=10, numeric=True)
@@ -12,10 +11,7 @@ def head(stream: "Stream"):
         stdin = stream.getStdin()
         if stdin is None:
             raise MissingStdin("Missing stdin")
-        if type(stdin) == StringIO:
-            lines = toList(stdin.getvalue())
-        else:
-            lines = stdin.readlines()
+        lines = stdin.readlines()
     else:
         lines = getLines(stream)
     stdout = stream.getStdout()

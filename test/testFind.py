@@ -11,7 +11,6 @@ from apps.Exceptions import (
     MissingParamError,
 )
 from apps.Find import find
-from appTests import appTests
 
 
 class testFind(appTests):

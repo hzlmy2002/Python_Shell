@@ -4,7 +4,6 @@ sys.path.insert(0, "../src")
 from appTests import appTests
 import unittest
 from apps.Echo import echo
-from appTests import appTests
 from hypothesis import given, assume, strategies as st
 
 

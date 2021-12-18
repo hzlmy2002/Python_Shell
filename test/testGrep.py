@@ -7,9 +7,9 @@ from appTests import appTests
 from apps.Exceptions import (
     InvalidArgumentError,
     InvalidFileOrDir,
+    MissingStdin,
 )
 from apps.Grep import grep
-from appTests import appTests
 
 
 class testGrep(appTests):
@@ -36,10 +36,10 @@ class testGrep(appTests):
 
     def testGrepExceptions(self):
         self.exceptionAssertHelper(
-            ["testA.txt"], InvalidArgumentError, "InvalidArgumentError"
+            ["testA.txt"], MissingStdin, "MissingStdin"
         )  # No pattern specified
         self.exceptionAssertHelper(
-            ["pattern"], InvalidArgumentError, "InvalidArgumentError"
+            ["pattern"], MissingStdin, "MissingStdin"
         )  # No file specified
         self.exceptionAssertHelper(
             ["AAA", "smh", "testA.txt"], InvalidFileOrDir, "InvalidFileOrDir"

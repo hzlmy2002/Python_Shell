@@ -12,7 +12,6 @@ from apps.Exceptions import (
     InvalidParamError,
 )
 from apps.Tail import tail
-from appTests import appTests
 from hypothesis import given, strategies as st
 
 

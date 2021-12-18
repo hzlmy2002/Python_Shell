@@ -9,9 +9,9 @@ from apps.Exceptions import (
     InvalidParamError,
     InvalidFileOrDir,
     MissingParamError,
+    MissingStdin,
 )
 from apps.Cut import cut
-from appTests import appTests
 from hypothesis import given, assume, example, strategies as st
 import re
 
@@ -56,7 +56,7 @@ class testCut(appTests):
             ["testA.txt"], MissingParamError, "MissingParamError"
         )  # No param b specified
         self.exceptionAssertHelper(
-            ["-b", "testA.txt"], InvalidArgumentError, "InvalidArgumentError"
+            ["-b", "testA.txt"], MissingStdin, "MissingStdin"
         )  # No param arg specified
         self.exceptionAssertHelper(
             ["-b", "3-5", "smh.txt"], InvalidFileOrDir, "InvalidFileOrDir"
@@ -79,7 +79,7 @@ class testCut(appTests):
             ["-b", "1-2-3", "testA.txt"], InvalidParamError, "InvalidParamError"
         )  # Invalid param arg
         self.exceptionAssertHelper(
-            ["-b", "1-3"], InvalidArgumentError, "InvalidArgumentError"
+            ["-b", "1-3"], MissingStdin, "MissingStdin"
         )  # No file specified
         self.exceptionAssertHelper(
             ["-b", "1-3", ""], InvalidArgumentError, "InvalidArgumentError"

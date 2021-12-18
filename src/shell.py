@@ -4,7 +4,9 @@ from _parser import parseCommand
 from typing import TextIO
 from apps.Stream import Stream
 from commandTreeVisitor import CommandTreeVisitor
-import traceback
+
+# import traceback
+
 
 class Shell:
     def __init__(self, workingDir: str):
@@ -37,31 +39,34 @@ if __name__ == "__main__":  # pragma: no cover
             raise ValueError(f"Unexpected command line argument {args[0]}.")
         sh.eval(args[1], sys.stdout)
     else:
-        mode="advanced"
+        """
+        mode = "advanced"
         if os.name != "posix":
-                print("Entering basic mode. Extra features are not available.")
-                print("Please use Linux or MacOS. (not in container)")
-                mode="basic"
+            print("Entering basic mode. Extra features are not available.")
+            print("Please use Linux or MacOS. (not in container)")
+            mode = "basic"
         try:
-            from keyboardDisplay import hideInput,display,keyboardMonitor
-            from keyboardDisplay import Data,State
-            from threading import Thread,Lock
+            from keyboardDisplay import hideInput, display, keyboardMonitor
+            from keyboardDisplay import Data, State
+            from threading import Thread, Lock
             from pynput import keyboard
         except ImportError:
-            mode="basic"
+            mode = "basic"
             print(traceback.format_exc())
-            print("Entering basic mode. Extra features are not available in Docker containers.")
-            
+            print(
+                "Entering basic mode. Extra features are not available in Docker containers."
+            )
+
         if mode == "advanced":
             try:
                 print("Entering advanced mode.")
-                lock=Lock()
-                data=Data()
-                state=State()
-                data.setPrefix(sh.getWorkingDir()+"> ")
-                t1=Thread(target=hideInput,args=(state,))
-                t2=Thread(target=display,args=(data,lock,state,))
-                t3=keyboard.Listener(on_press=keyboardMonitor(data,sh,lock,state))
+                lock = Lock()
+                data = Data()
+                state = State()
+                data.setPrefix(sh.getWorkingDir() + "> ")
+                t1 = Thread(target=hideInput, args=(state,))
+                t2 = Thread(target=display, args=(data, lock, state,))
+                t3 = keyboard.Listener(on_press=keyboardMonitor(data, sh, lock, state))
                 t1.start()
                 t2.start()
                 t3.start()
@@ -70,5 +75,9 @@ if __name__ == "__main__":  # pragma: no cover
                 exit(-1)
         else:
             while True:
-                cmdline = input(sh.getWorkingDir()+"> ")
+                cmdline = input(sh.getWorkingDir() + "> ")
                 sh.eval(cmdline, sys.stdout)
+        """
+        while True:
+            cmdline = input(sh.getWorkingDir() + "> ")
+            sh.eval(cmdline, sys.stdout)

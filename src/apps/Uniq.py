@@ -1,11 +1,10 @@
 from apps.Stream import Stream
-from apps.decorators import getFlag, _glob
+from apps.decorators import getFlag, glob
 from apps.Exceptions import MissingStdin
-from apps.Tools import getLines, toList
-from io import StringIO
+from apps.Tools import getLines
 
 
-@_glob
+@glob
 @getFlag("i")
 def uniq(stream: "Stream"):
     caseSensitive = stream.getFlag("i")
@@ -14,10 +13,7 @@ def uniq(stream: "Stream"):
         stdin = stream.getStdin()
         if stdin is None:
             raise MissingStdin("Missing stdin")
-        if type(stdin) == StringIO:
-            lines = toList(stdin.getvalue())
-        else:
-            lines = stdin.readlines()
+        lines = stdin.readlines()
     else:
         lines = getLines(stream)
     res = ""

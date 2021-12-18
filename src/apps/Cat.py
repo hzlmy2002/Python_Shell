@@ -1,9 +1,9 @@
 from apps.Exceptions import InvalidFileOrDir, MissingStdin
-from apps.decorators import _glob
+from apps.decorators import glob
 from .Stream import Stream
 
 
-@_glob
+@glob
 def cat(stream: "Stream"):
     fileNames = stream.getArgs()
     stdout = stream.getStdout()

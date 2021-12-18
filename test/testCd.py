@@ -6,7 +6,6 @@ import unittest
 from appTests import appTests
 from apps.Exceptions import InvalidArgumentError, InvalidFileOrDir
 from apps.Cd import cd
-from appTests import appTests
 
 
 class testCd(appTests):

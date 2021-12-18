@@ -1,9 +1,8 @@
 from apps.Stream import Stream
 from apps.decorators import hasParam, notEmpty
-from apps.Exceptions import InvalidArgumentError, InvalidParamError
-from apps.Tools import getLines, toList
+from apps.Exceptions import InvalidArgumentError, InvalidParamError, MissingStdin
+from apps.Tools import getLines
 from typing import List
-from io import StringIO
 
 
 def checkDigit(n: int):
@@ -14,12 +13,12 @@ def parseByteRange(param: str) -> "List[int]":
     res = param.split("-")
     if len(res) == 1:
         if checkDigit(res[0]):
-            # Single positioned (e.g. 2)
+            # single positioned (e.g. 2)
             index = int(res[0])
             return [index - 1, index]
     elif len(res) == 2:
         if all(checkDigit(element) for element in res):
-            # Has a start and end (e.g. 1-4)
+            # has a start and end (e.g. 1-4)
             li = [int(res[0]) - 1, int(res[1])]
             if li[1] < li[0]:
                 raise InvalidArgumentError(
@@ -28,10 +27,10 @@ def parseByteRange(param: str) -> "List[int]":
             return li
 
         if checkDigit(res[0]) and res[1] == "":
-            # No end (e.g. 5-)
+            # no end (e.g. 5-)
             return [int(res[0]) - 1, -1]
 
-        # No start (e.g. -5)
+        # no start (e.g. -5)
         return [0, int(res[1])]
 
     raise InvalidParamError(f"Invalid parameter {param}")
@@ -55,7 +54,7 @@ def isBiggerEqual(x: int, y: int):
 
 
 def fixByteRanges(byteRanges: "List[List[int]]"):
-    # Fix duplicates and byte ranges that
+    # fix duplicates and byte ranges that
     # includes others
     # (e.g. 1-5 and 3, where 1-5 includes byte 3)
     bR = byteRanges.copy()
@@ -87,13 +86,9 @@ def cut(stream: "Stream"):
     paramArgs = parseParamArguments(stream.getParam("b"))
     if len(stream.getArgs()) == 0:
         stdin = stream.getStdin()
-        if type(stdin) == StringIO:
-            lines = toList(stdin.getvalue())
-        else:
-            try:
-                lines = stdin.readlines()
-            except AttributeError:
-                raise InvalidArgumentError("Should not take empty argument")
+        if stdin is None:
+            raise MissingStdin("Missing stdin")
+        lines = stdin.readlines()
     else:
         lines = getLines(stream)
     byteRanges = fixByteRanges([parseByteRange(element) for element in paramArgs])

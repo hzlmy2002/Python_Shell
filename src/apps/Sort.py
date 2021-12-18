@@ -1,7 +1,6 @@
-from io import StringIO
 from apps.Stream import Stream
-from apps.decorators import getFlag, _glob
-from apps.Tools import getLines, toList
+from apps.decorators import getFlag, glob
+from apps.Tools import getLines
 from apps.Exceptions import MissingStdin
 
 
@@ -11,7 +10,7 @@ def fixNewLine(li):
             li[i] = li[i] + "\n"
 
 
-@_glob
+@glob
 @getFlag("r")
 def sort(stream: "Stream"):
     doReverse = stream.getFlag("r")
@@ -20,10 +19,7 @@ def sort(stream: "Stream"):
         stdin = stream.getStdin()
         if stdin is None:
             raise MissingStdin("Missing stdin")
-        if type(stdin) == StringIO:
-            lines = toList(stdin.getvalue())
-        else:
-            lines = stdin.readlines()
+        lines = stdin.readlines()
     else:
         lines = getLines(stream)
     lines.sort(reverse=doReverse)

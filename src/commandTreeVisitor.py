@@ -13,10 +13,6 @@ from functools import singledispatchmethod
 from pathlib import Path
 
 
-class StdinNotFoundError(RuntimeError):
-    pass
-
-
 class CommandTreeVisitor:
     def __init__(self, stream: "Stream"):
         self.stream = stream
@@ -33,10 +29,7 @@ class CommandTreeVisitor:
     @visit.register
     def _(self, node: "InRedirection") -> None:
         path = Path(self.stream.workingDir, node.getPath())
-        try:
-            stdin = open(path, "r")
-        except FileNotFoundError:
-            raise StdinNotFoundError("stdin not found.")
+        stdin = open(path, "r")
         self.stream.setStdin(stdin)
 
     @visit.register
@@ -73,7 +66,8 @@ class CommandTreeVisitor:
             calls[i].accept(self)
 
             self.stream.reset()
-            self.stream.setStdin(stdout)
+            stdin = StringIO(stdout.getvalue())
+            self.stream.setStdin(stdin)
 
         self.stream.setStdout(initialStdout)
         calls[-1].accept(self)

@@ -10,8 +10,10 @@ def parseCommand(cmdline: str, shell):
             stdout = StringIO()
             shell.eval(subcmd, stdout)
             out = stdout.getvalue()
+            if out[-1] == "\n":
+                out = out[:-1]
             out = out.replace("\n", " ")
-            return out[:-1]
+            return out
 
         singleQuoted = "'" >> reg(r"[^\n\r']*") << "'"
         backQuoted = "`" >> reg(r"[^\n\r`]*") << "`" > substitution

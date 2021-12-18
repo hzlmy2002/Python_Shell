@@ -11,7 +11,6 @@ from apps.Exceptions import (
     MissingStdin,
 )
 from apps.Sort import sort
-from appTests import appTests
 
 
 class testSort(appTests):

@@ -7,7 +7,6 @@ import shutil
 from appTests import appTests
 from apps.Exceptions import InvalidArgumentError, InvalidFileOrDir
 from apps.Ls import ls
-from appTests import appTests
 
 
 class testLs(appTests):

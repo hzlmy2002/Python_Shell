@@ -23,7 +23,7 @@ def find(stream: "Stream"):
     if len(arg) == 1:
         rootPath = arg[0]
         if not (os.path.exists(rootPath) and os.path.isdir(rootPath)):
-            raise InvalidFileOrDir("File or Directory does not exist")
+            raise InvalidFileOrDir("Directory does not exist")
     pattern = stream.getParam("name")
     stdout = stream.getStdout()
     relativePaths = findFiles(rootPath, pattern)
