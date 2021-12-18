@@ -5,7 +5,7 @@ from apps.Tools import getLines
 from typing import List
 
 
-def checkDigit(n: int):
+def checkDigit(n: str):
     return n.isdigit() and int(n) >= 1
 
 

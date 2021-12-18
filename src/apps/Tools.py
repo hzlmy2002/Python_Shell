@@ -16,7 +16,6 @@ def getLines(stream: "Stream") -> List[str]:
     if len(args) != 1 or args[0] == "":
         raise InvalidArgumentError("Too many arguments given")
     fileName = args[0]
-    lines = ""
     try:
         with open(fileName, "r") as f:
             lines = f.readlines()

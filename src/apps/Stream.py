@@ -23,7 +23,7 @@ class Stream:
     def addParam(self, key: str, val) -> None:
         self.params[key] = val
 
-    def getParam(self, key: str) -> str:
+    def getParam(self, key: str):
         return self.params[key]
 
     def addFlag(self, flag: str) -> None:

@@ -28,4 +28,4 @@ def appFactory(appName: str) -> Callable[["Stream.Stream"], None]:
     elif appName.startswith("_") and not appName[1:].startswith("_"):
         return unsafe(appFactory(appName[1:]))
     else:
-        raise AppNotFoundError("Application not found.")
+        raise AppNotFoundError(f"Application {appName} not found.")

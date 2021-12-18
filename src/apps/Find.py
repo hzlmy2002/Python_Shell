@@ -18,12 +18,12 @@ def findFiles(rootPath: str, pattern: str) -> str:
 @hasParam("name", required=True)
 @argumentLimit(1, strict=False)
 def find(stream: "Stream"):
-    arg = stream.getArgs()
+    args = stream.getArgs()
     rootPath = "."
-    if len(arg) == 1:
-        rootPath = arg[0]
+    if len(args) == 1:
+        rootPath = args[0]
         if not (os.path.exists(rootPath) and os.path.isdir(rootPath)):
-            raise InvalidFileOrDir("Directory does not exist")
+            raise InvalidFileOrDir(f"Directory {rootPath} does not exist")
     pattern = stream.getParam("name")
     stdout = stream.getStdout()
     relativePaths = findFiles(rootPath, pattern)

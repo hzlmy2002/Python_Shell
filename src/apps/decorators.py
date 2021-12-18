@@ -63,7 +63,7 @@ def hasParam(key: str, required: bool, defaultVal=0, numeric=False):
                 stream.removeArg(i)
                 stream.removeArg(i)
             except (ValueError, IndexError):
-                if required:  # and Value Error
+                if required:
                     raise MissingParamError(f"Missing parameter {key}")
                 else:
                     val = defaultVal

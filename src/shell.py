@@ -4,8 +4,7 @@ from _parser import parseCommand
 from typing import TextIO
 from apps.Stream import Stream
 from commandTreeVisitor import CommandTreeVisitor
-
-# import traceback
+import traceback
 
 
 class Shell:
@@ -39,7 +38,6 @@ if __name__ == "__main__":  # pragma: no cover
             raise ValueError(f"Unexpected command line argument {args[0]}.")
         sh.eval(args[1], sys.stdout)
     else:
-        """
         mode = "advanced"
         if os.name != "posix":
             print("Entering basic mode. Extra features are not available.")
@@ -77,7 +75,3 @@ if __name__ == "__main__":  # pragma: no cover
             while True:
                 cmdline = input(sh.getWorkingDir() + "> ")
                 sh.eval(cmdline, sys.stdout)
-        """
-        while True:
-            cmdline = input(sh.getWorkingDir() + "> ")
-            sh.eval(cmdline, sys.stdout)
