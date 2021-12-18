@@ -1,6 +1,6 @@
 import sys
 import os
-from _parser import parseCommand
+from shellParser import parseCommand
 from typing import TextIO
 from apps.Stream import Stream
 from commandTreeVisitor import CommandTreeVisitor
@@ -50,7 +50,6 @@ if __name__ == "__main__":  # pragma: no cover
             from pynput import keyboard
         except ImportError:
             mode = "basic"
-            print(traceback.format_exc())
             print(
                 "Entering basic mode. Extra features are not available in Docker containers."
             )
