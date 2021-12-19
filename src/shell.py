@@ -41,7 +41,7 @@ if __name__ == "__main__":  # pragma: no cover
         mode = "advanced"
         if os.name != "posix":
             print("Entering basic mode. Extra features are not available.")
-            print("Please use Linux or MacOS. (not in container)")
+            print("Please use Linux. (not in container)")
             mode = "basic"
         try:
             from keyboardDisplay import hideInput, display, keyboardMonitor
@@ -53,6 +53,7 @@ if __name__ == "__main__":  # pragma: no cover
             print(
                 "Entering basic mode. Extra features are not available in Docker containers."
             )
+            print("Check https://pynput.readthedocs.io/en/latest/limitations.html")
 
         if mode == "advanced":
             try:
@@ -63,7 +64,8 @@ if __name__ == "__main__":  # pragma: no cover
                 data.setPrefix(sh.getWorkingDir() + "> ")
                 t1 = Thread(target=hideInput, args=(state,))
                 t2 = Thread(target=display, args=(data, lock, state,))
-                t3 = keyboard.Listener(on_press=keyboardMonitor(data, sh, lock, state))
+                t3 = keyboard.Listener(
+                    on_press=keyboardMonitor(data, sh, lock, state))
                 t1.start()
                 t2.start()
                 t3.start()
