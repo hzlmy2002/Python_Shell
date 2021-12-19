@@ -23,6 +23,8 @@ class testRedirection(withStdOut):
     def testOutRedirection(self):
         sh = Shell("")
         sh.eval("echo foo > testOut.txt", None)
+        with open("testOut.txt") as f:
+            self.assertEqual(f.read().strip(), "foo")
         os.remove("testOut.txt")
 
 
