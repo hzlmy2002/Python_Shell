@@ -96,7 +96,7 @@ def display(data: "Data", lock: "Lock", state: "State"):
             output = data.getWithPrefix()
 
         lock.acquire()
-        print(output, end="\r")
+        print(output, end="\r", flush=True)
         lock.release()
         time.sleep(0.1)
 
