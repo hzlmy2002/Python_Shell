@@ -1,24 +1,25 @@
-from apps.Exceptions import InvalidFileOrDir
-from apps.decorators import hasArgument
-from .Stream import Stream
-from io import StringIO
+from apps.exceptions import InvalidFileOrDir, MissingStdin
+from apps.decorators import glob
+from .stream import Stream
 
 
-@hasArgument
+@glob
 def cat(stream: "Stream"):
     fileNames = stream.getArgs()
     stdout = stream.getStdout()
     content = ""
-    for file in fileNames:
-        try:
-            if type(file) == StringIO:
-                content += file.getvalue()
-
-            else:
+    if len(fileNames) == 0:
+        stdin = stream.getStdin()
+        if stdin is None:
+            raise MissingStdin("Missing stdin")
+        content += stdin.read()
+    else:
+        for file in fileNames:
+            try:
                 with open(file, "r") as f:
                     content += f.read()
-            if not content.endswith("\n"):
-                content += "\n"
-        except FileNotFoundError:
-            raise InvalidFileOrDir(f"File {file} does not exist")
+            except FileNotFoundError:
+                raise InvalidFileOrDir(f"File {file} does not exist")
+    if not content.endswith("\n"):
+        content += "\n"
     stdout.write(content)

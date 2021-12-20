@@ -1,6 +1,5 @@
 from typing import Callable
-from apps import Cat, Cd, Cut, Echo, Find, Grep,\
-     Head, Ls, Pwd, Sort, Tail, Uniq, Stream
+from apps import cat, cd, cut, echo, find, grep, head, ls, pwd, sort, stream, tail, uniq
 from apps.decorators import unsafe
 
 
@@ -8,21 +7,20 @@ class AppNotFoundError(RuntimeError):
     pass
 
 
-def appFactory(appName: str) -> Callable[["Stream.Stream"], None]:
-
+def appFactory(appName: str) -> Callable[["stream.Stream"], None]:
     appTable = {
-        "cat": Cat.cat,
-        "cd": Cd.cd,
-        "cut": Cut.cut,
-        "echo": Echo.echo,
-        "find": Find.find,
-        "grep": Grep.grep,
-        "head": Head.head,
-        "ls": Ls.ls,
-        "pwd": Pwd.pwd,
-        "sort": Sort.sort,
-        "tail": Tail.tail,
-        "uniq": Uniq.uniq,
+        "cat": cat.cat,
+        "cd": cd.cd,
+        "cut": cut.cut,
+        "echo": echo.echo,
+        "find": find.find,
+        "grep": grep.grep,
+        "head": head.head,
+        "ls": ls.ls,
+        "pwd": pwd.pwd,
+        "sort": sort.sort,
+        "tail": tail.tail,
+        "uniq": uniq.uniq,
     }
 
     if appName in appTable:
@@ -30,4 +28,4 @@ def appFactory(appName: str) -> Callable[["Stream.Stream"], None]:
     elif appName.startswith("_") and not appName[1:].startswith("_"):
         return unsafe(appFactory(appName[1:]))
     else:
-        raise AppNotFoundError("Application not found.")
+        raise AppNotFoundError(f"Application {appName} not found.")

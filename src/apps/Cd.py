@@ -1,14 +1,17 @@
-from apps.Stream import Stream
+from apps.stream import Stream
+from apps.exceptions import InvalidFileOrDir
+from apps.decorators import argumentLimit
+from pathlib import Path
 import os
-from apps.Exceptions import InvalidFileOrDir
-from apps.decorators import hasOneArgument
 
 
-@hasOneArgument
+@argumentLimit(1)
 def cd(stream: "Stream"):
-    args = stream.getArgs()
-    try:
-        os.chdir(args[0])
-        stream.addToEnv("workingDir", os.getcwd())
-    except FileNotFoundError:
-        raise InvalidFileOrDir("Directory does not exist")
+    changeDir = stream.getArgs()[0]
+    workingDir = stream.getWorkingDir()
+    path = Path(workingDir, changeDir)
+    pathStr = os.path.normpath(path.__str__())
+    if path.is_dir():
+        stream.setWorkingDir(pathStr)
+    else:
+        raise InvalidFileOrDir(f"Directory {pathStr} does not exist")

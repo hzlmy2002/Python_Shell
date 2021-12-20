@@ -1,6 +1,7 @@
-from apps.Stream import Stream
-from apps.decorators import getFlag, hasOneArgument
-from apps.Tools import getLines
+from apps.stream import Stream
+from apps.decorators import getFlag, glob
+from apps.tools import getLines
+from apps.exceptions import MissingStdin
 
 
 def fixNewLine(li):
@@ -9,11 +10,18 @@ def fixNewLine(li):
             li[i] = li[i] + "\n"
 
 
+@glob
 @getFlag("r")
-@hasOneArgument
 def sort(stream: "Stream"):
     doReverse = stream.getFlag("r")
-    lines = getLines(stream)
+    args = stream.getArgs()
+    if len(args) == 0:
+        stdin = stream.getStdin()
+        if stdin is None:
+            raise MissingStdin("Missing stdin")
+        lines = stdin.readlines()
+    else:
+        lines = getLines(stream)
     lines.sort(reverse=doReverse)
     fixNewLine(lines)
     stdout = stream.getStdout()

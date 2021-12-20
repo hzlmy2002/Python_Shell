@@ -3,3 +3,8 @@ coverage
 flake8-html
 junit2html
 parsita
+pynput
+mutmut
+mutpy
+hypothesis
+mypy

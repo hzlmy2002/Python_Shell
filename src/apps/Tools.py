@@ -1,11 +1,9 @@
-from apps.Stream import Stream
-from apps.Exceptions import InvalidFileOrDir
+from apps.stream import Stream
+from apps.exceptions import InvalidArgumentError, InvalidFileOrDir
 from typing import List
-from io import StringIO
 
 
 def toList(newLineString: str) -> List[str]:
-
     res = [x + "\n" for x in newLineString.split("\n")]
     if res[-1] == "\n":
         res.pop()
@@ -13,18 +11,14 @@ def toList(newLineString: str) -> List[str]:
 
 
 def getLines(stream: "Stream") -> List[str]:
-    # Return content within a single file of name fileName as list of string
+    # return content within a single file of name fileName as list of string
     args = stream.getArgs()
-    fileName = args[-1]
-    lines = ""
+    if len(args) != 1 or args[0] == "":
+        raise InvalidArgumentError("Too many arguments given")
+    fileName = args[0]
     try:
-        if type(fileName) == StringIO:
-            with fileName as f:
-                lines = f.getvalue()
-                lines = toList(lines)
-        else:
-            with open(fileName, "r") as f:
-                lines = f.readlines()
+        with open(fileName, "r") as f:
+            lines = f.readlines()
     except FileNotFoundError:
         raise InvalidFileOrDir(f"File {fileName} does not exist")
     return lines

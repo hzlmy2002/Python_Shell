@@ -5,10 +5,11 @@ import os
 import unittest
 import shutil
 from appTests import appTests
-from apps.Exceptions import InvalidArgumentError, InvalidFileOrDir
-from apps.Ls import ls
+from apps.exceptions import InvalidArgumentError, InvalidFileOrDir
+from apps.ls import ls
 
-class testLs(unittest.TestCase):
+
+class testLs(appTests):
     def setUp(self) -> None:
         self.cwd = os.getcwd()
         parent = "testDir/"
@@ -16,7 +17,7 @@ class testLs(unittest.TestCase):
         os.makedirs(parent + "test2")
         os.makedirs(parent + ".test3")
         os.mkdir("testDir2")
-        self.tester = appTests(ls)
+        self.setApp(ls, "ls")
 
     def tearDown(self) -> None:
         os.chdir(self.cwd)
@@ -24,31 +25,17 @@ class testLs(unittest.TestCase):
         shutil.rmtree("testDir2")
 
     def testLsListDir(self):
-        result1 = self.tester.doOuputTest(["testDir"])
-        result2 = self.tester.doOuputTest(["testDir"], unsafeApp=True)
+        self.outputAssertHelper(["testDir"])
         os.chdir("testDir")
-        result3 = self.tester.doOuputTest()
-        result4 = self.tester.doOuputTest(unsafeApp=True)
-        self.assertEqual(result1, result2)
-        self.assertEqual(result3, result4)
-        self.assertEqual(result1, result3)
-        self.assertEqual(result1, "test1\ntest2\n")
+        self.outputAssertHelper(env=os.getcwd())
 
     def testLsExceptions(self):
-        # lsUnsafe = LsUnsafe()
-        with self.assertRaises(InvalidArgumentError):
-            self.tester.doOuputTest(
-                ["testDir", "testDir2"])  # Too many arguments
-        with self.assertRaises(InvalidFileOrDir):
-            self.tester.doOuputTest(["smh"])  # Not existing directory
-        self.assertTrue(
-            "InvalidArgumentError"
-            in self.tester.doOuputTest(["testDir", "testDir2"], unsafeApp=True)
-        )
-        self.assertTrue(
-            "InvalidFileOrDir" in self.tester.doOuputTest(
-                ["smh"], unsafeApp=True)
-        )
+        self.exceptionAssertHelper(
+            ["testDir", "testDir2"], InvalidArgumentError, "InvalidArgumentError"
+        )  # Too many arguments
+        self.exceptionAssertHelper(
+            ["smh"], InvalidFileOrDir, "InvalidFileOrDir"
+        )  # Not existing directory
 
 
 if __name__ == "__main__":

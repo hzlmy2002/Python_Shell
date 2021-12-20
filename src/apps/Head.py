@@ -1,13 +1,19 @@
-from apps.Stream import Stream
-from apps.decorators import intParam, hasOneArgument
-from apps.Tools import getLines
+from apps.exceptions import MissingStdin
+from apps.stream import Stream
+from apps.decorators import hasParam
+from apps.tools import getLines
 
 
-@intParam("n", required=False, defaultVal=10)
-@hasOneArgument
+@hasParam("n", required=False, defaultVal=10, numeric=True)
 def head(stream: "Stream"):
     linesNum = stream.getParam("n")
-    lines = getLines(stream)
+    if len(stream.getArgs()) == 0:
+        stdin = stream.getStdin()
+        if stdin is None:
+            raise MissingStdin("Missing stdin")
+        lines = stdin.readlines()
+    else:
+        lines = getLines(stream)
     stdout = stream.getStdout()
     content = ""
     linesNum = min(len(lines), int(linesNum))
