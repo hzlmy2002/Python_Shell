@@ -4,6 +4,8 @@ import time
 import sys
 import traceback
 
+# extra functionality implementation
+
 
 class Data:
     def __init__(self):
@@ -67,7 +69,7 @@ class State:
         return self.alive
 
 
-def hideInput(state: "State"): # pragma: no cover
+def hideInput(state: "State"):  # pragma: no cover
     while True:
         if not state.isAlive():
             break
@@ -81,7 +83,7 @@ def hideInput(state: "State"): # pragma: no cover
             break
 
 
-def display(data: "Data", lock: "Lock", state: "State"): # pragma: no cover
+def display(data: "Data", lock: "Lock", state: "State"):  # pragma: no cover
     while True:
         if not state.isAlive():
             break
@@ -100,13 +102,14 @@ def display(data: "Data", lock: "Lock", state: "State"): # pragma: no cover
         time.sleep(0.1)
 
 
-def keyboardMonitor(data: "Data", sh, lock: "Lock", state: "State"): # pragma: no cover
+def keyboardMonitor(data: "Data", sh, lock: "Lock", state: "State"):  # pragma: no cover
     try:
         from pynput import keyboard
     except ImportError:
         print("Platform not supported")
         state.die()
         return False
+
     def wrapper(key: "keyboard.Key"):
         if not state.isAlive():
             return False
