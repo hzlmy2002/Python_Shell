@@ -11,7 +11,7 @@ class Shell:
     def __init__(self, workingDir: str):
         self.stream = Stream(workingDir)
 
-    def eval(self, cmdline: str, stdout: TextIO):
+    def eval(self, cmdline: str, stdout: TextIO) -> None:
         if len(cmdline.strip()) == 0:
             return
         commandTree = parseCommand(cmdline, self)
@@ -32,12 +32,14 @@ if __name__ == "__main__":  # pragma: no cover
     argsNum = len(args)
 
     if argsNum > 0:
+        # basic shell implementation
         if argsNum != 2:
             raise ValueError("Wrong number of command line arguments.")
         if args[0] != "-c":
             raise ValueError(f"Unexpected command line argument {args[0]}.")
         sh.eval(args[1], sys.stdout)
     else:
+        # extra functionality implementation
         mode = "advanced"
         if os.name != "posix":
             print("Entering basic mode. Extra features are not available.")
@@ -56,15 +58,18 @@ if __name__ == "__main__":  # pragma: no cover
             print("Check https://pynput.readthedocs.io/en/latest/limitations.html")
 
         if mode == "advanced":
+            # extra functionality implementation
             try:
                 print("Entering advanced mode.")
                 lock = Lock()
                 data = Data()
                 state = State()
+
                 data.setPrefix(sh.getWorkingDir() + "> ")
                 t1 = Thread(target=hideInput, args=(state,))
                 t2 = Thread(target=display, args=(data, lock, state,))
                 t3 = keyboard.Listener(on_press=keyboardMonitor(data, sh, lock, state))
+
                 t1.start()
                 t2.start()
                 t3.start()
@@ -72,6 +77,7 @@ if __name__ == "__main__":  # pragma: no cover
                 print(traceback.format_exc())
                 exit(-1)
         else:
+            # basic shell implementation
             while True:
                 cmdline = input(sh.getWorkingDir() + "> ")
                 sh.eval(cmdline, sys.stdout)

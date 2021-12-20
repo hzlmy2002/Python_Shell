@@ -7,7 +7,7 @@ from apps import cat, cd, cut, echo, find, grep, head, ls, pwd, sort, tail, uniq
 
 
 class TestFactory(unittest.TestCase):
-    def test_factory(self):
+    def testFactory(self):
         appNames = [
             "pwd",
             "head",
@@ -41,7 +41,7 @@ class TestFactory(unittest.TestCase):
             self.assertEqual(getApp.__hash__(), func.__hash__())
             # self.assertEqual(getUnsafeApp.__hash__(),unsafe(func).__hash__())
 
-    def test_no_app(self):
+    def testNoApp(self):
         with self.assertRaises(AppNotFoundError):
             appFactory("someapp")
 
