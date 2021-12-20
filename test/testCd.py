@@ -4,8 +4,8 @@ sys.path.insert(0, "../src")
 import os
 import unittest
 from appTests import appTests
-from apps.Exceptions import InvalidArgumentError, InvalidFileOrDir
-from apps.Cd import cd
+from apps.exceptions import InvalidArgumentError, InvalidFileOrDir
+from apps.cd import cd
 
 
 class testCd(appTests):

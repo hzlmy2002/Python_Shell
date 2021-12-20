@@ -1,7 +1,7 @@
-from apps.Stream import Stream
+from apps.stream import Stream
 from apps.decorators import getFlag, glob
-from apps.Tools import getLines
-from apps.Exceptions import MissingStdin
+from apps.tools import getLines
+from apps.exceptions import MissingStdin
 
 
 def fixNewLine(li):

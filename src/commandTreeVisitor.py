@@ -8,7 +8,7 @@ from commandTree import (
     Seq,
     Pipe,
 )
-from apps.Stream import Stream
+from apps.stream import Stream
 from functools import singledispatchmethod
 from pathlib import Path
 

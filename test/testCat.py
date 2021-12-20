@@ -3,9 +3,9 @@ import sys
 sys.path.insert(0, "../src")
 import os
 import unittest
-from apps.Exceptions import InvalidFileOrDir, MissingStdin
+from apps.exceptions import InvalidFileOrDir, MissingStdin
 from appTests import appTests
-from apps.Cat import cat
+from apps.cat import cat
 
 
 class testCat(appTests):

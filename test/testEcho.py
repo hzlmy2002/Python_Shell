@@ -3,7 +3,7 @@ import sys
 sys.path.insert(0, "../src")
 from appTests import appTests
 import unittest
-from apps.Echo import echo
+from apps.echo import echo
 from hypothesis import given, assume, strategies as st
 
 

@@ -1,7 +1,7 @@
-from apps.Exceptions import MissingStdin
-from apps.Stream import Stream
+from apps.exceptions import MissingStdin
+from apps.stream import Stream
 from apps.decorators import hasParam
-from apps.Tools import getLines
+from apps.tools import getLines
 
 
 @hasParam("n", required=False, defaultVal=10, numeric=True)

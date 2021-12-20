@@ -1,6 +1,6 @@
-from apps.Exceptions import InvalidFileOrDir, MissingStdin
+from apps.exceptions import InvalidFileOrDir, MissingStdin
 from apps.decorators import glob
-from .Stream import Stream
+from .stream import Stream
 
 
 @glob

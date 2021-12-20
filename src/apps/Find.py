@@ -1,6 +1,6 @@
-from apps.Stream import Stream
+from apps.stream import Stream
 from apps.decorators import argumentLimit, hasParam, notEmpty
-from apps.Exceptions import InvalidFileOrDir
+from apps.exceptions import InvalidFileOrDir
 import os
 import fnmatch
 

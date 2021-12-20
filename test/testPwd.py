@@ -4,7 +4,7 @@ sys.path.insert(0, "../src")
 import os
 import unittest
 from appTests import appTests
-from apps.Pwd import pwd
+from apps.pwd import pwd
 
 
 class testPwd(appTests):

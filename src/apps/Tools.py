@@ -1,5 +1,5 @@
-from apps.Stream import Stream
-from apps.Exceptions import InvalidArgumentError, InvalidFileOrDir
+from apps.stream import Stream
+from apps.exceptions import InvalidArgumentError, InvalidFileOrDir
 from typing import List
 
 

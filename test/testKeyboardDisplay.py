@@ -1,11 +1,13 @@
 import sys
+
 sys.path.insert(0, "../src")
-import keyboardDisplay
+from keyboardDisplay import Data, State
 import unittest
+
 
 class testKeyboardDisplay(unittest.TestCase):
     def testData(self):
-        d=keyboardDisplay.Data()
+        d = Data()
         print(d)
         d.pressUp()
         self.assertEqual(d.isUpPressed(), True)
@@ -34,7 +36,7 @@ class testKeyboardDisplay(unittest.TestCase):
         self.assertEqual(d.getWithPrefix(), "c")
 
     def testState(self):
-        s=keyboardDisplay.State()
+        s = State()
         self.assertEqual(s.alive, True)
         s.die()
         self.assertEqual(s.alive, False)

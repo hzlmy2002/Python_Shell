@@ -2,7 +2,7 @@ import sys
 import os
 from shellParser import parseCommand
 from typing import TextIO
-from apps.Stream import Stream
+from apps.stream import Stream
 from commandTreeVisitor import CommandTreeVisitor
 import traceback
 
@@ -64,8 +64,7 @@ if __name__ == "__main__":  # pragma: no cover
                 data.setPrefix(sh.getWorkingDir() + "> ")
                 t1 = Thread(target=hideInput, args=(state,))
                 t2 = Thread(target=display, args=(data, lock, state,))
-                t3 = keyboard.Listener(
-                    on_press=keyboardMonitor(data, sh, lock, state))
+                t3 = keyboard.Listener(on_press=keyboardMonitor(data, sh, lock, state))
                 t1.start()
                 t2.start()
                 t3.start()

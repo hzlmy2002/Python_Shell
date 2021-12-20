@@ -1,7 +1,7 @@
-from apps.Stream import Stream
+from apps.stream import Stream
 from apps.decorators import hasParam, notEmpty
-from apps.Exceptions import InvalidArgumentError, InvalidParamError, MissingStdin
-from apps.Tools import getLines
+from apps.exceptions import InvalidArgumentError, InvalidParamError, MissingStdin
+from apps.tools import getLines
 from typing import List
 
 

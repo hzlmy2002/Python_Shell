@@ -1,4 +1,4 @@
-from apps.Stream import Stream
+from apps.stream import Stream
 from apps.decorators import glob
 
 

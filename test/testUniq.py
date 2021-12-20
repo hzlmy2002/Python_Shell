@@ -4,13 +4,13 @@ sys.path.insert(0, "../src")
 import os
 import unittest
 from appTests import appTests
-from apps.Exceptions import (
+from apps.exceptions import (
     InvalidArgumentError,
     InvalidParamTagError,
     InvalidFileOrDir,
     MissingStdin,
 )
-from apps.Uniq import uniq
+from apps.uniq import uniq
 
 
 class testUniq(appTests):

@@ -1,6 +1,6 @@
-from apps.Stream import Stream
+from apps.stream import Stream
 from apps.decorators import notEmpty
-from apps.Exceptions import InvalidFileOrDir, MissingStdin
+from apps.exceptions import InvalidFileOrDir, MissingStdin
 import re
 from typing import List, TextIO
 

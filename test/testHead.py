@@ -4,14 +4,14 @@ sys.path.insert(0, "../src")
 import os
 import unittest
 from appTests import appTests
-from apps.Exceptions import (
+from apps.exceptions import (
     InvalidArgumentError,
     InvalidParamTagError,
     InvalidFileOrDir,
     MissingStdin,
     InvalidParamError,
 )
-from apps.Head import head
+from apps.head import head
 from hypothesis import given, strategies as st
 
 

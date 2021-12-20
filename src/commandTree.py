@@ -1,6 +1,6 @@
 from abc import ABC
 from typing import Callable, List
-from apps.Stream import Stream
+from apps.stream import Stream
 
 
 class CommandTreeNode(ABC):

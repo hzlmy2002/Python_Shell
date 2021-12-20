@@ -5,12 +5,12 @@ import os
 import unittest
 import shutil
 from appTests import appTests
-from apps.Exceptions import (
+from apps.exceptions import (
     InvalidArgumentError,
     InvalidFileOrDir,
     MissingParamError,
 )
-from apps.Find import find
+from apps.find import find
 
 
 class testFind(appTests):

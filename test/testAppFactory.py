@@ -3,7 +3,7 @@ import sys
 sys.path.insert(0, "../src")
 from appFactory import AppNotFoundError, appFactory
 import unittest
-from apps import Cat, Cd, Cut, Echo, Find, Grep, Head, Ls, Pwd, Sort, Tail, Uniq
+from apps import cat, cd, cut, echo, find, grep, head, ls, pwd, sort, tail, uniq
 
 
 class TestFactory(unittest.TestCase):
@@ -23,18 +23,18 @@ class TestFactory(unittest.TestCase):
             "tail",
         ]
         appFunc = [
-            Pwd.pwd,
-            Head.head,
-            Echo.echo,
-            Cat.cat,
-            Cd.cd,
-            Ls.ls,
-            Cut.cut,
-            Find.find,
-            Grep.grep,
-            Sort.sort,
-            Uniq.uniq,
-            Tail.tail,
+            pwd.pwd,
+            head.head,
+            echo.echo,
+            cat.cat,
+            cd.cd,
+            ls.ls,
+            cut.cut,
+            find.find,
+            grep.grep,
+            sort.sort,
+            uniq.uniq,
+            tail.tail,
         ]
         for name, func in zip(appNames, appFunc):
             getApp = appFactory(name)

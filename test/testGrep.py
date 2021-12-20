@@ -4,12 +4,12 @@ sys.path.insert(0, "../src")
 import os
 import unittest
 from appTests import appTests
-from apps.Exceptions import (
+from apps.exceptions import (
     InvalidArgumentError,
     InvalidFileOrDir,
     MissingStdin,
 )
-from apps.Grep import grep
+from apps.grep import grep
 
 
 class testGrep(appTests):

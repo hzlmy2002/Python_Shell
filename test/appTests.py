@@ -1,5 +1,5 @@
-from StdOutForTest import StdOutForTest
-from StreamForTest import StreamForTest
+from stdOutForTest import StdOutForTest
+from streamForTest import StreamForTest
 from typing import List, Callable
 from apps.decorators import unsafe
 import unittest
@@ -12,11 +12,7 @@ class appTests(unittest.TestCase):
         self.name = name
 
     def doOutputTest(
-        self,
-        arg: List[str],
-        env: str = "",
-        unsafeApp=False,
-        getEnv=False,
+        self, arg: List[str], env: str = "", unsafeApp=False, getEnv=False,
     ) -> str:
         stdOut = StdOutForTest()
         stream = StreamForTest(env, stdOut, None, arg.copy())
