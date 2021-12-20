@@ -1,11 +1,8 @@
 from threading import Lock
-from pynput import keyboard
 from getpass import getpass
 import time
 import sys
 import traceback
-
-# this file contains the extra functionality implementation
 
 
 class Data:
@@ -70,7 +67,7 @@ class State:
         return self.alive
 
 
-def hideInput(state: "State"):
+def hideInput(state: "State"): # pragma: no cover
     while True:
         if not state.isAlive():
             break
@@ -84,7 +81,7 @@ def hideInput(state: "State"):
             break
 
 
-def display(data: "Data", lock: "Lock", state: "State"):
+def display(data: "Data", lock: "Lock", state: "State"): # pragma: no cover
     while True:
         if not state.isAlive():
             break
@@ -103,7 +100,13 @@ def display(data: "Data", lock: "Lock", state: "State"):
         time.sleep(0.1)
 
 
-def keyboardMonitor(data: "Data", sh, lock: "Lock", state: "State"):
+def keyboardMonitor(data: "Data", sh, lock: "Lock", state: "State"): # pragma: no cover
+    try:
+        from pynput import keyboard
+    except ImportError:
+        print("Platform not supported")
+        state.die()
+        return False
     def wrapper(key: "keyboard.Key"):
         if not state.isAlive():
             return False

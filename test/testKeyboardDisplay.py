@@ -39,7 +39,7 @@ class testKeyboardDisplay(unittest.TestCase):
         s = State()
         self.assertEqual(s.alive, True)
         s.die()
-        self.assertEqual(s.alive, False)
+        self.assertEqual(s.isAlive(), False)
         s.die()
         self.assertEqual(s.alive, False)
 
