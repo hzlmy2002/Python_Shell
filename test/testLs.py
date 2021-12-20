@@ -25,9 +25,9 @@ class testLs(appTests):
         shutil.rmtree("testDir2")
 
     def testLsListDir(self):
-        self.outputAssertHelper(["testDir"])
+        self.outputAssertHelper(["testDir"], ordered=False)
         os.chdir("testDir")
-        self.outputAssertHelper(env=os.getcwd())
+        self.outputAssertHelper(env=os.getcwd(),ordered=False)
 
     def testLsExceptions(self):
         self.exceptionAssertHelper(
