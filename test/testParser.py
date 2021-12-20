@@ -9,7 +9,7 @@ class TestParser(unittest.TestCase):
         args = tree.getCommands()[0].getArgs()
         self.assertEqual(len(args), 2)
         self.assertEqual(args[0].getArg(), "hello")
-        self.assertEqual(args[0].getArg(), "world")
+        self.assertEqual(args[1].getArg(), "world")
 
     def testQuotes(self):
         tree = parseCommand("echo 'hello world'", Shell(""))
