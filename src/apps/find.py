@@ -1,6 +1,6 @@
-from apps.Stream import Stream
-from apps.decorators import intParam, atMostOneArgument
-from apps.Exceptions import InvalidFileOrDir
+from apps.stream import Stream
+from apps.decorators import argumentLimit, hasParam, notEmpty
+from apps.exceptions import InvalidFileOrDir
 import os
 import fnmatch
 
@@ -14,15 +14,16 @@ def findFiles(rootPath: str, pattern: str) -> str:
     return result
 
 
-@intParam("name", required=True)
-@atMostOneArgument
+@notEmpty
+@hasParam("name", required=True)
+@argumentLimit(1, strict=False)
 def find(stream: "Stream"):
-    arg = stream.getArgs()
+    args = stream.getArgs()
     rootPath = "."
-    if len(arg) == 1:
-        rootPath = arg[0]
+    if len(args) == 1:
+        rootPath = args[0]
         if not (os.path.exists(rootPath) and os.path.isdir(rootPath)):
-            raise InvalidFileOrDir("File or Directory does not exist")
+            raise InvalidFileOrDir(f"Directory {rootPath} does not exist")
     pattern = stream.getParam("name")
     stdout = stream.getStdout()
     relativePaths = findFiles(rootPath, pattern)

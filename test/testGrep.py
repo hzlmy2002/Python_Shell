@@ -4,13 +4,15 @@ sys.path.insert(0, "../src")
 import os
 import unittest
 from appTests import appTests
-from apps.Exceptions import (
+from apps.exceptions import (
     InvalidArgumentError,
     InvalidFileOrDir,
+    MissingStdin,
 )
-from apps.Grep import grep
+from apps.grep import grep
 
-class testGrep(unittest.TestCase):
+
+class testGrep(appTests):
     def setUp(self) -> None:
         with open("testA.txt", "w") as file:
             file.write("AAA\nBBB\nCCC")
@@ -18,68 +20,33 @@ class testGrep(unittest.TestCase):
             file.write("BBB\nCCC\nDDD")
         with open("testC.txt", "w") as file:
             file.write("BBB\nCCC\nBBB")
-        self.tester = appTests(grep)
+        self.setApp(grep, "grep")
 
     def tearDown(self) -> None:
         os.remove("testA.txt")
         os.remove("testB.txt")
         os.remove("testC.txt")
 
-    def findPatternHelper(self, result1, result2, stringPattern):
-        self.assertEqual(result1, result2)
-        self.assertEqual(result1, stringPattern)
-
     def testGrepFindPattern(self):
-        result1 = self.tester.doOuputTest(["AAA", "testA.txt"])
-        result2 = self.tester.doOuputTest(["AAA", "testA.txt"], unsafeApp=True)
-        result3 = self.tester.doOuputTest(["AAA", "testA.txt", "testB.txt"])
-        result4 = self.tester.doOuputTest(
-            ["AAA", "testA.txt", "testB.txt"], unsafeApp=True
-        )
-        result5 = self.tester.doOuputTest(["BBB", "testA.txt", "testB.txt"])
-        result6 = self.tester.doOuputTest(
-            ["BBB", "testA.txt", "testB.txt"], unsafeApp=True
-        )
-        result7 = self.tester.doOuputTest(["...", "testA.txt"])
-        result8 = self.tester.doOuputTest(["...", "testA.txt"], unsafeApp=True)
-        result9 = self.tester.doOuputTest(["B..", "testC.txt"])
-        result10 = self.tester.doOuputTest(
-            ["B..", "testC.txt"], unsafeApp=True)
-        self.findPatternHelper(result1, result2, "AAA\n")
-        self.findPatternHelper(result3, result4, "testA.txt:AAA\n")
-        self.findPatternHelper(
-            result5, result6, "testA.txt:BBB\ntestB.txt:BBB\n")
-        self.findPatternHelper(result7, result8, "AAA\nBBB\nCCC\n")
-        self.findPatternHelper(result9, result10, "BBB\nBBB\n")
+        self.outputAssertHelper(["AAA", "testA.txt"])
+        self.outputAssertHelper(["AAA", "testA.txt", "testB.txt"])
+        self.outputAssertHelper(["BBB", "testA.txt", "testB.txt"])
+        self.outputAssertHelper(["...", "testA.txt"])
+        self.outputAssertHelper(["B..", "testC.txt"])
 
     def testGrepExceptions(self):
-        # appUnsafe = GrepUnsafe()
-        with self.assertRaises(InvalidArgumentError):
-            self.tester.doOuputTest(["testA.txt"])  # No pattern specified
-        with self.assertRaises(InvalidArgumentError):
-            self.tester.doOuputTest(["pattern"])  # No file specified
-        with self.assertRaises(InvalidFileOrDir):
-            self.tester.doOuputTest(
-                ["AAA", "smh", "testA.txt"])  # Not existing file
-        with self.assertRaises(InvalidArgumentError):
-            self.tester.doOuputTest([])  # Empty
-        self.assertTrue(
-            "InvalidArgumentError"
-            in self.tester.doOuputTest(["testA.txt"], unsafeApp=True)
-        )
-        self.assertTrue(
-            "InvalidArgumentError"
-            in self.tester.doOuputTest(["pattern"], unsafeApp=True)
-        )
-        self.assertTrue(
-            "InvalidFileOrDir"
-            in self.tester.doOuputTest(["AAA", "smh", "testA.txt"],
-                                       unsafeApp=True)
-        )
-        self.assertTrue(
-            "InvalidArgumentError" in self.tester.doOuputTest(
-                [], unsafeApp=True)
-        )
+        self.exceptionAssertHelper(
+            ["testA.txt"], MissingStdin, "MissingStdin"
+        )  # No pattern specified
+        self.exceptionAssertHelper(
+            ["pattern"], MissingStdin, "MissingStdin"
+        )  # No file specified
+        self.exceptionAssertHelper(
+            ["AAA", "smh", "testA.txt"], InvalidFileOrDir, "InvalidFileOrDir"
+        )  # Not existing file
+        self.exceptionAssertHelper(
+            [], InvalidArgumentError, "InvalidArgumentError"
+        )  # Empty
 
 
 if __name__ == "__main__":

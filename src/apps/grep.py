@@ -1,14 +1,12 @@
-from io import StringIO
-from apps.Stream import Stream
-from apps.Tools import toList
-from apps.decorators import hasArgument
-from apps.Exceptions import InvalidArgumentError, InvalidFileOrDir
+from apps.stream import Stream
+from apps.decorators import notEmpty
+from apps.exceptions import InvalidFileOrDir, MissingStdin
 import re
-from typing import List
+from typing import List, TextIO
 
 
-def match_line(lines: "List[str]", pattern: str, multFiles=False, fileName=""):
-    """Finds matching pattern given by args returns matched lines"""
+def match_line(lines: List[str], pattern: str, multFiles=False, fileName=""):
+    # finds matching pattern given by args returns matched lines
     res = ""
     for line in lines:
         if re.match(pattern, line):
@@ -23,7 +21,7 @@ def match_line(lines: "List[str]", pattern: str, multFiles=False, fileName=""):
     return res
 
 
-def processFiles(fileNames: "List[str]", pattern: str) -> str:
+def processFiles(fileNames: List[str], pattern: str) -> str:
     matched = ""
     multFiles = len(fileNames) > 1
     for filename in fileNames:
@@ -36,24 +34,22 @@ def processFiles(fileNames: "List[str]", pattern: str) -> str:
     return matched
 
 
-def processStdin(string: StringIO, pattern: str) -> str:
-    res = ""
-    with string as f:
-        res = f.getvalue()
-    lines = toList(res)
+def processStdin(stdin: TextIO, pattern: str) -> str:
+    lines = stdin.readlines()
     matched = match_line(lines, pattern)
     return matched
 
 
-@hasArgument
+@notEmpty
 def grep(stream: "Stream"):
     args = stream.getArgs()
     length = len(args)
-    if length < 2:
-        raise InvalidArgumentError("Invalid argument")
     pattern = args[0]
-    if length == 2 and type(args[1]) == StringIO:
-        res = processStdin(args[1], pattern)
+    if length == 1:
+        stdin = stream.getStdin()
+        if stdin is None:
+            raise MissingStdin("Missing stdin")
+        res = processStdin(stdin, pattern)
     else:
         fileNames = args[1:]
         res = processFiles(fileNames, pattern)

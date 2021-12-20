@@ -3,16 +3,20 @@ import sys
 sys.path.insert(0, "../src")
 from appTests import appTests
 import unittest
-from apps.Echo import echo
+from apps.echo import echo
+from hypothesis import given, assume, strategies as st
 
-class testEcho(unittest.TestCase):
+
+class testEcho(appTests):
     def setUp(self) -> None:
-        self.tester = appTests(echo)
+        self.setApp(echo, "echo")
 
-    def testEchoOutput(self):
-        result1 = self.tester.doOuputTest(["Hello"])
-        result2 = self.tester.doOuputTest(["Hello"], unsafeApp=True)
-        self.assertEqual(result1, "Hello\n")
+    @given(s=st.text())
+    def testEchoOutput(self, s):
+        assume("*" not in s)  # No glob
+        result1 = self.doOutputTest([s])
+        result2 = self.doOutputTest([s], unsafeApp=True)
+        self.assertEqual(result1, f"{s}\n")
         self.assertEqual(result1, result2)
 
 

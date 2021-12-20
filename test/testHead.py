@@ -4,90 +4,54 @@ sys.path.insert(0, "../src")
 import os
 import unittest
 from appTests import appTests
-from apps.Exceptions import InvalidArgumentError,\
-    InvalidParamTagError, InvalidFileOrDir
-from apps.Head import head
+from apps.exceptions import (
+    InvalidArgumentError,
+    InvalidParamTagError,
+    InvalidFileOrDir,
+    MissingStdin,
+    InvalidParamError,
+)
+from apps.head import head
+from hypothesis import given, strategies as st
 
-class testHead(unittest.TestCase):
+
+class testHead(appTests):
     def setUp(self) -> None:
-        self.tester = appTests(head)
         with open("test.txt", "w") as file:
             file.write("l1\nl2\nl3\nl4\nl5\nl6\nl7\nl8\nl9\nl10\nl11\n")
+        self.setApp(head, "head")
 
     def tearDown(self) -> None:
         os.remove("test.txt")
 
-    def testHeadFile(self):
-        result1 = self.tester.doOuputTest(["test.txt"])
-        result2 = self.tester.doOuputTest(["test.txt"], unsafeApp=True)
-        result3 = self.tester.doOuputTest(["-n", "11", "test.txt"])
-        result4 = self.tester.doOuputTest(
-            ["-n", "11", "test.txt"], unsafeApp=True)
-        self.assertEqual(result1, result2)
-        self.assertEqual(result1, "l1\nl2\nl3\nl4\nl5\nl6\nl7\nl8\nl9\nl10\n")
-        self.assertEqual(result3, result4)
-        self.assertEqual(
-            result3, "l1\nl2\nl3\nl4\nl5\nl6\nl7\nl8\nl9\nl10\nl11\n")
+    def testHeadFileDefault(self):
+        self.outputAssertHelper(["test.txt"])  # no -n specified
+
+    @given(st.integers(min_value=1, max_value=15))
+    def testHeadFile(self, s):
+        self.outputAssertHelper(["-n", str(s), "test.txt"])
 
     def testHeadExceptions(self):
-        with self.assertRaises(InvalidParamTagError):
-            # Invalid param tag -a
-            self.tester.doOuputTest(["-a", "11", "test.txt"])
-        with self.assertRaises(InvalidArgumentError):
-            self.tester.doOuputTest(
-                ["-n", "11", "smh", "test.txt"]
-            )  # Way to many arguments
-        with self.assertRaises(InvalidFileOrDir):
-            self.tester.doOuputTest(
-                ["-n", "11", "smh.txt"])  # Not existing file
-
-        with self.assertRaises(InvalidArgumentError):
-            self.tester.doOuputTest(["-n", "11"])  # No file specified
-
-        with self.assertRaises(InvalidArgumentError):
-            self.tester.doOuputTest(["-n", "11", ""])  # No file specified
-
-        with self.assertRaises(InvalidArgumentError):
-            # No param argument specified
-            self.tester.doOuputTest(["-n", "test.txt"])
-        with self.assertRaises(InvalidArgumentError):
-            self.tester.doOuputTest([""])  # Empty
-        with self.assertRaises(InvalidArgumentError):
-            self.tester.doOuputTest([])  # Empty
-        self.assertTrue(
-            "InvalidParamTagError"
-            in self.tester.doOuputTest(["-a", "11", "test.txt"],
-                                       unsafeApp=True)
-        )
-        self.assertTrue(
-            "InvalidArgumentError"
-            in self.tester.doOuputTest(["-n", "11", "smh", "test.txt"],
-                                       unsafeApp=True)
-        )
-        self.assertTrue(
-            "InvalidFileOrDir"
-            in self.tester.doOuputTest(["-n", "11", "smh.txt"], unsafeApp=True)
-        )
-        self.assertTrue(
-            "InvalidArgumentError"
-            in self.tester.doOuputTest(["-n", "11"], unsafeApp=True)
-        )
-        self.assertTrue(
-            "InvalidArgumentError"
-            in self.tester.doOuputTest(["-n", "11", ""], unsafeApp=True)
-        )
-        self.assertTrue(
-            "InvalidArgumentError"
-            in self.tester.doOuputTest(["-n", "test.txt"], unsafeApp=True)
-        )
-        self.assertTrue(
-            "InvalidArgumentError" in self.tester.doOuputTest(
-                [""], unsafeApp=True)
-        )
-        self.assertTrue(
-            "InvalidArgumentError" in self.tester.doOuputTest(
-                [], unsafeApp=True)
-        )
+        self.exceptionAssertHelper(
+            ["-a", "11", "test.txt"], InvalidParamTagError, "InvalidParamTagError"
+        )  # Invalid param tag -a
+        self.exceptionAssertHelper(
+            ["-n", "11", "smh", "test.txt"],
+            InvalidArgumentError,
+            "InvalidArgumentError",
+        )  # Way to many arguments
+        self.exceptionAssertHelper(
+            ["-n", "11", "smh.txt"], InvalidFileOrDir, "InvalidFileOrDir"
+        )  # Not existing file
+        self.exceptionAssertHelper(
+            ["-n", "11"], MissingStdin, "MissingStdin"
+        )  # No stdin specified
+        self.exceptionAssertHelper(
+            ["-n", "test.txt"], InvalidParamError, "InvalidParamError"
+        )  # No param argument specified or not valid parameter argument "test.txt"
+        self.exceptionAssertHelper(
+            [], MissingStdin, "MissingStdin"
+        )  # No stdin specified
 
 
 if __name__ == "__main__":

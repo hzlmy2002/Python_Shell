@@ -1,48 +1,36 @@
 import sys
+
 sys.path.insert(0, "../src")
 import os
 import unittest
-from apps.Exceptions import InvalidArgumentError, InvalidFileOrDir
+from apps.exceptions import InvalidFileOrDir, MissingStdin
 from appTests import appTests
-from apps.Cat import cat
+from apps.cat import cat
 
-class testCat(unittest.TestCase):
+
+class testCat(appTests):
     def setUp(self) -> None:
         with open(".testCatA.txt", "w") as file:
             file.write("TestLineA\nTestLineAA\n")
         with open(".testCatB.txt", "w") as file:
             file.write("testCatB")
-        self.tester = appTests(cat)
+        self.setApp(cat, "cat")
 
     def tearDown(self) -> None:
         os.remove(".testCatA.txt")
         os.remove(".testCatB.txt")
 
     def testCatFile(self):
-        result1 = self.tester.doOuputTest([".testCatA.txt", ".testCatB.txt"])
-        result2 = self.tester.doOuputTest(
-            [".testCatA.txt", ".testCatB.txt"], unsafeApp=True
-        )
-        self.assertEqual(result1, result2)
-        self.assertEqual(result1, "TestLineA\nTestLineAA\ntestCatB\n")
+        self.outputAssertHelper([".testCatA.txt", ".testCatB.txt"])
 
     def testCatExceptions(self):
-        # cat2 = CatUnsafe()
-        with self.assertRaises(InvalidFileOrDir):
-            self.tester.doOuputTest(["^^^"])  # Not existing file
-        with self.assertRaises(InvalidArgumentError):
-            self.tester.doOuputTest([])  # No argument
-        with self.assertRaises(InvalidArgumentError):
-            self.tester.doOuputTest([""])  # No argument
-        self.assertTrue(
-            "InvalidFileOrDir" in self.tester.doOuputTest(["^^^"], unsafeApp=True)
-        )
-        self.assertTrue(
-            "InvalidArgumentError" in self.tester.doOuputTest([""], unsafeApp=True)
-        )
-        self.assertTrue(
-            "InvalidArgumentError" in self.tester.doOuputTest([], unsafeApp=True)
-        )
+        self.exceptionAssertHelper(
+            ["^^^"], InvalidFileOrDir, "InvalidFileOrDir"
+        )  # Not existing file
+        self.exceptionAssertHelper([], MissingStdin, "MissingStdin")  # No argument
+        self.exceptionAssertHelper(
+            [""], InvalidFileOrDir, "InvalidFileOrDir"
+        )  # No argument
 
 
 if __name__ == "__main__":

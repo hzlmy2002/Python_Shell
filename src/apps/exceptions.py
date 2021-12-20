@@ -16,3 +16,7 @@ class InvalidArgumentError(RuntimeError):
 
 class InvalidFileOrDir(FileNotFoundError):
     pass
+
+
+class MissingStdin(RuntimeError):
+    pass
