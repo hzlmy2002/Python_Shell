@@ -5,7 +5,7 @@ import unittest
 
 
 class TestShell(unittest.TestCase):
-    def test_shell(self):
+    def testShell(self):
         pass
 
 

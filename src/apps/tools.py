@@ -11,7 +11,7 @@ def toList(newLineString: str) -> List[str]:
 
 
 def getLines(stream: "Stream") -> List[str]:
-    # return content within a single file of name fileName as list of string
+    # return content within a single file of name fileName as list of strings
     args = stream.getArgs()
     if len(args) != 1 or args[0] == "":
         raise InvalidArgumentError("Too many arguments given")

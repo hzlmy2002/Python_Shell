@@ -85,7 +85,7 @@ def getFlag(key: str):
                 stream.addFlag(args[i][1:])
                 stream.removeArg(i)
             except ValueError:
-                pass
+                pass  # flags are optional
             call(stream)
 
         return wrapper
@@ -114,7 +114,7 @@ def glob(call: Callable[["Stream"], None]):
                 path = Path(workingDir)
                 globbed = list(path.glob(a))
                 if len(globbed) == 0:
-                    continue
+                    continue  # leave arg unchanged if no files match
                 stream.removeArg(i)
                 for g in globbed:
                     stream.addArg(os.path.relpath(g, path))
