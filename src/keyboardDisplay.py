@@ -110,9 +110,7 @@ def keyboardMonitor(data: "Data", sh, lock: "Lock", state: "State"): # pragma: n
     def wrapper(key: "keyboard.Key"):
         if not state.isAlive():
             return False
-        if key == keyboard.Key.tab:
-            pass
-        elif key == keyboard.Key.backspace:
+        if key == keyboard.Key.backspace:
             data.pop()
         elif key == keyboard.Key.space:
             data.add(" ")
