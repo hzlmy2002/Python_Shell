@@ -18,7 +18,7 @@ class TestParser(unittest.TestCase):
         self.assertEqual(args[0].getArg(), "hello world")
 
     def testRedirectionPath(self):
-        tree = parseCommand("echo < test.txt hello world")
+        tree = parseCommand("echo < test.txt hello world", Shell(""))
         args = tree.getCommands()[0].getArgs()
         self.assertEqual(args[0].getPath(), "test.txt")
 
